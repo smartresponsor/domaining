@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domaining\Repository;
 
-use App\Domaining\RepositoryInterface\DomainBindingRepositoryInterface;
 use App\Domaining\Entity\DomainBinding;
+use App\Domaining\Entity\DomainDeclaration;
 use App\Domaining\Enum\DomainBindingStatus;
+use App\Domaining\RepositoryInterface\DomainBindingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,5 +39,12 @@ final class DomainBindingRepository extends ServiceEntityRepository implements D
             ])
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findOneForDeclaration(DomainDeclaration $declaration): ?DomainBinding
+    {
+        $binding = $this->findOneBy(['declaration' => $declaration]);
+
+        return $binding instanceof DomainBinding ? $binding : null;
     }
 }

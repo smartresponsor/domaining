@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace App\Domaining\Service\Runtime;
 
 use App\Domaining\Dto\DomainRuntimeOverlay;
-use App\Domaining\Entity\DomainBinding;
 use App\Domaining\Enum\DomainDeclarationStatus;
 use App\Domaining\Enum\DomainPublicationStatus;
-use App\Domaining\Repository\DomainBindingRepository;
-use App\Domaining\Repository\DomainDeclarationRepository;
-use App\Domaining\Repository\DomainPublicationStateRepository;
-use App\Domaining\Repository\DomainRoutingTargetRepository;
+use App\Domaining\RepositoryInterface\DomainBindingRepositoryInterface;
+use App\Domaining\RepositoryInterface\DomainDeclarationRepositoryInterface;
+use App\Domaining\RepositoryInterface\DomainPublicationStateRepositoryInterface;
+use App\Domaining\RepositoryInterface\DomainRoutingTargetRepositoryInterface;
 use App\Domaining\ServiceInterface\Runtime\DomainRuntimeOverlayServiceInterface;
 
 final readonly class DomainRuntimeOverlayService implements DomainRuntimeOverlayServiceInterface
 {
     public function __construct(
-        private DomainDeclarationRepository $declarationRepository,
-        private DomainBindingRepository $bindingRepository,
-        private DomainPublicationStateRepository $publicationStateRepository,
-        private DomainRoutingTargetRepository $routingTargetRepository,
+        private DomainDeclarationRepositoryInterface $declarationRepository,
+        private DomainBindingRepositoryInterface $bindingRepository,
+        private DomainPublicationStateRepositoryInterface $publicationStateRepository,
+        private DomainRoutingTargetRepositoryInterface $routingTargetRepository,
     ) {
     }
 
@@ -53,10 +52,9 @@ final readonly class DomainRuntimeOverlayService implements DomainRuntimeOverlay
             );
         }
 
-        $binding = $this->bindingRepository->findOneBy(['declaration' => $declaration]);
-        $binding = $binding instanceof DomainBinding ? $binding : null;
-        $publicationState = null === $binding ? null : $this->publicationStateRepository->findOneBy(['binding' => $binding]);
-        $routingTarget = null === $binding ? null : $this->routingTargetRepository->findOneBy(['binding' => $binding]);
+        $binding = $this->bindingRepository->findOneForDeclaration($declaration);
+        $publicationState = null === $binding ? null : $this->publicationStateRepository->findOneForBinding($binding);
+        $routingTarget = null === $binding ? null : $this->routingTargetRepository->findOneForBinding($binding);
 
         return new DomainRuntimeOverlay(
             $declaration->applicationKey(),

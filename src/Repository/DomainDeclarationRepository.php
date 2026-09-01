@@ -6,10 +6,11 @@ namespace App\Domaining\Repository;
 
 use App\Domaining\Entity\DomainDeclaration;
 use App\Domaining\Enum\DomainApplicationRole;
+use App\Domaining\RepositoryInterface\DomainDeclarationRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-final class DomainDeclarationRepository extends ServiceEntityRepository
+final class DomainDeclarationRepository extends ServiceEntityRepository implements DomainDeclarationRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
