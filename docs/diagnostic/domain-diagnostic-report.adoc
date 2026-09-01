@@ -1,0 +1,42 @@
+= Domaining Diagnostic Report
+
+Domaining W8 adds a provider-neutral diagnostic report for custom-domain lifecycle consistency.
+
+The diagnostic layer does not mutate DNS, registrar accounts, runtime routers, certificates, or provider configuration. It reads Domaining state and reports issues that must be fixed by Domaining lifecycle actions or by the runtime publication provider.
+
+== HTTP
+
+[source,text]
+----
+GET /domain/diagnostic/report
+----
+
+The response contains:
+
+* `pass` — false when at least one error is present.
+* `severityCount` — grouped counts for `error`, `warning`, and `info`.
+* `issues` — structured issue list with domain name, owner/surface context, code, message, and machine-readable context.
+
+== CLI
+
+[source,bash]
+----
+php bin/console domaining:diagnostic:report
+----
+
+The command exits with failure when diagnostic errors exist. This makes it usable as a release/readiness gate before exporting runtime handoff instructions.
+
+== Current W8 checks
+
+* active binding must have a published publication state;
+* ready or published publication must have a routing target;
+* suspended binding that remains published is flagged for runtime withdrawal review;
+* live verified/active binding should have a last verification timestamp;
+* routing target must not self-loop to the same public custom domain;
+* routing target path must start with `/`;
+* pending expired challenges are flagged for regeneration/expiry handling;
+* repeated pending DNS verification attempts are flagged for operator/user guidance.
+
+== Boundary
+
+Diagnostics are intentionally provider-neutral. Cloudflare, Caddy, Traefik, Nginx, Kubernetes Ingress, or any other runtime provider may consume the report, but Domaining remains the lifecycle owner, not the infrastructure mutator.

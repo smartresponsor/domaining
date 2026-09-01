@@ -1,0 +1,32 @@
+= Composer Sibling Host Install
+
+This component can be mounted by a host application through a Composer path repository.
+
+[source,json]
+----
+{
+  "repositories": [
+    { "type": "path", "url": "../Domaining", "options": { "symlink": true } }
+  ],
+  "require": {
+    "domaining/domain": "*@dev"
+  }
+}
+----
+
+Register the bundle when the host does not use auto-registration:
+
+[source,php]
+----
+App\Domaining\DomainingBundle::class => ['all' => true],
+----
+
+Import Domaining routes from the host application:
+
+[source,yaml]
+----
+domaining:
+  resource: '@DomainingBundle/config/routes.yaml'
+----
+
+The host application owns environment configuration, database connection, runtime routing, TLS provider, and Interfacing installation.

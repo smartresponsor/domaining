@@ -1,0 +1,28 @@
+= Domaining W14 Release Package
+
+W14 adds the final provider-neutral RC package surface.
+
+The release package aggregates:
+
+* release review;
+* release manifest;
+* contract governance;
+* release gate;
+* state export;
+* runtime handoff.
+
+The package is intentionally read-only. It does not register domains, transfer domains, mutate DNS provider state, request certificates, or write runtime routing configuration.
+
+== Command
+
+[source,bash]
+----
+php bin/console domaining:release:package
+----
+
+== HTTP
+
+[source,http]
+----
+GET /domain/release/package
+----

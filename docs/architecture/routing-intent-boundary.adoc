@@ -1,0 +1,14 @@
+= Routing Intent Boundary
+
+Domaining owns the decision that a domain is verified and eligible for publication. Infrastructure owns the act of publishing traffic routes and certificates.
+
+Domaining may produce:
+
+* domain name
+* owner id
+* surface type and surface key
+* target host
+* target path
+* publication readiness state
+
+Domaining must not directly own provider-specific runtime mutation in its business core. Cloudflare, Caddy, Traefik, nginx, Kubernetes ingress, ACME, or CDN automation belongs to provider/infrastructure services that consume Domaining routing intent.

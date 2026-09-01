@@ -1,0 +1,107 @@
+parameters:
+  domaining.standalone_enabled: false
+  domaining.template_surface: 'domain'
+  domaining.raw_json_fallback: true
+  domaining.interfacing_template_candidates:
+    - '@@Interfacing/domain/surface/binding.html.twig'
+    - 'interfacing/domain/surface/binding.html.twig'
+    - 'domain/surface/binding.html.twig'
+  domaining.provider_recommendation:
+    primary: 'Cloudflare'
+    note: 'Smart Responsor does not register, sell, transfer, or host domains as a registrar.'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Domaining\:
+    resource: '../src/'
+    exclude:
+      - '../src/Entity/'
+      - '../src/Dto/'
+      - '../src/Enum/'
+      - '../src/Value/'
+      - '../src/Exception/'
+
+  App\Domaining\ServiceInterface\Claim\DomainClaimCreationServiceInterface:
+    alias: App\Domaining\Service\Claim\DomainClaimCreationService
+
+  App\Domaining\ServiceInterface\Declaration\DomainDeclarationServiceInterface:
+    alias: App\Domaining\Service\Declaration\DomainDeclarationService
+
+  App\Domaining\ServiceInterface\Verification\DomainVerificationChallengeServiceInterface:
+    alias: App\Domaining\Service\Verification\DomainVerificationChallengeService
+
+  App\Domaining\ServiceInterface\Verification\DomainDnsVerificationServiceInterface:
+    alias: App\Domaining\Service\Verification\DomainDnsVerificationService
+
+  App\Domaining\ServiceInterface\Binding\DomainBindingServiceInterface:
+    alias: App\Domaining\Service\Binding\DomainBindingService
+
+  App\Domaining\ServiceInterface\Publication\DomainPublicationServiceInterface:
+    alias: App\Domaining\Service\Publication\DomainPublicationService
+
+
+  App\Domaining\ServiceInterface\Verification\DomainDnsInstructionServiceInterface:
+    alias: App\Domaining\Service\Verification\DomainDnsInstructionService
+
+  App\Domaining\ServiceInterface\Audit\DomainAuditServiceInterface:
+    alias: App\Domaining\Service\Audit\DomainAuditService
+
+  App\Domaining\ServiceInterface\Publication\DomainPublicationReadServiceInterface:
+    alias: App\Domaining\Service\Publication\DomainPublicationReadService
+
+  App\Domaining\ServiceInterface\Configuration\DomainConfigurationToolMetadataServiceInterface:
+    alias: App\Domaining\Service\Configuration\DomainConfigurationToolMetadataService
+
+
+  App\Domaining\ServiceInterface\Security\DomainOwnershipGuardServiceInterface:
+    alias: App\Domaining\Service\Security\DomainOwnershipGuardService
+
+  App\Domaining\ServiceInterface\Interfacing\DomainInterfacingPayloadServiceInterface:
+    alias: App\Domaining\Service\Interfacing\DomainInterfacingPayloadService
+
+  App\Domaining\ServiceInterface\State\DomainBindingTransitionGuardInterface:
+    alias: App\Domaining\Service\State\DomainBindingTransitionGuard
+
+  App\Domaining\ServiceInterface\Observability\DomainObservabilityServiceInterface:
+    alias: App\Domaining\Service\Observability\DomainObservabilityService
+
+
+  App\Domaining\ServiceInterface\Release\DomainReleaseGateServiceInterface:
+    alias: App\Domaining\Service\Release\DomainReleaseGateService
+
+  App\Domaining\ServiceInterface\Audit\DomainAuditTrailReadServiceInterface:
+    alias: App\Domaining\Service\Audit\DomainAuditTrailReadService
+
+  App\Domaining\ServiceInterface\Runtime\DomainRuntimeHandoffServiceInterface:
+    alias: App\Domaining\Service\Runtime\DomainRuntimeHandoffService
+
+  App\Domaining\ServiceInterface\Runtime\DomainRuntimeOverlayServiceInterface:
+    alias: App\Domaining\Service\Runtime\DomainRuntimeOverlayService
+
+  App\Domaining\ServiceInterface\Diagnostic\DomainDiagnosticServiceInterface:
+    alias: App\Domaining\Service\Diagnostic\DomainDiagnosticService
+
+  App\Domaining\ServiceInterface\Policy\DomainSurfacePolicyServiceInterface:
+    alias: App\Domaining\Service\Policy\DomainSurfacePolicyService
+
+  App\Domaining\ServiceInterface\Export\DomainStateExportServiceInterface:
+    alias: App\Domaining\Service\Export\DomainStateExportService
+
+  App\Domaining\ServiceInterface\Contract\DomainContractGovernanceServiceInterface:
+    alias: App\Domaining\Service\Contract\DomainContractGovernanceService
+
+  App\Domaining\ServiceInterface\Manifest\DomainReleaseManifestServiceInterface:
+    alias: App\Domaining\Service\Manifest\DomainReleaseManifestService
+
+  App\Domaining\ServiceInterface\Review\DomainReleaseReviewServiceInterface:
+    alias: App\Domaining\Service\Review\DomainReleaseReviewService
+
+  App\Domaining\ServiceInterface\Package\DomainReleasePackageServiceInterface:
+    alias: App\Domaining\Service\Package\DomainReleasePackageService
+
+
+  App\Domaining\ServiceInterface\Interfacing\DomainTemplateRenderServiceInterface:
+    alias: App\Domaining\Service\Interfacing\DomainTemplateRenderService

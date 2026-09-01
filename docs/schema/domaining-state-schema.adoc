@@ -1,0 +1,31 @@
+= Domaining State Schema
+
+Domaining state is split intentionally across claim, verification, binding,
+routing target, publication state, and audit record tables.
+
+== Table prefix
+
+All component-owned tables use the `domain_` prefix.
+
+== Primary lifecycle
+
+[source,text]
+----
+domain_claim
+  -> domain_verification_challenge
+  -> domain_binding
+  -> domain_routing_target
+  -> domain_publication_state
+  -> domain_audit_record
+----
+
+== Live binding states
+
+`verified`, `active`, and `suspended` are live states. `removed` is historical
+and must not permanently block the same domain from a future valid claim.
+
+== Provider boundary
+
+Provider-specific implementation data must not become canonical schema unless it
+represents provider-neutral business state. Vendor payloads belong in runtime or
+provider-specific integration layers, not in Domaining core tables.

@@ -1,0 +1,30 @@
+= Domaining State Transition Guard
+:toc:
+
+Domaining W5 introduces a dedicated state-transition guard for binding lifecycle actions.
+The goal is to keep transition policy explicit and reusable instead of duplicating status checks across controllers or services.
+
+== Guarded transitions
+
+[source,text]
+----
+activate_binding
+suspend_binding
+remove_binding
+prepare_publication
+mark_published
+withdraw_publication
+----
+
+== Current policy
+
+* verified or suspended bindings may be activated;
+* verified or active bindings may be suspended;
+* verified or suspended bindings may be removed;
+* verified or active bindings may prepare publication intent;
+* active bindings may be marked as published after publication readiness exists;
+* suspended or removed bindings may withdraw publication.
+
+== Boundary
+
+The guard validates business state only. Authorization remains in Accessing/Rolling and runtime publication remains outside Domaining.

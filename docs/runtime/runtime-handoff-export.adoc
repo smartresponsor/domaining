@@ -1,0 +1,49 @@
+= Domaining Runtime Handoff Export
+
+Domaining owns domain lifecycle decisions, not reverse proxy mutation.
+The runtime handoff export is the provider-neutral boundary between Domaining and an external runtime publisher.
+
+== Purpose
+
+The export answers one question: what should the runtime layer do with already known domain bindings?
+
+Domaining may emit these actions:
+
+* `publish_route` when an active binding is ready but not yet marked as published.
+* `ensure_route` when an active binding is already marked as published and should remain present.
+* `withdraw_route` when a suspended binding should be removed from runtime routing.
+* `review` when the state combination needs operator review.
+
+== HTTP
+
+[source]
+----
+GET /domain/runtime/handoff
+----
+
+== CLI
+
+[source,bash]
+----
+php bin/console domaining:runtime:handoff-export
+----
+
+== Contract
+
+The payload is provider-neutral and contains only domain lifecycle facts and desired actions.
+It does not contain Cloudflare, Nginx, Caddy, Traefik, Kubernetes, or registrar-specific instructions.
+
+[source,json]
+----
+{
+  "domainName": "example.com",
+  "ownerId": "tenant-123",
+  "surfaceType": "tenant",
+  "surfaceKey": "public-site",
+  "targetHost": "tenant-123.smartresponsor.app",
+  "targetPath": "/",
+  "publicationStatus": "ready",
+  "bindingStatus": "active",
+  "action": "publish_route"
+}
+----

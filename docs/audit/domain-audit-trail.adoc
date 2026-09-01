@@ -1,0 +1,27 @@
+= Domain Audit Trail
+
+Domaining records lifecycle events as component-owned audit records.
+The audit trail is not a registrar log and is not a DNS provider log. It is the
+business record for claim, verification, binding, publication, suspension, and
+withdrawal decisions made by the Domaining component.
+
+== Endpoint
+
+[source,text]
+----
+GET /domain/audit/{domainName}?limit=50
+----
+
+The endpoint returns the most recent audit records for a normalized domain name.
+The limit is clamped to `1..250` to keep the query bounded.
+
+== Canonical actions
+
+* `domain_claimed`
+* `domain_verification_verified`
+* `domain_binding_activated`
+* `domain_binding_suspended`
+* `domain_binding_removed`
+* `domain_publication_ready`
+* `domain_publication_published`
+* `domain_publication_withdrawn`

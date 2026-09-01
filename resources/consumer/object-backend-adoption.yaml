@@ -1,0 +1,34 @@
+object_backend_adoption_version: 1
+component: Domaining
+business_stem: DomainDeclaration
+namespace: App\Domaining
+entity: App\Domaining\Entity\DomainDeclaration
+table: domain_declaration
+standalone_ready: true
+field_pack_profile: object_baseline
+explicit_field_packs: []
+effective_field_packs:
+  - object_identity
+  - object_audit
+title_alias_profile: null
+backend_ownership:
+  entity: Domaining
+  doctrine_schema: Domaining
+  dto: Domaining
+  controller: Domaining
+  form: Domaining
+  repository: Domaining
+  service: Domaining
+objecting_ownership:
+  field_packs: Objecting
+  field_pack_profiles: Objecting
+adoption_readiness:
+  status: ready
+  checks:
+    - backend_component_namespace
+    - business_table_prefix
+    - profile_resolution_materialized
+    - standalone_ready
+    - effective_field_packs_registered
+    - component_entity_namespace
+  blocking_reasons: []

@@ -1,0 +1,129 @@
+= Domaining / Domain
+
+Domaining owns the lifecycle of externally registered domains connected to Smart
+Responsor surfaces. It does not register, sell, transfer, or host domains as a
+registrar.
+
+== Canon
+
+* Component: `Domaining`
+* Business prefix: `Domain*`
+* Namespace: `App\Domaining\...`
+* DB table prefix: `domain_`
+* PHP: `^8.4`
+* Symfony: `^8.0`
+* No `/src/Domain/`
+* No ports-and-adapters architecture
+* No provider lock-in
+
+== Core flow
+
+[source,text]
+----
+claim -> verification challenge -> DNS verification -> binding -> routing target -> publication state -> audit
+----
+
+== Release gate
+
+[source,bash]
+----
+php bin/console domaining:release:gate
+----
+
+The same report is exposed through:
+
+[source,text]
+----
+GET /domain/release/gate
+----
+
+== Runtime handoff
+
+[source,bash]
+----
+php bin/console domaining:runtime:handoff-export
+----
+
+[source,text]
+----
+GET /domain/runtime/handoff
+----
+
+== W8
+
+W8 adds provider-neutral lifecycle diagnostics:
+
+[source,bash]
+----
+php bin/console domaining:diagnostic:report
+----
+
+HTTP surface:
+
+[source,text]
+----
+GET /domain/diagnostic/report
+----
+
+
+== W9 surface policy
+
+Wave 9 adds a provider-neutral surface policy report for tenant/custom-domain posture review. It exposes `GET /domain/policy/surface/{ownerId}` and `php bin/console domaining:policy:surface-report <ownerId>`.
+
+== W10 state export
+
+Wave 10 adds a provider-neutral Domaining state export for Administering/runtime review:
+
+[source,bash]
+----
+php bin/console domaining:state:export
+----
+
+[source,text]
+----
+GET /domain/export/state
+----
+
+== W12 release manifest
+
+W12 adds a machine-readable release manifest surface:
+
+[source,text]
+----
+GET /domain/release/manifest
+php bin/console domaining:release:manifest
+----
+
+The manifest is provider-neutral and keeps registrar/DNS/runtime mutation ownership outside Domaining.
+
+
+== W13 release review
+
+Domaining now exposes an aggregate RC review surface through `GET /domain/release/review` and `php bin/console domaining:release:review`.
+
+
+== W14 release package
+
+Domaining now exposes the final provider-neutral RC package surface.
+
+[source,bash]
+----
+php bin/console domaining:release:package
+----
+
+[source,http]
+----
+GET /domain/release/package
+----
+
+The package aggregates release review, manifest, contract governance, release gate, state export, and runtime handoff. It remains read-only and does not mutate registrar, DNS, TLS, or runtime routing provider state.
+
+== W15 execution modes
+
+Domaining supports standalone review mode and Composer sibling/bundle mode.
+
+* Standalone: use `App\Domaining\Kernel` through `public/index.php`.
+* Host application: require `domaining/domain` through a Composer path repository and register `App\Domaining\DomainingBundle`.
+* Interfacing: Domaining looks for the noun surface `domain`; if missing, it returns structured JSON.
+
+See `docs/bundle/standalone-and-bundle-mode.adoc`.

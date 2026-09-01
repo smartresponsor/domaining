@@ -1,0 +1,41 @@
+= Domaining Release-Quality Readiness
+:toc:
+
+Domaining W5 adds an explicit release-readiness layer for the existing custom-domain lifecycle.
+The component still owns only externally registered custom domains; it does not sell, register, or transfer domains.
+
+== Required lifecycle chain
+
+A domain must move through the following controlled states before it can be treated as publicly usable:
+
+. claim created for an owner/surface;
+. DNS verification challenge issued;
+. verification challenge passed;
+. binding created from the verified claim;
+. routing intent prepared for the verified or active binding;
+. binding activated by authorized application flow;
+. runtime/provider confirms publication;
+. publication state is marked as published.
+
+== Runtime boundary
+
+Domaining exports provider-neutral publication intent. It does not directly write Nginx, Caddy, Traefik, Kubernetes ingress, Cloudflare zone, or ACME state.
+The runtime/provider layer consumes the publication snapshot and applies platform-specific routing and TLS.
+
+== Readiness endpoint
+
+[source,text]
+----
+GET /domain/observability/readiness
+----
+
+The endpoint returns a JSON report with status counts and warnings. A non-empty warning list should block release promotion until reviewed.
+
+== Metric snapshot endpoint
+
+[source,text]
+----
+GET /domain/observability/metric-snapshot
+----
+
+The endpoint returns simple status counters that can be adapted to Prometheus/Grafana outside the component.

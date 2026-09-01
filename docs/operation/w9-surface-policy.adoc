@@ -1,0 +1,18 @@
+= Domaining W9 Surface Policy Hardening
+:toc:
+
+Wave 9 adds a policy-report layer above the lifecycle diagnostics.
+
+The diagnostic report answers whether the current domain lifecycle state is internally consistent. The surface policy report answers whether a tenant or surface has a safe and reviewable domain posture.
+
+== Added surfaces
+
+* `GET /domain/policy/surface/{ownerId}`
+* `php bin/console domaining:policy:surface-report <ownerId>`
+
+== Canonical constraints
+
+* Domaining remains the owner of custom-domain lifecycle and policy.
+* Administering may display the policy report but does not own the policy.
+* Runtime providers may consume the report but do not decide tenant ownership.
+* Cloudflare remains a recommendation/provider hint only, not a required dependency.

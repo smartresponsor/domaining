@@ -1,0 +1,66 @@
+= Domaining Standalone and Bundle Mode
+
+Domaining is intentionally usable in two modes.
+
+== Standalone mode
+
+Standalone mode is useful for local development, isolated verification, API checks, and component-level release review.
+
+[source,bash]
+----
+composer install
+APP_ENV=dev APP_DEBUG=1 DATABASE_URL='sqlite:///%kernel.project_dir%/var/domaining.db' php -S 127.0.0.1:8080 -t public
+----
+
+The standalone kernel is `App\Domaining\Kernel` and registers the same `DomainingBundle` used by a host application.
+
+== Host application / Composer sibling mode
+
+The host application should include this repository through a Composer path repository or another local package source.
+
+[source,json]
+----
+{
+  "repositories": [
+    { "type": "path", "url": "../Domaining", "options": { "symlink": true } }
+  ],
+  "require": {
+    "domaining/domain": "*@dev"
+  }
+}
+----
+
+Register the bundle in the host application when Symfony Flex does not do it automatically:
+
+[source,php]
+----
+return [
+    App\Domaining\DomainingBundle::class => ['all' => true],
+];
+----
+
+Import routes explicitly from the host application:
+
+[source,yaml]
+----
+domaining:
+  resource: '@DomainingBundle/config/routes.yaml'
+----
+
+== Interfacing template lookup
+
+The producer component prepares its own location-based payload and looks for a noun-surface template named `domain`.
+
+Candidate templates are intentionally provider-neutral and can be overridden through configuration:
+
+[source,yaml]
+----
+domaining:
+  template_surface: 'domain'
+  interfacing_template_candidates:
+    - '@Interfacing/domain/surface/binding.html.twig'
+    - 'interfacing/domain/surface/binding.html.twig'
+    - 'domain/surface/binding.html.twig'
+----
+
+If no Interfacing template is present, Domaining must not fail the host application. It returns structured JSON as a safe fallback.

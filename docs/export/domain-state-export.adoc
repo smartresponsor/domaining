@@ -1,0 +1,69 @@
+= Domaining State Export
+
+The state export is a read-only, provider-neutral contract for Administering, runtime review tools, and release synchronization.
+
+It does not mutate DNS, Cloudflare, Nginx, Caddy, Traefik, Kubernetes ingress, or any registrar/provider account.
+
+== HTTP
+
+[source,text]
+----
+GET /domain/export/state
+----
+
+== CLI
+
+[source,bash]
+----
+php bin/console domaining:state:export
+----
+
+== Schema
+
+[source,json]
+----
+{
+  "domainStateExport": {
+    "schemaVersion": "domaining.state-export.v1",
+    "generatedAt": "2026-05-29T00:00:00+00:00",
+    "count": 1,
+    "warnings": [],
+    "bindings": [
+      {
+        "domainName": "example.com",
+        "ownerId": "tenant-123",
+        "surfaceType": "storefront",
+        "surfaceKey": "main",
+        "bindingStatus": "active",
+        "publicationStatus": "published",
+        "targetHost": "tenant-123.smartresponsor.app",
+        "targetPath": "/",
+        "lastVerifiedAt": "2026-05-29T00:00:00+00:00",
+        "reviewState": "runtime_ready"
+      }
+    ]
+  }
+}
+----
+
+== Review states
+
+[cols="1,3"]
+|===
+|State |Meaning
+
+|`runtime_ready`
+|The binding is active, published, verified, and has a routing target.
+
+|`binding_ready`
+|The binding is verified but has not yet been moved into runtime publication.
+
+|`withdrawal_review`
+|The binding is suspended and should be reviewed for route withdrawal.
+
+|`historical`
+|The binding is removed and retained only as history.
+
+|`blocked`
+|The binding is incomplete or inconsistent and must not be trusted for runtime publication.
+|===

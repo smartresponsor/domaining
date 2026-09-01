@@ -1,0 +1,50 @@
+= Domaining Release Manifest
+
+The release manifest is a machine-readable RC review surface for the Domaining component.
+It is not a provider integration and must not mutate DNS, registrar, TLS, proxy, or runtime infrastructure.
+
+== Endpoint
+
+[source,text]
+----
+GET /domain/release/manifest
+----
+
+== CLI
+
+[source,bash]
+----
+php bin/console domaining:release:manifest
+----
+
+== Contract
+
+[source,text]
+----
+domaining.release-manifest.v1
+----
+
+The manifest publishes:
+
+* component identity: `Domaining`, `domaining/domain`, `App\Domaining`;
+* business prefix and table prefix: `Domain*`, `domain_`;
+* capability list;
+* explicit out-of-scope boundaries;
+* required release gates;
+* exported contract inventory;
+* manifest-level checks.
+
+== Release use
+
+The manifest is intended for RC review before wiring Domaining into Administering or a runtime publication provider.
+It complements, but does not replace, these checks:
+
+* `domaining:release:gate`
+* `domaining:contract:governance`
+* `domaining:diagnostic:report`
+* `domaining:runtime:handoff-export`
+
+
+== W13 extension
+
+The manifest now includes the `releaseReview` contract and requires `domaining:release:review` before RC publication.

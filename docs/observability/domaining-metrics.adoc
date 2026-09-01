@@ -1,0 +1,30 @@
+= Domaining Observability Metrics
+:toc:
+
+Domaining exposes status-count metrics in a provider-neutral JSON snapshot.
+The component does not require a metrics vendor and does not hardcode Prometheus, Grafana, Datadog, or CloudWatch.
+
+== Snapshot keys
+
+[source,text]
+----
+domain_binding_status_total
+domain_verification_status_total
+domain_publication_status_total
+----
+
+Each key maps status values to integer counts.
+
+== Release signals
+
+Warnings should be reviewed when:
+
+* active bindings exist without a published publication state;
+* failed verification challenges exist;
+* publication states remain ready for too long without runtime/provider confirmation;
+* withdrawn publications still have traffic externally routed by infrastructure.
+
+== Canonical ownership
+
+Metrics are informational. Business decisions remain in Domaining services and state guards.
+External monitoring should alert, not mutate component state directly.

@@ -1,0 +1,15 @@
+= W12 Release Manifest Hardening
+
+W12 adds an explicit release manifest surface for RC-facing review.
+
+The manifest keeps Domaining aligned with the platform canon:
+
+* component name: `Domaining`;
+* package: `domaining/domain`;
+* namespace: `App\Domaining`;
+* business prefix: `Domain*`;
+* database prefix: `domain_`;
+* no registrar/provider ownership;
+* no provider-specific runtime mutation logic.
+
+The release manifest is intentionally provider-neutral. Cloudflare may be recommended to users as an external DNS/registrar provider, but Domaining must not become a registrar or Cloudflare-specific owner.

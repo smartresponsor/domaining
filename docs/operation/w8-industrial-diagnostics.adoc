@@ -1,0 +1,16 @@
+= Domaining W8 Industrial Diagnostics
+
+W8 strengthens Domaining with a read-only diagnostics surface that can be used before runtime publication, release checks, or support escalation.
+
+The purpose is to catch inconsistent states early:
+
+* active domain without published runtime state;
+* published state without routing target;
+* suspended domain still published;
+* self-looping route target;
+* invalid route target path;
+* stale or repeatedly failing verification challenge.
+
+The diagnostic report complements the release gate. The release gate gives high-level readiness; diagnostics give concrete issue codes and context for remediation.
+
+No provider-specific code is introduced in W8. The component still handles existing user-owned domains only and does not act as registrar, DNS host, CDN, proxy, or certificate authority.

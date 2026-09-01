@@ -1,0 +1,12 @@
+framework:
+  secret: '%env(default:domaining_default_secret:APP_SECRET)%'
+  http_method_override: false
+  handle_all_throwables: true
+  csrf_protection: true
+  session:
+    handler_id: null
+    cookie_secure: auto
+    cookie_samesite: lax
+
+parameters:
+  domaining_default_secret: 'domaining-standalone-dev-secret-change-me'

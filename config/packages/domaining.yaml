@@ -1,0 +1,14 @@
+domaining:
+  standalone_enabled: true
+  template_surface: 'domain'
+  raw_json_fallback: true
+  interfacing_template_candidates:
+    - '@@Interfacing/domain/base.twig'
+    - 'interfacing/domain/base.twig'
+    - 'domain/base.twig'
+    - '@@Interfacing/domain/surface/binding.twig'
+    - 'interfacing/domain/surface/binding.twig'
+    - 'domain/surface/binding.twig'
+  provider_recommendation:
+    primary: 'Cloudflare'
+    note: 'Smart Responsor recommends external DNS providers when helpful, but does not act as registrar, DNS host, or domain provider.'

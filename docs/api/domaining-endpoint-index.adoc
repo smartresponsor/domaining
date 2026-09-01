@@ -1,0 +1,114 @@
+= Domaining Endpoint Index
+
+== Claim and verification
+
+* `POST /domain/claim`
+* `POST /domain/claim/{claimId}/challenge`
+* `GET /domain/verification/{challengeId}/instruction?provider=cloudflare`
+* `POST /domain/verification/{challengeId}/check`
+
+== Binding and publication
+
+* `POST /domain/binding/{bindingId}/activate`
+* `POST /domain/binding/{bindingId}/suspend`
+* `DELETE /domain/binding/{bindingId}`
+* `GET /domain/publication/{bindingId}/snapshot`
+* `POST /domain/publication/{bindingId}/ready`
+* `POST /domain/publication/{bindingId}/published`
+* `POST /domain/publication/{bindingId}/withdrawn`
+
+== Ecosystem surfaces
+
+* `GET /domain/configuration/tool-metadata`
+* `GET /domain/surface/{bindingId}`
+
+== Observability and release
+
+* `GET /domain/observability/readiness`
+* `GET /domain/observability/metric-snapshot`
+* `GET /domain/release/gate`
+* `GET /domain/audit/{domainName}?limit=50`
+
+== W7 runtime handoff endpoint
+
+[cols="1,1,3",options="header"]
+|===
+|Method |Path |Purpose
+|GET |`/domain/runtime/handoff` |Exports provider-neutral runtime route handoff actions for active/suspended domain bindings.
+|===
+
+== W8 diagnostics
+
+[source,text]
+----
+GET /domain/diagnostic/report
+----
+
+Returns a read-only lifecycle diagnostic report with structured issue codes, severity counts, domain/surface context, and machine-readable remediation context.
+
+== W9 policy endpoints
+
+[cols="1,1,2"]
+|===
+|Method |Path |Purpose
+
+|GET
+|`/domain/policy/surface/{ownerId}`
+|Build a provider-neutral custom-domain surface policy report for an owner, optionally filtered by `surfaceType` and `surfaceKey`.
+|===
+
+== W10 state export
+
+[cols="1,1,2"]
+|===
+|Method |Path |Purpose
+
+|GET
+|`/domain/export/state`
+|Exports a provider-neutral Domaining state contract for Administering/runtime review and release synchronization.
+|===
+
+== W11 contract governance
+
+[source,text]
+----
+GET /domain/contract/governance
+----
+
+Returns provider-neutral contract version inventory and export-surface coverage for RC governance.
+
+== W12 release manifest
+
+[source,text]
+----
+GET /domain/release/manifest
+----
+
+Returns the machine-readable Domaining release manifest for RC review.
+
+
+== Release review
+
+[source,text]
+----
+GET /domain/release/review
+----
+
+Aggregates release gate, contract governance, release manifest, and diagnostics into one RC-facing report.
+
+
+== W14 Release Package
+
+[cols="1,1,2", options="header"]
+|===
+| Method | Path | Purpose
+| GET | `/domain/release/package` | Returns the final provider-neutral Domaining RC package report aggregating release review, manifest, governance, gate, state export, and runtime handoff surfaces.
+|===
+
+== W15 bundle/interfacing endpoint
+
+[cols="1,2,3", options="header"]
+|===
+| Method | Path | Purpose
+| GET | `/domain/surface/{bindingId}/render` | Render a domain binding through an Interfacing `domain` template when available; otherwise return structured JSON fallback.
+|===

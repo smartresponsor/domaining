@@ -1,0 +1,35 @@
+= Domaining Release Review
+
+The release review is the RC-facing aggregate gate for the Domaining component.
+It composes the component-owned release gate, contract governance report, release manifest, and lifecycle diagnostic report into one machine-readable review surface.
+
+== Boundary
+
+The review does not inspect registrar, DNS-host, TLS-vendor, Cloudflare, Caddy, Nginx, Traefik, Kubernetes, or host-application internals.
+Domaining remains responsible for custom-domain claim, DNS ownership verification, tenant/surface binding, publication readiness, and provider-neutral runtime handoff only.
+
+== HTTP surface
+
+[source,text]
+----
+GET /domain/release/review
+----
+
+== CLI surface
+
+[source,bash]
+----
+php bin/console domaining:release:review
+----
+
+== Schema
+
+[source,text]
+----
+domaining.release-review.v1
+----
+
+== RC meaning
+
+`releaseCandidateReady=true` means the Domaining-owned release surfaces have no blocking error severity issues.
+Warnings and informational findings may still exist and should be reviewed before runtime-provider integration.

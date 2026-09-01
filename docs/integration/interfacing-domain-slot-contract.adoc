@@ -1,0 +1,55 @@
+= Domaining Interfacing Domain Slot Contract
+
+Domaining renders through the noun surface `domain`, not through a physical `Domaining` template folder.
+
+Mount point:
+
+----
+Interfacing/templates/domain/base.twig
+----
+
+The component prepares a provider-neutral payload using `domaining.interfacing-domain-surface.v1` and fills the shell locations below. If the Interfacing template is not available in the host application, the component returns the same payload as structured JSON.
+
+== Slots
+
+* `shell.body.top`
+* `shell.head.left.logo`
+* `shell.head.left.name`
+* `shell.head.left.title`
+* `shell.head.context`
+* `shell.head.main`
+* `shell.head.right.user`
+* `shell.head.right.cart`
+* `shell.head.right.notification`
+* `shell.head.right.toggle`
+* `shell.head.bottom`
+* `shell.left.top`
+* `shell.left.middle`
+* `shell.left.bottom`
+* `shell.context.top`
+* `shell.context.middle`
+* `shell.context.bottom`
+* `shell.main.top`
+* `shell.main.content`
+* `shell.main.bottom`
+* `shell.right.top`
+* `shell.right.middle`
+* `shell.right.bottom`
+* `shell.footer.top`
+* `shell.footer.left`
+* `shell.footer.context`
+* `shell.footer.main`
+* `shell.footer.right`
+
+== Vendor responsibility
+
+The slot payload is not split into alternative themes. The domain surface is a single composed screen:
+
+* Ant Design handles basic shell content, forms, DNS instructions, descriptions, and alerts.
+* Ant Design ProComponents handles the operator workbench, state/review tables, runtime handoff and release review areas.
+* PrimeReact handles compact status, diagnostic, badge and timeline-style operational widgets.
+
+== Boundary
+
+Domaining owns claim, verification, binding, publication readiness and runtime intent export. It does not register, sell, transfer or host domains and it does not mutate DNS/TLS/edge infrastructure directly.
+

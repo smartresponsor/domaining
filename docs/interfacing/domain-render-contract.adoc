@@ -1,0 +1,28 @@
+= Domain Render Contract
+
+Domaining prepares a location-based payload and can optionally render it through an Interfacing template.
+
+== Template candidates
+
+[source,yaml]
+----
+domaining:
+  template_surface: 'domain'
+  interfacing_template_candidates:
+    - '@Interfacing/domain/surface/binding.html.twig'
+    - 'interfacing/domain/surface/binding.html.twig'
+    - 'domain/surface/binding.html.twig'
+----
+
+== Fallback rule
+
+The template is optional. Missing Interfacing templates must not break domain lifecycle endpoints.
+
+When no template is found, Domaining returns JSON with:
+
+* `rendered: false`
+* `surface: domain`
+* `template: null`
+* `payload`
+
+When a template is found, Domaining returns rendered HTML from `/domain/surface/{bindingId}/render`.

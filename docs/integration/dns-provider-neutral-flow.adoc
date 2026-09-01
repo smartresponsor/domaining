@@ -1,0 +1,24 @@
+= DNS Provider Neutral Flow
+:toc:
+
+Domaining must work with any provider that allows the user to add DNS records.
+
+== Required record for wave 1
+
+[source,text]
+----
+Type: TXT
+Name: _smartresponsor-domain.example.com
+Value: sr-domain-verification=<token>
+----
+
+== Future optional records
+
+* CNAME to a platform target host
+* A/AAAA records for advanced provider-specific routing
+* ACME/TLS validation records if delegated to the runtime provider
+
+== Important rule
+
+Domaining verifies ownership and expresses routing intent.
+It does not mutate external DNS provider accounts in the first industrial baseline.

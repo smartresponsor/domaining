@@ -1,0 +1,19 @@
+= W13 Release Review
+
+W13 adds a release-review layer for Domaining.
+
+The goal is to avoid separate manual interpretation of the release gate, manifest, diagnostics, and contract governance surfaces during RC preparation.
+Instead, Domaining now exposes one aggregate provider-neutral report that can be consumed by Administering, CI, or a release pipeline.
+
+== Added surfaces
+
+* `GET /domain/release/review`
+* `domaining:release:review`
+* `domaining.release-review.v1`
+
+== Canon preserved
+
+* Domaining does not become a domain registrar.
+* Domaining does not mutate Cloudflare, proxy, ingress, DNS-host, or TLS-provider state.
+* Runtime application is still represented through provider-neutral handoff and publication state.
+* Administering may render and operate the surface, but it does not own the domain lifecycle.

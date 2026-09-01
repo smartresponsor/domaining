@@ -1,0 +1,42 @@
+= Domaining Contract Governance
+
+Domaining exposes provider-neutral contract surfaces that can be consumed by Administering, release tooling, diagnostics, and runtime publication workers.
+
+The governance surface does not mutate DNS, TLS, runtime infrastructure, or external registrar/provider state. It reports the contract version line and the expected HTTP/CLI surfaces that must remain stable for a release candidate.
+
+== Contract versions
+
+[source,text]
+----
+domaining.state-export.v1
+domaining.runtime-handoff.v1
+domaining.surface-policy.v1
+domaining.diagnostic-report.v1
+domaining.release-gate.v1
+domaining.contract-governance.v1
+----
+
+== HTTP surface
+
+[source,text]
+----
+GET /domain/contract/governance
+----
+
+== CLI surface
+
+[source,bash]
+----
+php bin/console domaining:contract:governance
+----
+
+== Release use
+
+The release gate checks live data posture. The contract governance report checks the exported contract posture: schema names, endpoint inventory, and command inventory.
+
+A release candidate should keep all contract names under the `domaining.*.v1` compatibility line unless a deliberate schema-version migration is planned.
+
+
+== Release review contract
+
+`domaining.release-review.v1` is the aggregate RC-facing review contract. It is exposed through `GET /domain/release/review` and `domaining:release:review`.

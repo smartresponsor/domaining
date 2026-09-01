@@ -1,0 +1,22 @@
+= Domaining Release Package Contract
+
+The Domaining release package contract is `domaining.release-package.v1`.
+
+It is the final machine-readable RC handoff report for the component. It is designed for release review, CI capture, Administering, and runtime-provider preparation.
+
+== Boundary
+
+Domaining packages provider-neutral reports only. It does not become a registrar, DNS host, TLS issuer, Cloudflare module, Caddy module, Nginx module, Traefik module, or Kubernetes ingress mutator.
+
+== Included surfaces
+
+* `domaining.release-review.v1`
+* `domaining.release-manifest.v1`
+* `domaining.contract-governance.v1`
+* `domaining.release-gate.v1`
+* `domaining.state-export.v1`
+* `domaining.runtime-handoff.v1`
+
+== Readiness rule
+
+The package is ready only when release review, release manifest, contract governance, and release gate are all ready.

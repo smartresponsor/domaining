@@ -1,0 +1,39 @@
+= Runtime Publication Contract
+
+Domaining decides whether a domain is legally and safely ready for publication.
+It does not own the low-level infrastructure implementation.
+
+== Domaining owns
+
+* external-domain claim lifecycle;
+* DNS verification challenge lifecycle;
+* tenant/surface binding state;
+* publication readiness state;
+* routing intent payload;
+* audit trail.
+
+== Runtime/provider layer owns
+
+* CDN/provider API calls;
+* reverse proxy or ingress updates;
+* certificate issuance and renewal execution;
+* DNS provider automation when a future integration is explicitly added;
+* rollback of applied infrastructure routes.
+
+== Boundary event
+
+When Domaining marks a binding publication as `ready`, the runtime layer may consume the routing intent:
+
+[source,json]
+----
+{
+  "domainName": "customer.example.com",
+  "ownerId": "tenant-123",
+  "surfaceType": "tenant",
+  "surfaceKey": "public-site",
+  "targetHost": "smart-responder.app",
+  "targetPath": "/"
+}
+----
+
+The runtime layer should later report the applied state back by calling the publication `published` or `withdrawn` lifecycle operation.

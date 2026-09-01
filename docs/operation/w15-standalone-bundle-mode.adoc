@@ -1,0 +1,12 @@
+= W15 Standalone and Bundle Mode
+
+W15 prepares Domaining for two supported execution modes:
+
+* standalone Symfony component application for isolated development and review;
+* Composer sibling/bundle integration inside a host application.
+
+The bundle mode is intentionally thin. The host application remains the runtime owner. Domaining exports routes, services, configuration, and provider-neutral domain lifecycle logic.
+
+Interfacing lookup remains noun-surface based. Domaining looks for the `domain` surface and never requires a physical `Domaining` template folder.
+
+If the Interfacing template is missing, Domaining returns a structured JSON fallback instead of failing the host application.

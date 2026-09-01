@@ -1,0 +1,17 @@
+= Domaining Verification Recheck Operation
+
+Domaining never assumes that DNS propagation is immediate. A missing TXT record during the first check keeps the challenge pending and records the failed observation as audit context.
+
+[source,bash]
+----
+php bin/console domaining:verification:recheck --limit=50
+----
+
+The command checks only pending challenges whose retry window is open. Operators may expose the same behavior through a scheduler, worker, or host application cron.
+
+== Safety rules
+
+* A missing TXT record is not treated as a final failure until the challenge expires.
+* Active bindings must be suspended before removal.
+* Removed bindings must not produce routing intent.
+* Domaining emits routing intent; it does not mutate Cloudflare, registrar, nginx, Caddy, Traefik, or ingress state directly in the business layer.

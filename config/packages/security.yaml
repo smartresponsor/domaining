@@ -1,0 +1,12 @@
+security:
+  providers:
+    domaining_memory_users:
+      memory: null
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      lazy: true
+      provider: domaining_memory_users
+  access_control: []

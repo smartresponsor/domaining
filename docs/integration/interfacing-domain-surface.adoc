@@ -1,0 +1,28 @@
+= Interfacing Domain Surface Contract
+
+Domaining is a producer component.
+When a UI surface is requested, Domaining prepares a location-based payload for the neutral `domain` surface.
+
+== Physical template folder
+
+Interfacing should use a noun-based folder:
+
+[source,text]
+----
+templates/domain/
+----
+
+Do not create a physical `Domaining` or `*ing` component-name folder for this surface.
+
+== Payload locations
+
+The W4 payload uses these locations:
+
+* `shell.head.main` - title and current domain subtitle
+* `shell.body.top` - binding status and surface identity
+* `shell.body.main` - publication snapshot
+* `shell.right.top` - available domain actions
+
+If Interfacing does not provide a matching template, Domaining returns the same structured JSON payload.
+This preserves the canonical fallback: producer components must not fail only because a template is absent.
+

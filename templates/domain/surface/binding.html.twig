@@ -1,0 +1,15 @@
+<section data-domaining-surface="domain" data-domain-name="{{ domain.domainName|e('html_attr') }}">
+  <header>
+    <h1>{{ location['shell.head.main'].title|default('Custom domain') }}</h1>
+    <p>{{ domain.domainName }}</p>
+  </header>
+
+  <dl>
+    <dt>Status</dt>
+    <dd>{{ location['shell.body.top'].status|default('unknown') }}</dd>
+    <dt>Surface</dt>
+    <dd>{{ location['shell.body.top'].surfaceType|default('unknown') }} / {{ location['shell.body.top'].surfaceKey|default('main') }}</dd>
+  </dl>
+
+  <pre>{{ location['shell.body.main'].publication|default({})|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+</section>

@@ -1,0 +1,32 @@
+= Domaining Responsibility
+:toc:
+
+Domaining is the owner of tenant/user custom-domain lifecycle for externally registered domains.
+It is deliberately provider-neutral.
+
+== Owns
+
+* domain claim creation
+* DNS ownership challenge issuing
+* DNS ownership verification
+* verified domain binding
+* publication readiness
+* routing intent
+* lifecycle audit
+
+== Does not own
+
+* domain registration
+* registrar accounts
+* paid DNS hosting
+* Cloudflare account ownership
+* reverse proxy runtime
+* TLS provider internals
+* Interfacing templates
+* Administering form engine
+* Accessing/Rolling authorization policy
+
+== Boundary
+
+Domaining decides whether a domain is safe and valid to connect to a Smart Responsor surface.
+Runtime infrastructure applies the route after Domaining marks publication readiness.

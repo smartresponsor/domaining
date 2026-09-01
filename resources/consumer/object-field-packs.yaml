@@ -1,0 +1,19 @@
+component: Domaining
+business_stem: DomainDeclaration
+namespace: App\Domaining
+entity: App\Domaining\Entity\DomainDeclaration
+field_pack_profile: object_baseline
+field_packs: []
+effective_field_packs:
+  - object_identity
+  - object_audit
+title_alias_profile: null
+title_aliases: {}
+resolution:
+  resolver: App\Objecting\Resolver\FieldPack\ObjectFieldPackConsumerContractResolver
+  resolved_contract: App\Objecting\Contract\ObjectResolvedFieldPackConsumerContract
+notes:
+  - Domaining owns Entity, Doctrine schema, Form, Controller, Repository, Service and domain lifecycle behavior.
+  - Objecting owns reusable identity and audit system fields only.
+  - The Doctrine primary key remains owned by Domaining.
+  - Domain names, application keys, brand keys, environments and lifecycle statuses are business fields.

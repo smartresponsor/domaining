@@ -1,0 +1,27 @@
+= W11 Contract Governance
+
+W11 adds a release-candidate governance layer for exported Domaining contracts.
+
+It keeps the component provider-neutral: no registrar integration, no Cloudflare lock-in, and no runtime infrastructure mutation. The component only publishes contract posture for review.
+
+== Added surfaces
+
+[source,text]
+----
+GET /domain/contract/governance
+php bin/console domaining:contract:governance
+----
+
+== Governance checks
+
+* contract versions remain `domaining.*` scoped;
+* initial compatibility line remains `.v1`;
+* export, runtime, policy, diagnostic, release, and contract surfaces are represented in endpoint/CLI inventories.
+
+== Relationship to previous reports
+
+* state export answers: what is the current domain state?
+* runtime handoff answers: what should runtime do?
+* diagnostic report answers: is lifecycle consistency healthy?
+* release gate answers: can this state be promoted?
+* contract governance answers: are the exported contracts themselves stable and discoverable?

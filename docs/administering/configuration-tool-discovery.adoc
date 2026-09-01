@@ -1,0 +1,29 @@
+= Domaining configuration tool discovery
+
+Domaining exposes a provider-neutral configuration metadata endpoint for Administering.
+
+The endpoint does not duplicate domain business logic and does not make Administering responsible for DNS, ownership verification, routing, or publication. Administering may render the metadata as one or more forms and submit values to the host application's configuration/secret storage flow.
+
+== Endpoint
+
+[source,text]
+----
+GET /domain/configuration/tool-metadata
+----
+
+== Canonical variables
+
+The descriptor explicitly declares the environment/configuration variables managed by the Domaining configuration surface. Administering must not infer hidden variables through arbitrary dependency scanning.
+
+[source,text]
+----
+DOMAIN_PUBLICATION_MODE
+DOMAIN_ROUTING_TARGET_HOST
+DOMAIN_VERIFICATION_TOKEN_PREFIX
+DOMAIN_VERIFICATION_RETRY_SECONDS
+DOMAIN_DNS_CHECK_TIMEOUT_SECONDS
+----
+
+== Boundary
+
+Domaining owns the meaning and lifecycle of these variables. Administering owns generic form rendering and persistence workflows. Provider-specific DNS instructions remain outside the shared contract and are represented as hints only.

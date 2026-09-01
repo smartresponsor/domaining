@@ -1,0 +1,18 @@
+doctrine:
+  dbal:
+    url: '%env(resolve:DATABASE_URL)%'
+  orm:
+    auto_mapping: false
+    mappings:
+      Domaining:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'App\Domaining\Entity'
+        alias: Domaining
+      Objecting:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/vendor/objecting/object/src/Embeddable'
+        prefix: 'App\Objecting\Embeddable'
+        alias: Objecting

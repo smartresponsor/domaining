@@ -1,0 +1,3 @@
+domaining_controller:
+  resource: '../src/Controller/'
+  type: attribute

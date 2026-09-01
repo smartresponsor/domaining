@@ -1,0 +1,23 @@
+= Use Case: Existing Domain Owner Connects Domain
+:toc:
+
+== Scenario
+
+A user already owns `example.com` through an external registrar or DNS provider.
+The user wants to connect it to a Smart Responsor surface.
+
+== Flow
+
+. User submits the domain name and target surface.
+. Domaining creates a `DomainClaim`.
+. Domaining issues a TXT challenge under `_smartresponsor-domain.example.com`.
+. User adds the TXT record in their DNS provider.
+. Domaining checks DNS records.
+. If the expected TXT value is present, the claim becomes verified.
+. Domaining creates a `DomainBinding`.
+. Domaining prepares routing intent.
+. Host/runtime infrastructure publishes route and TLS.
+
+== Provider recommendation
+
+The product may recommend Cloudflare because it is a practical DNS provider, but Domaining must never require Cloudflare for the first core case.

@@ -1,0 +1,28 @@
+= Interfacing domain template surface
+
+Domaining should look for an Interfacing template surface named `domain`, not `Domaining`.
+
+[source,text]
+----
+templates/domain/
+templates/domain/claim/
+templates/domain/verification/
+templates/domain/binding/
+templates/domain/publication/
+----
+
+Domaining prepares slot/location payloads for templates. If no matching Interfacing template exists, Domaining must return structured JSON instead of failing.
+
+== Suggested payload locations
+
+[source,text]
+----
+shell.main.top        domain title, status, current owner/surface
+shell.main.content    claim form, DNS instruction, verification status, binding state
+shell.right.top       operational warnings and retry information
+shell.right.middle    provider-neutral DNS help
+shell.main.bottom     audit trail summary and next action
+----
+
+Interfacing remains an inert templates/layout package. It does not discover Domaining and does not own domain business logic.
+

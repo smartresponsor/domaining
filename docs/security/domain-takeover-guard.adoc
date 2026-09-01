@@ -1,0 +1,18 @@
+= Domain takeover guard
+
+Domaining must protect against accidental or malicious custom-domain takeover.
+
+== Required guards
+
+* One live domain binding can belong to only one owner.
+* A binding cannot be activated unless its claim is verified.
+* DNS verification tokens must be random and non-predictable.
+* A pending challenge should not fail immediately during ordinary DNS propagation.
+* Active bindings must be suspended before removal.
+* Publication state must be withdrawn when runtime routing is removed.
+* Root domain and subdomain claims must be treated as distinct host names.
+* Re-verification policy should be added before long-lived production use.
+
+== Non-goals
+
+Domaining does not register, transfer, renew, or sell domains. Domain purchase and DNS hosting stay with the user's external provider such as Cloudflare, Namecheap, GoDaddy, Route53, or another registrar/DNS host.

@@ -1,0 +1,18 @@
+= Domaining W7 Industrial Hardening
+
+W7 strengthens the connection between domain lifecycle and runtime publication without turning Domaining into an infrastructure provider.
+
+== Added capability
+
+* Runtime handoff DTOs.
+* Runtime handoff HTTP endpoint.
+* Runtime handoff CLI export.
+* Provider-neutral action taxonomy.
+* Documentation for the runtime handoff boundary.
+
+== Canonical boundary
+
+Domaining decides whether a route is legitimate and what the desired publication action is.
+The runtime publisher decides how to apply that action to infrastructure.
+
+This keeps Domaining clean from provider lock-in and prevents Cloudflare/Nginx/Caddy/Traefik details from leaking into the business lifecycle model.

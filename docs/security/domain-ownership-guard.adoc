@@ -1,0 +1,35 @@
+= Domaining Ownership Guard
+
+Domaining owns a security boundary around externally registered custom domains.
+The component does not assume that a domain string is safe only because a user typed it into a form.
+
+== Guarded decisions
+
+The ownership guard protects these decisions:
+
+* claim creation for externally registered domains;
+* activation of a verified binding;
+* routing target preparation;
+* reserved platform-domain exclusion;
+* prevention of live binding conflicts across owners.
+
+== Reserved platform domains
+
+Platform-owned domains such as `smart-responder.com` and `smartresponsor.com` are reserved by default.
+A tenant must not claim the platform's own public domains or subdomains as an external custom domain.
+
+== Live binding policy
+
+Only one live binding may exist for one domain name.
+Live means one of:
+
+* `verified`
+* `active`
+* `suspended`
+
+A removed binding is historical/audit material and must not block a future legitimate claim after policy review.
+
+== Routing target policy
+
+Domaining emits runtime routing intent, but does not directly mutate reverse-proxy, CDN, registrar, or certificate-provider configuration.
+The guard validates that the routing target is an allowed platform host and that the path is normalized before publication state can become `ready`.

@@ -1,0 +1,38 @@
+= Domaining Release Gate
+
+The release gate is the component-owned promotion check for Domaining.
+It is intentionally provider-neutral and does not inspect registrar, Cloudflare,
+reverse-proxy, ACME, or certificate-vendor internals.
+
+== Command
+
+[source,bash]
+----
+php bin/console domaining:release:gate
+----
+
+The command exits with a non-zero code when blocking release errors are found.
+
+== HTTP endpoint
+
+[source,text]
+----
+GET /domain/release/gate
+----
+
+The report contains:
+
+* `passed`
+* `errors`
+* `warnings`
+* lifecycle counters
+
+== Blocking checks
+
+* Active bindings must have at least one published publication state.
+* Ready publication states must have routing targets.
+
+== Warning checks
+
+* Failed verification challenges should be reviewed.
+* Suspended bindings should be checked against runtime publication withdrawal.

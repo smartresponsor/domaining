@@ -1,0 +1,10 @@
+/.codebase-memory/
+/.idea/
+/.phpunit.cache/
+/.phpunit.result.cache
+/vendor/
+/var/
+/.env.local
+/.env.*.local
+/composer.lock
+/auth.json

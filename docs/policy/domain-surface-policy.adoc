@@ -1,0 +1,47 @@
+= Domaining Surface Policy
+:toc:
+
+Domaining owns the policy checks that decide whether an already registered external domain can safely remain connected to a Smart Responsor surface.
+
+== Boundary
+
+The policy report is provider-neutral. It does not buy domains, transfer domains, mutate DNS, or configure Cloudflare, Caddy, Traefik, Nginx, or Kubernetes ingress directly.
+
+Domaining evaluates the business and safety state of custom-domain bindings and exposes the result to Administering, runtime publication, and operator review.
+
+== HTTP
+
+[source,http]
+----
+GET /domain/policy/surface/{ownerId}
+GET /domain/policy/surface/{ownerId}?surfaceType=storefront&surfaceKey=main
+----
+
+== CLI
+
+[source,bash]
+----
+php bin/console domaining:policy:surface-report tenant-123 --surface-type=storefront --surface-key=main
+----
+
+== Current policy checks
+
+* owner id must be present;
+* surface key must not be empty when a surface filter is provided;
+* owner-level live-domain threshold is reported;
+* surface-level active-domain threshold is reported;
+* wildcard domain bindings require explicit review;
+* public domain names with underscores fail policy;
+* suspended live bindings are surfaced as review information.
+
+== Result contract
+
+The report returns:
+
+* `pass` for release/automation safety;
+* owner and optional surface filters;
+* live, active, and suspended binding counts;
+* severity counters;
+* structured issue codes.
+
+This report is intentionally suitable for Administering UI, CI/release gates, and runtime handoff preflight review.

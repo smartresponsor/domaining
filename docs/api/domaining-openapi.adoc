@@ -1,0 +1,140 @@
+= Domaining API Surface
+
+This wave keeps the API provider-neutral and focused on custom domains that are already registered by the user.
+
+== Verification instruction
+
+[source,http]
+----
+GET /domain/verification/{challengeId}/instruction?provider=cloudflare
+----
+
+Returns the DNS records the user must create at the current DNS provider. Cloudflare may be shown as a recommended provider hint, but Domaining does not become a registrar or DNS reseller.
+
+== Verification check
+
+[source,http]
+----
+POST /domain/verification/{challengeId}/check
+POST /domain/verification/{challengeId}/check?force=true
+----
+
+Normal checks respect the retry window. Forced checks are intended for explicit user action or operator workflows.
+
+
+== W3 endpoints
+
+[source,text]
+----
+GET  /domain/configuration/tool-metadata
+GET  /domain/publication/{bindingId}/snapshot
+POST /domain/publication/{bindingId}/ready
+POST /domain/publication/{bindingId}/published
+POST /domain/publication/{bindingId}/withdrawn
+----
+
+The `published` endpoint is intended for trusted runtime/infrastructure integration after the external routing provider has actually applied the host mapping. Domaining records the lifecycle state; it does not perform registrar or DNS-provider operations directly.
+
+== W8 Diagnostic Report
+
+[source,yaml]
+----
+/domain/diagnostic/report:
+  get:
+    summary: Export Domaining lifecycle diagnostics
+    responses:
+      '200':
+        description: Diagnostic report with pass flag, severity counts, and structured issues.
+----
+
+== W9 policy report
+
+[source,yaml]
+----
+/domain/policy/surface/{ownerId}:
+  get:
+    summary: Build custom-domain surface policy report
+    parameters:
+      - name: ownerId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: surfaceType
+        in: query
+        required: false
+        schema: { type: string, enum: [tenant, workspace, application, storefront, landing, api] }
+      - name: surfaceKey
+        in: query
+        required: false
+        schema: { type: string }
+    responses:
+      '200':
+        description: Surface policy report with pass flag, counters, and issue codes.
+----
+
+== W10 state export
+
+[source,yaml]
+----
+/domain/export/state:
+  get:
+    summary: Export provider-neutral Domaining state
+    responses:
+      '200':
+        description: Domaining state export report
+----
+
+== GET /domain/contract/governance
+
+Returns the Domaining contract governance report.
+
+[source,json]
+----
+{
+  "domainContractGovernance": {
+    "schemaVersion": "domaining.contract-governance.v1",
+    "ready": true,
+    "contractVersion": {
+      "stateExport": "domaining.state-export.v1",
+      "runtimeHandoff": "domaining.runtime-handoff.v1"
+    },
+    "endpoint": ["GET /domain/export/state"],
+    "command": ["domaining:state:export"],
+    "issue": []
+  }
+}
+----
+
+== W12 release manifest
+
+[source,yaml]
+----
+/domain/release/manifest:
+  get:
+    summary: Export Domaining release manifest
+    responses:
+      '200':
+        description: Machine-readable release manifest for RC review.
+----
+
+
+== GET /domain/release/review
+
+Returns `domaining.release-review.v1`, an aggregate provider-neutral RC review report.
+
+
+== `/domain/release/package`
+
+`GET /domain/release/package` returns `domaining.release-package.v1`, the final provider-neutral RC package report for Domaining. The response is safe for Administering, CI, and runtime-provider review because it does not mutate registrar, DNS, TLS, or edge-router state.
+
+== W15 Interfacing render endpoint
+
+[source,yaml]
+----
+/domain/surface/{bindingId}/render:
+  get:
+    summary: Render domain binding surface through Interfacing when available
+    responses:
+      '200':
+        description: HTML response when a template is found, or JSON fallback when no template exists.
+----
