@@ -80,3 +80,17 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 Что имеем? RC-critical declaration/claim lifecycle drift is normalized, its schema transition is explicit, provider-neutral release/contract checks are green, and documentation/migration manifest drift is reduced.
 
 Что осталось? Create the coherent task commit, publish the feature branch if remote access is available, inspect integration state, then perform Iteration 5 final acceptance on the post-integration HEAD.
+
+### Iteration 5 — final acceptance and handoff
+
+- Coherent signed implementation commit created: `25a4486c706a0e39ad124c3b349d43baee67de1b` (`Normalize Domaining Objecting lifecycle`).
+- Post-commit product tree is clean; the only remaining worktree entry is the pre-existing untracked `.gating/` directory intentionally excluded from this task.
+- Remote `origin` is configured as `git@github.com:smartresponsor/domaining.git` and the current feature branch has no upstream yet.
+- Console MCP push was attempted with explicit confirmation and blocked by its `working_tree_dirty` guard because of that pre-existing `.gating/`. No attempt was made to delete, stage, commit, move, or otherwise mutate the unrelated `.gating/` tree to bypass policy.
+- Therefore PR creation/merge cannot be factually completed in this run because the committed branch cannot first be published through the authorized Console MCP Git path.
+- Final code acceptance remains green for the gates that do not require database configuration: changed PHP lint, Symfony container lint, YAML lint, Composer install dry-run, runtime release manifest, contract governance, and zero tracked `updatedAt` occurrences.
+- Database-dependent acceptance remains externally blocked by missing `DATABASE_URL`: Doctrine mapping/schema validation and the database-backed release gate were not runnable.
+
+Что имеем? The bounded local Domaining task is materially implemented and committed; the canonical Objecting declaration/claim lifecycle surface is in place with an explicit forward migration and corrected repository documentation/manifest references.
+
+Что осталось? Remote publication/PR/merge and database-backed gates require external prerequisites: either a clean worktree that resolves ownership of the pre-existing `.gating/`, and a configured `DATABASE_URL`. No additional safe in-scope source change is justified merely to consume budget.
