@@ -7,15 +7,18 @@ namespace App\Domaining\Entity;
 use App\Domaining\Enum\DomainClaimStatus;
 use App\Domaining\Enum\DomainSurfaceType;
 use App\Domaining\Repository\DomainClaimRepository;
-use DateTimeImmutable;
+use App\Objecting\EntityInterface\ObjectAuditedInterface;
+use App\Objecting\EntityTrait\Embeddable\ObjectAuditEmbeddableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: DomainClaimRepository::class)]
 #[ORM\Table(name: 'domain_claim')]
 #[ORM\UniqueConstraint(name: 'domain_claim_name_owner_surface_unique', columns: ['domain_name', 'owner_id', 'surface_type', 'surface_key'])]
-class DomainClaim
+class DomainClaim implements ObjectAuditedInterface
 {
+    use ObjectAuditEmbeddableTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
     private Uuid $id;
@@ -39,23 +42,16 @@ class DomainClaim
     #[ORM\Column(length: 32, enumType: DomainClaimStatus::class)]
     private DomainClaimStatus $status = DomainClaimStatus::Pending;
 
-    #[ORM\Column(name: 'created_at')]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at')]
-    private DateTimeImmutable $updatedAt;
-
     public function __construct(string $domainName, string $ownerId, DomainSurfaceType $surfaceType, string $surfaceKey, ?DomainDeclaration $declaration = null)
     {
-        $now = new DateTimeImmutable();
+        $now = new \DateTimeImmutable();
         $this->id = Uuid::v7();
         $this->domainName = $domainName;
         $this->ownerId = $ownerId;
         $this->surfaceType = $surfaceType;
         $this->surfaceKey = $surfaceKey;
         $this->declaration = $declaration;
-        $this->createdAt = $now;
-        $this->updatedAt = $now;
+        $this->initializeObjectAudit($now);
     }
 
     public function id(): Uuid { return $this->id; }
@@ -86,7 +82,7 @@ class DomainClaim
 
     private function touch(): void
     {
-        $this->updatedAt = new DateTimeImmutable();
+        $this->touchModified();
     }
 }
 

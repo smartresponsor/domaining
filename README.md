@@ -69,5 +69,5 @@ To integrate Domaining in your Symfony project:
 - [Routing Intent Boundary](docs/architecture/routing-intent-boundary.adoc)
 - [Runtime Publication Contract](docs/architecture/runtime-publication-contract.adoc)
 - [State Transition Guard](docs/architecture/state-transition-guard.adoc)
-- [Domaining Endpoint Index](docs/domaining/domaining-endpoint-index.adoc)
-- [OpenAPI Schema](docs/domaining/domaining-openapi.adoc)
+- [Domaining Endpoint Index](docs/api/domaining-endpoint-index.adoc)
+- [OpenAPI Schema](docs/api/domaining-openapi.adoc)

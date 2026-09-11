@@ -1,0 +1,82 @@
+# CMCP Orchestration Journal
+
+## engine-20260911143859-domaining-a3a00d
+
+### Iteration 1 — reconnaissance and baseline
+
+- Workspace: `D:\PhpstormProjects\www\Domaining`.
+- Branch/HEAD: `feature/application-runtime-overlay-20260901` at `b623ff3103f0c1ec3d5f70c6003600b186475cc6`.
+- Pre-existing worktree state: untracked `.gating/`; treat as pre-existing and do not overwrite or stage without a task-specific reason.
+- Repository role: standalone-capable Symfony bundle/application owning externally registered custom-domain declaration, ownership verification, binding, publication readiness, routing intent, and audit. Registrar, DNS-hosting, TLS issuance, reverse-proxy mutation, and provider-specific runtime mutation remain outside Domaining.
+- Runtime dependency baseline is declared directly in Composer: `cruding/crud`, `viewing/view`, `interfacing/interface`, `objecting/object`, and `easycorp/easyadmin-bundle`; local path repositories exist for Cruding, Interfacing, Objecting, and Viewing.
+- Current standalone bundle registration includes Cruding, Interfacing, Objecting, Viewing, EasyAdmin, Doctrine, Security, Twig, and Domaining.
+- `MANIFEST.json` is stale relative to the current tree: current runtime-overlay/declaration files exist but are absent from the W16 manifest. README documentation links also contain stale `docs/domaining/*` paths while the manifest records `docs/api/*`.
+- No component-local generic CRUD engine was found in the inspected current surface. `DomainDeclarationCrudController` is EasyAdmin-derived and therefore falls under the explicit Canon021 exception.
+
+### Canonization mapping consulted
+
+- `Canon019NoAlternativeLayerTaxonomyRule.md`: Domaining uses role-first roots and must not introduce `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Port`, `src/Adapter`, or `src/Adaptor`. Current inspected source respects this root rule.
+- `Canon021CrudingOwnsGenericCrudRule.md`: generic application CRUD belongs to Cruding. Current EasyAdmin declaration CRUD is allowed; no parallel generic CRUD implementation should be added.
+- `Canon022StandaloneApplicationDependencyBaselineRule.md`: standalone Symfony applications require direct runtime dependencies on Cruding, Viewing, Interfacing, Objecting, and EasyAdmin. Domaining currently declares this baseline.
+- Objecting lifecycle canon: canonical audit vocabulary is `created` / `modified`; consumers should use Objecting packs and canonical methods rather than local timestamp fields or `updated*` aliases.
+
+### RC-critical workstream selected
+
+Normalize Domaining lifecycle/system-field usage against Objecting without crossing repository boundaries. Facts found during reconnaissance:
+
+- `DomainDeclaration` already composes `ObjectIdentityEmbeddableTrait` and `ObjectAuditEmbeddableTrait`, but exposes a legacy `updatedAt()` alias and EasyAdmin binds an `updatedAt` field instead of the canonical modified surface.
+- `DomainClaim`, `DomainBinding`, `DomainAuditRecord`, and `DomainVerificationChallenge` still contain local `createdAt` and/or `updatedAt` storage instead of the canonical Objecting lifecycle pack.
+- Migration must be semantic and entity-by-entity; business timestamps must not be converted mechanically. Runtime callers, repositories, forms/admin fields, persistence mapping, and tests/gates must be updated together.
+
+### Growth workstream (non-blocking for RC)
+
+Continue maturity of the application runtime-overlay/declaration capability after RC correctness is green: add explicit consumer-facing contract tests/diagnostics, strengthen status projection semantics, and align release manifest/documentation with the current runtime overlay. Keep provider-specific TLS/proxy/DNS mutation outside Domaining.
+
+### Risks and safeguards
+
+- Do not alter sibling repositories; Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization are reference-only for this task.
+- Do not touch pre-existing `.gating/` unless a verified gate requires an in-scope local configuration change.
+- Preserve existing data semantics when replacing local lifecycle fields; do not conflate business event timestamps with Objecting audit fields.
+
+### Iteration 2 — material implementation
+
+- Canonicalized `DomainDeclaration` against Objecting without changing persisted schema: it now explicitly implements `ObjectAuditedInterface` and `ObjectIdentifiedInterface` already backed by its Objecting traits.
+- Removed legacy `createdAt()` / `updatedAt()` compatibility aliases from `DomainDeclaration`; canonical lifecycle access is now `getCreatedAt()` / `getModifiedAt()`.
+- Updated EasyAdmin `DomainDeclarationCrudController` from legacy `updatedAt` to canonical `modifiedAt`; EasyAdmin remains within the Canon021 admin exception.
+- PHP syntax lint passed for both changed product PHP files. The broad changed-file lint also traversed the pre-existing untracked `.gating/` tree; all reported files were syntactically valid, but `.gating/` remains outside this task's mutation/staging scope.
+- `composer install --dry-run` passed: lock contents are installable and no dependency changes are required.
+- `composer validate --strict` reports `composer.json` valid, but exits non-zero because existing sibling `*@dev` constraints are unbound. This is packaging debt, not a syntax/schema error introduced by this wave.
+- Symfony `lint:container` passed and `lint:yaml config --parse-tags` passed for all 8 YAML files.
+- `doctrine:schema:validate` is runtime-blocked because `DATABASE_URL` is not defined; no destructive database fallback was attempted.
+
+Что имеем? The already-Objecting-backed declaration entity now exposes only canonical Objecting lifecycle contracts, with container/YAML/PHP validation green.
+
+Что осталось? Iteration 3 must inspect the resulting state, run targeted legacy/canon checks, fix any in-scope regression, and classify the remaining local lifecycle fields before deciding whether a schema-changing migration wave is safe in this run.
+
+### Iteration 3 — verification and fix
+
+- Targeted search after Iteration 2 showed `updatedAt` only in `DomainClaim`; the declaration/admin legacy surface is fully removed.
+- Verified the repository has an explicit Domaining migration namespace/path (`App\\Domaining\\Migration` -> `migration/`), so the remaining `DomainClaim.updated_at` can be migrated forward rather than silently changing mapping.
+- `DomainClaim` now implements `ObjectAuditedInterface`, composes `ObjectAuditEmbeddableTrait`, preserves its existing creation timestamp through `initializeObjectAudit($now)`, and routes modifications through `touchModified()`.
+- No lifecycle actor was inferred from `ownerId`: that field is business ownership context, and the current code does not prove it is the actor identity required by Objecting `created_by` / `modified_by`.
+- A forward migration is required to rename `updated_at` to `modified_at` and add nullable `created_by` / `modified_by` columns while preserving `created_at` data.
+
+Что имеем? The last concrete `updatedAt` implementation has been removed from product code without inventing identity semantics.
+
+Что осталось? Add and verify the forward migration, then close non-schema documentation/manifest drift and Git integration in Iteration 4.
+
+### Iteration 4 — debt closure and integration
+
+- Added `migration/Version20260911205500.php`: preserves `domain_claim.created_at`, renames `updated_at` to canonical `modified_at`, and adds nullable `created_by` / `modified_by`; the down migration reverses the change.
+- PHP lint passed for `DomainClaim.php` and the new migration.
+- Targeted search confirms no `updatedAt` token remains in tracked Domaining source.
+- Corrected stale README documentation links from `docs/domaining/*` to the existing `docs/api/*` paths.
+- Corrected the static delivery manifest by removing six missing 2026-05 migration paths, adding the current migration, and registering the current consumer ensure command.
+- `domaining:release:manifest` executes successfully and reports `releaseCandidateReady: true`.
+- `domaining:contract:governance` executes successfully with `ready: true` and zero issues.
+- `domaining:release:gate`, `doctrine:schema:validate`, and `doctrine:mapping:info` are blocked by the absent `DATABASE_URL`; this is an environment prerequisite, not an observed code failure. No destructive database workaround was used.
+- Existing untracked `.gating/` remains untouched and will not be staged.
+
+Что имеем? RC-critical declaration/claim lifecycle drift is normalized, its schema transition is explicit, provider-neutral release/contract checks are green, and documentation/migration manifest drift is reduced.
+
+Что осталось? Create the coherent task commit, publish the feature branch if remote access is available, inspect integration state, then perform Iteration 5 final acceptance on the post-integration HEAD.

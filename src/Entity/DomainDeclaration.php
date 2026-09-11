@@ -7,6 +7,8 @@ namespace App\Domaining\Entity;
 use App\Domaining\Enum\DomainApplicationRole;
 use App\Domaining\Enum\DomainDeclarationStatus;
 use App\Domaining\Repository\DomainDeclarationRepository;
+use App\Objecting\EntityInterface\ObjectAuditedInterface;
+use App\Objecting\EntityInterface\ObjectIdentifiedInterface;
 use App\Objecting\EntityTrait\Embeddable\ObjectAuditEmbeddableTrait;
 use App\Objecting\EntityTrait\Embeddable\ObjectIdentityEmbeddableTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\UniqueConstraint(name: 'domain_declaration_name_environment_unique', columns: ['domain_name', 'environment'])]
 #[ORM\Index(name: 'domain_declaration_application_environment_idx', columns: ['application_key', 'environment'])]
 #[ORM\Index(name: 'domain_declaration_status_idx', columns: ['status'])]
-class DomainDeclaration
+class DomainDeclaration implements ObjectAuditedInterface, ObjectIdentifiedInterface
 {
     use ObjectIdentityEmbeddableTrait;
     use ObjectAuditEmbeddableTrait;
@@ -75,8 +77,6 @@ class DomainDeclaration
     public function getRole(): DomainApplicationRole { return $this->role; }
     public function status(): DomainDeclarationStatus { return $this->status; }
     public function getStatus(): DomainDeclarationStatus { return $this->status; }
-    public function createdAt(): \DateTimeImmutable { return $this->getCreatedAt(); }
-    public function updatedAt(): \DateTimeImmutable { return $this->getModifiedAt() ?? $this->getCreatedAt(); }
 
     public function setApplicationKey(string $applicationKey): self
     {

@@ -53,6 +53,6 @@ final class DomainDeclarationCrudController extends AbstractCrudController
         yield TextField::new('objectUuid')->hideOnForm();
         yield TextField::new('objectSlug')->hideOnForm();
         yield DateTimeField::new('createdAt')->hideOnForm();
-        yield DateTimeField::new('updatedAt')->hideOnForm();
+        yield DateTimeField::new('modifiedAt')->hideOnForm();
     }
 }
