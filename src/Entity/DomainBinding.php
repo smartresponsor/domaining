@@ -74,6 +74,10 @@ class DomainBinding
     public function surfaceKey(): string { return $this->surfaceKey; }
     public function declaration(): ?DomainDeclaration { return $this->declaration; }
     public function status(): DomainBindingStatus { return $this->status; }
+    public function createdAt(): DateTimeImmutable { return $this->createdAt; }
+    public function activatedAt(): ?DateTimeImmutable { return $this->activatedAt; }
+    public function suspendedAt(): ?DateTimeImmutable { return $this->suspendedAt; }
+    public function removedAt(): ?DateTimeImmutable { return $this->removedAt; }
     public function lastVerifiedAt(): ?DateTimeImmutable { return $this->lastVerifiedAt; }
 
     public function markVerifiedNow(): void

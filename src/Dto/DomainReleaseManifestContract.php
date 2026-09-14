@@ -20,7 +20,7 @@ final readonly class DomainReleaseManifestContract
     }
 
     /**
-     * @return array{name: string, version: string, owner: string, endpoint: list<string>, command: list<string>}
+     * @return array{nameEntity: string, version: string, owner: string, endpoint: list<string>, command: list<string>}
      */
     public function toArray(): array
     {

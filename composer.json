@@ -4,20 +4,23 @@
   "type": "symfony-bundle",
   "license": "proprietary",
   "repositories": [
-    {"type": "path", "url": "../Administering", "options": {"symlink": true}},
-    {"type": "path", "url": "../Cruding", "options": {"symlink": true}},
-    {"type": "path", "url": "../Interfacing", "options": {"symlink": true}},
-    {"type": "path", "url": "../Objecting", "options": {"symlink": true}},
-    {"type": "path", "url": "../Viewing", "options": {"symlink": true}}
+    {"type": "path", "url": "../Administering", "options": {"symlink": true, "versions": {"administering/administration": "dev-master"}}},
+    {"type": "path", "url": "../Collectioning", "options": {"symlink": true, "versions": {"collectioning/collection": "dev-master"}}},
+    {"type": "path", "url": "../Cruding", "options": {"symlink": true, "versions": {"cruding/crud": "dev-master"}}},
+    {"type": "path", "url": "../Interfacing", "options": {"symlink": true, "versions": {"interfacing/interface": "dev-master"}}},
+    {"type": "path", "url": "../Objecting", "options": {"symlink": true, "versions": {"objecting/object": "dev-master"}}},
+    {"type": "path", "url": "../Tabling", "options": {"symlink": true, "versions": {"tabling/table": "dev-master"}}},
+    {"type": "path", "url": "../Viewing", "options": {"symlink": true, "versions": {"viewing/view": "dev-master"}}}
   ],
   "require": {
     "doctrine/doctrine-bundle": "^3.0",
     "doctrine/orm": "^3.0",
-    "administering/administration": "*@dev",
-    "cruding/crud": "*@dev",
+    "administering/administration": "dev-master",
+    "collectioning/collection": "dev-master",
+    "cruding/crud": "dev-master",
     "easycorp/easyadmin-bundle": "^5.0",
-    "interfacing/interface": "*@dev",
-    "objecting/object": "*@dev",
+    "interfacing/interface": "dev-master",
+    "objecting/object": "dev-master",
     "php": "^8.4",
     "symfony/config": "^8.1",
     "symfony/console": "^8.1",
@@ -27,9 +30,10 @@
     "symfony/http-foundation": "^8.1",
     "symfony/routing": "^8.1",
     "symfony/string": "^8.1",
+    "tabling/table": "dev-master",
     "symfony/uid": "^8.1",
     "symfony/validator": "^8.1",
-    "viewing/view": "*@dev",
+    "viewing/view": "dev-master",
     "symfony/yaml": "^8.1",
     "doctrine/doctrine-migrations-bundle": "^4.0",
     "symfony/http-kernel": "^8.1",
@@ -56,6 +60,16 @@
       "symfony/runtime": true
     },
     "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "test": "phpunit",
+    "phpstan": "phpstan analyse src test --level=6 --memory-limit=1G",
+    "qa": [
+      "@phpstan",
+      "@test"
+    ]
   },
   "extra": {
     "symfony": {

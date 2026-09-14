@@ -28,6 +28,7 @@ final class DomainSurfaceController extends AbstractController
         return $this->json($payloadService->payloadForBinding($binding)->toArray());
     }
 
+    /** @return JsonResponse|array<string, mixed> */
     #[Route('/{bindingId}/render', name: 'binding_render', methods: ['GET'])]
     public function renderBinding(
         string $bindingId,

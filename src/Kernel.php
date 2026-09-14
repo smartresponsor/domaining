@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domaining;
 
+use App\Collectioning\CollectioningBundle;
 use App\Cruding\CrudingBundle;
 use App\Interfacing\InterfacingBundle;
 use App\Objecting\ObjectBundle;
+use App\Tabling\TablingBundle;
 use App\Viewing\ViewingBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
@@ -32,9 +34,11 @@ final class Kernel extends BaseKernel implements KernelInterface
         yield new SecurityBundle();
         yield new TwigBundle();
         yield new EasyAdminBundle();
+        yield new CollectioningBundle();
         yield new CrudingBundle();
         yield new InterfacingBundle();
         yield new ObjectBundle();
+        yield new TablingBundle();
         yield new ViewingBundle();
         yield new DomainingBundle();
     }

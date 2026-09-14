@@ -18,7 +18,7 @@ final readonly class DomainAuditTrailReadService implements DomainAuditTrailRead
 
     public function recentForDomain(string $domainName, int $limit = 50): array
     {
-        $normalizedDomainName = DomainName::fromString($domainName)->value();
+        $normalizedDomainName = (new DomainName($domainName))->value;
         $records = $this->auditRecordRepository->recentForDomain($normalizedDomainName, max(1, min(250, $limit)));
 
         return array_map(static fn (DomainAuditRecord $record): DomainAuditTrailEntry => new DomainAuditTrailEntry(

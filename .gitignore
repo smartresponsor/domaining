@@ -1,4 +1,5 @@
 /.codebase-memory/
+/.console-mcp/
 /.idea/
 /.phpunit.cache/
 /.phpunit.result.cache
@@ -6,5 +7,4 @@
 /var/
 /.env.local
 /.env.*.local
-/composer.lock
 /auth.json

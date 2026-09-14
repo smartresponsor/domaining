@@ -28,12 +28,14 @@ class DomainAuditRecord
     #[ORM\Column(name: 'actor_id', length: 128, nullable: true)]
     private ?string $actorId;
 
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $context;
 
     #[ORM\Column(name: 'created_at')]
     private DateTimeImmutable $createdAt;
 
+    /** @param array<string, mixed> $context */
     public function __construct(string $domainName, string $action, ?string $actorId = null, array $context = [])
     {
         $this->id = Uuid::v7();

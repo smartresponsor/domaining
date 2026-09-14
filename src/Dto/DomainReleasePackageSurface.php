@@ -24,7 +24,7 @@ final readonly class DomainReleasePackageSurface
     ) {
     }
 
-    /** @return array{name: string, schemaVersion: string, purpose: string, endpoint: list<string>, command: list<string>, metadata: array<string, mixed>} */
+    /** @return array{nameEntity: string, schemaVersion: string, purpose: string, endpoint: list<string>, command: list<string>, metadata: array<string, mixed>} */
     public function toArray(): array
     {
         return [

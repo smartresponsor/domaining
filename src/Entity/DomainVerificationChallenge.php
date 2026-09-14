@@ -77,6 +77,8 @@ class DomainVerificationChallenge
     public function recordValue(): string { return $this->recordValue; }
     public function status(): DomainVerificationStatus { return $this->status; }
     public function expiresAt(): DateTimeImmutable { return $this->expiresAt; }
+    public function createdAt(): DateTimeImmutable { return $this->createdAt; }
+    public function verifiedAt(): ?DateTimeImmutable { return $this->verifiedAt; }
     public function attemptCount(): int { return $this->attemptCount; }
     public function checkedAt(): ?DateTimeImmutable { return $this->checkedAt; }
     public function nextCheckAfter(): ?DateTimeImmutable { return $this->nextCheckAfter; }

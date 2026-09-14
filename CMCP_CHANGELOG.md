@@ -94,3 +94,39 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 Что имеем? The bounded local Domaining task is materially implemented and committed; the canonical Objecting declaration/claim lifecycle surface is in place with an explicit forward migration and corrected repository documentation/manifest references.
 
 Что осталось? Remote publication/PR/merge and database-backed gates require external prerequisites: either a clean worktree that resolves ownership of the pre-existing `.gating/`, and a configured `DATABASE_URL`. No additional safe in-scope source change is justified merely to consume budget.
+
+## 2026-09-14 — Canon022/Canon043 RC package-contract pass
+
+### Reconnaissance baseline
+
+- Re-read Domaining repository instructions, manifest, package contract, architecture/API documentation, current source inventory, and Git state.
+- Re-read mandatory Objecting, Cruding, Viewing, and Interfacing contracts plus Gating and Canonization governance.
+- Consulted the normative Canon022, Canon043, and Canon044 rule documents directly; verified Collectioning and Tabling package identities from their local Composer manifests.
+- Market/reference check confirmed the existing responsibility boundary: ownership validation/readiness belongs in Domaining, while certificate issuance, DNS hosting, and edge routing execution stay in provider/runtime infrastructure.
+- Pre-existing untracked `.gating/` remains outside this run's ownership.
+
+### Target-to-canon mapping and selected RC work
+
+- Canon022: Domaining is standalone-capable and must directly require Cruding, Collectioning, Tabling, Viewing, Interfacing, Objecting, and EasyAdmin. Collectioning and Tabling were missing.
+- Canon043: every first-party local path repository must pin the sibling package as `dev-master`, matching direct requirements; the root must use `minimum-stability=dev` and `prefer-stable=true`. Existing `*@dev` constraints and unversioned path entries were non-canonical.
+- Canon044 remains applicable to active Doctrine mappings; no new field migration is justified without a concrete mapping finding.
+- RC-critical implementation selected: normalize local package wiring and complete the direct baseline dependency contour. Growth work remains separate: richer pre-validation/DCV telemetry and zero-downtime provider migration semantics.
+
+### Material implementation and risks
+
+- Added direct Collectioning and Tabling dependencies and their local path repositories.
+- Pinned Administering, Collectioning, Cruding, Interfacing, Objecting, Tabling, and Viewing path repositories and matching first-party constraints to `dev-master`.
+- Added canonical development stability flags.
+- Refreshed the dependency graph to the current canonical first-party `dev-master` contour; Collectioning and Tabling are now present and Cruding is no longer locked to a feature branch.
+- Composer audit exposed high-severity CVE-2026-67434 in PHPCS 4.0.1; package-scoped update to 4.0.4 cleared the advisory and repeat audit is green.
+- Canon022 runtime activation initially exposed a real custom-Kernel drift: `config/bundles.php` was not the active registration surface. `Kernel::registerBundles()` now registers Collectioning and Tabling as well; container and YAML lint are green.
+- Added a focused PHPUnit harness and integration regression test for the standalone dependency baseline. PHPUnit passes with 1 test / 2 assertions using test-only in-memory SQLite configuration.
+- Added reproducible Composer `test`, `phpstan`, and `qa` scripts. PHPStan level 6 initially found 23 issues; all were repaired without a baseline or analyzer weakening. The pass also fixed a real nonexistent `DomainName::fromString()` call, corrected release DTO shapes, repository/admin generics, lifecycle read accessors, and unreachable/nullsafe branches. Final PHPStan reports zero errors across 164 files.
+- Standalone reproducibility was corrected by tracking `composer.lock`; `.console-mcp/` local runtime state is ignored. The generated application `config/reference.php` was refreshed by the updated installed dependency graph.
+- Final green gates: `composer validate --strict --check-lock`, `composer audit`, full tracked PHP lint, Composer `qa`, Symfony `lint:container`, YAML lint, `domaining:contract:governance` (`ready: true`, zero issues), and `domaining:release:manifest` (`releaseCandidateReady: true`).
+- Database-backed `domaining:release:gate` and `domaining:release:review` remain externally blocked because this workspace has no `DATABASE_URL`. No fake production-equivalent database was introduced to manufacture a green result.
+- Gating was read as the executable canon companion and its package/CLI contract was inspected. The available guarded Console MCP command surface does not expose a cross-workspace PHP-binary invocation for `Gating/bin/gating --target=Domaining`; no permanent wrapper or invented Gating dependency was added merely to bypass that execution boundary.
+
+Что имеем? Canon022/Canon043 package and runtime wiring is reproducible, security-clean, statically clean, regression-tested, and green across every available non-database RC gate.
+
+Что осталось? Commit the coherent Domaining-owned changes and attempt publication of the current feature branch. Database-backed release acceptance still requires a real configured `DATABASE_URL`; pre-existing `.gating/` remains untouched and outside this run's ownership.

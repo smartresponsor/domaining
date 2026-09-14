@@ -33,7 +33,7 @@ final readonly class DomainReleaseManifest
     }
 
     /**
-     * @return array{schemaVersion: string, generatedAt: string, component: string, package: string, namespace: string, businessPrefix: string, databasePrefix: string, releaseCandidateReady: bool, capability: list<string>, boundary: list<string>, requiredGate: list<string>, contract: list<array{name: string, version: string, owner: string, endpoint: list<string>, command: list<string>}>, checkCount: int, check: list<array{severity: string, code: string, message: string, context: array<string, mixed>}>}
+     * @return array{schemaVersion: string, generatedAt: string, component: string, package: string, namespace: string, businessPrefix: string, databasePrefix: string, releaseCandidateReady: bool, capability: list<string>, boundary: list<string>, requiredGate: list<string>, contract: list<array{nameEntity: string, version: string, owner: string, endpoint: list<string>, command: list<string>}>, checkCount: int, check: list<array{severity: string, code: string, message: string, context: array<string, mixed>}>}
      */
     public function toArray(): array
     {

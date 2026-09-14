@@ -33,7 +33,7 @@ final readonly class DomainBindingService implements DomainBindingServiceInterfa
         if (DomainClaimStatus::Verified !== $claim->status()) {
             throw DomainInvalidStateException::create('Only verified claims can become domain bindings.');
         }
-        if (null !== $claim->declaration() && DomainDeclarationStatus::Verified !== $claim->declaration()?->status()) {
+        if (null !== $claim->declaration() && DomainDeclarationStatus::Verified !== $claim->declaration()->status()) {
             throw DomainInvalidStateException::create('Application domain declarations must be verified before binding.');
         }
 

@@ -40,7 +40,7 @@ final readonly class DomainTemplateRenderService implements DomainTemplateRender
 
         $loader = $twig->getLoader();
         foreach ($this->templateCandidates as $template) {
-            if (!is_string($template) || '' === trim($template)) {
+            if ('' === trim($template)) {
                 continue;
             }
 
@@ -53,12 +53,12 @@ final readonly class DomainTemplateRenderService implements DomainTemplateRender
                     'surface' => $this->templateSurface,
                     'domain' => $payloadArray,
                     'payload' => $payloadArray,
-                    'locations' => $payloadArray['locations'] ?? [],
-                    'location' => $payloadArray['locations'] ?? [],
-                    'binding' => $payloadArray['binding'] ?? [],
-                    'publication' => $payloadArray['publication'] ?? [],
-                    'slotContract' => $payloadArray['slotContract'] ?? [],
-                    'title' => $payloadArray['domainName'] ?? 'Domain connection',
+                    'locations' => $payloadArray['locations'],
+                    'location' => $payloadArray['locations'],
+                    'binding' => $payloadArray['binding'],
+                    'publication' => $payloadArray['publication'],
+                    'slotContract' => $payloadArray['slotContract'],
+                    'title' => $payloadArray['domainName'],
                     'subtitle' => 'Custom-domain lifecycle surface',
                 ]);
 
