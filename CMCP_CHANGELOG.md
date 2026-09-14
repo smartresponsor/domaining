@@ -130,3 +130,14 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 Что имеем? Canon022/Canon043 package and runtime wiring is reproducible, security-clean, statically clean, regression-tested, and green across every available non-database RC gate.
 
 Что осталось? Commit the coherent Domaining-owned changes and attempt publication of the current feature branch. Database-backed release acceptance still requires a real configured `DATABASE_URL`; pre-existing `.gating/` remains untouched and outside this run's ownership.
+
+### Git integration result
+
+- Signed implementation commit created: `f3bb89f294d93d08d843902913deaf90258b99bd` (`Harden Domaining RC package runtime contract`).
+- Post-commit tracked worktree is clean; the sole remaining status entry is the pre-existing untracked `.gating/` directory.
+- Guarded `push current --set-upstream` was attempted and refused with `working_tree_dirty` because `.gating/` remains untracked. The branch still has no upstream.
+- `.gating/` was not deleted, staged, committed, moved, or ignored by this run because its ownership predates the current task.
+
+Что имеем? The complete Domaining-owned RC hardening is signed and committed at `f3bb89f`; every available non-database acceptance gate is green.
+
+Что осталось? Remote publication is externally blocked by the pre-existing `.gating/` worktree entry, and database-backed release acceptance requires a real `DATABASE_URL`.
