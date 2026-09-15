@@ -209,3 +209,29 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 
 Что осталось? Schema synchronization is pending an explicit application-wide migration decision because the host currently has four pending migrations. Remote publication remains separately blocked by pre-existing `.gating/`.
 
+### Blocker resolution continuation
+
+- The remaining `.gating/` worktree entry was inspected before integration. It is a full foreign Gating repository snapshot, including nested `.gating/.gating`, historical logs, IDE/tooling surfaces, and duplicated executable rules; it is not a small Domaining-owned consumer profile.
+- Canonical Gating already owns the Domaining profile at sibling `Gating/.gating/profile/component/domaining.yaml`, so committing the duplicated runtime snapshot into Domaining would create conflicting ownership and stale policy copies.
+- Domaining now ignores the local `/.gating/` runtime overlay explicitly. No `.gating/` content was deleted or rewritten; only Git ownership is clarified.
+
+Что имеем? The dirty-worktree blocker is reduced to one intentional `.gitignore` change, while the local Gating overlay remains intact on disk.
+
+Что осталось? Commit the ownership clarification, then finish host migration synchronization and publish the Domaining feature branch.
+
+### Final blocker resolution and acceptance
+
+- While `.gating/` ownership was being resolved, the shared host migration state advanced externally; both previously pending Domaining migrations (`Version20260911205500` and `Version20260915180500`) became migrated without this run applying the broader application batch.
+- Host migration status subsequently reached zero pending migrations before the final Domaining schema repair.
+- Scoped ORM validation exposed the remaining Domaining-only drift: `domain_claim.modified_at` retained legacy `NOT NULL`; `domain_declaration` still used legacy `object_*` Objecting columns; and `domain_binding_name_idx` duplicated the canonical unique index on `domain_name`.
+- Added `Version20260915191500` to normalize DomainDeclaration Objecting physical names and DomainClaim audit nullability. Guarded dry-run showed exactly one pending migration; it was applied successfully.
+- Added `Version20260915192500` to remove the redundant DomainBinding `domain_name` lookup index. Guarded dry-run again showed exactly one pending migration; it was applied successfully.
+- Final host migration dry-run reports already at latest version with no pending migration work.
+- Final scoped database acceptance passes: `app:doctrine:mapped-schema:validate --em=postgres --table-prefix=domain_ --ignore-index-names` validates all 7 Domaining ORM-owned tables with zero drift.
+- Final Domaining `composer qa` passes: PHPStan zero errors; PHPUnit 3 tests / 6 assertions.
+- PHPUnit-generated `config/reference.php` environment drift was reverted and is excluded from integration.
+
+Что имеем? Both prior blockers are resolved: the foreign `.gating/` snapshot no longer dirties Domaining, and the real PostgreSQL Domaining schema is synchronized with current ORM metadata.
+
+Что осталось? Create the signed integration commit, verify a clean branch, and push the feature branch to origin.
+

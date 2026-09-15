@@ -1,5 +1,6 @@
 /.codebase-memory/
 /.console-mcp/
+/.gating/
 /.idea/
 /.phpunit.cache/
 /.phpunit.result.cache

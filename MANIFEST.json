@@ -79,6 +79,8 @@
     "migrations/Version20260823192000.php",
     "migrations/Version20260911205500.php",
     "migrations/Version20260915180500.php",
+    "migrations/Version20260915191500.php",
+    "migrations/Version20260915192500.php",
     "public/index.php",
     "src/Command/DomainConsumerEnsureCommand.php",
     "src/Command/DomainContractGovernanceCommand.php",
