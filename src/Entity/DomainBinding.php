@@ -7,6 +7,8 @@ namespace App\Domaining\Entity;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\Enum\DomainSurfaceType;
 use App\Domaining\Repository\DomainBindingRepository;
+use App\Objecting\EntityInterface\ObjectAuditedInterface;
+use App\Objecting\EntityTrait\Embeddable\ObjectAuditEmbeddableTrait;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -16,8 +18,10 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\UniqueConstraint(name: 'domain_binding_name_active_unique', columns: ['domain_name'])]
 #[ORM\Index(name: 'domain_binding_name_idx', columns: ['domain_name'])]
 #[ORM\Index(name: 'domain_binding_owner_surface_idx', columns: ['owner_id', 'surface_type', 'surface_key'])]
-class DomainBinding
+class DomainBinding implements ObjectAuditedInterface
 {
+    use ObjectAuditEmbeddableTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
     private Uuid $id;
@@ -41,9 +45,6 @@ class DomainBinding
     #[ORM\Column(length: 32, enumType: DomainBindingStatus::class)]
     private DomainBindingStatus $status = DomainBindingStatus::Verified;
 
-    #[ORM\Column(name: 'created_at')]
-    private DateTimeImmutable $createdAt;
-
     #[ORM\Column(name: 'activated_at', nullable: true)]
     private ?DateTimeImmutable $activatedAt = null;
 
@@ -64,7 +65,7 @@ class DomainBinding
         $this->surfaceType = $surfaceType;
         $this->surfaceKey = $surfaceKey;
         $this->declaration = $declaration;
-        $this->createdAt = new DateTimeImmutable();
+        $this->initializeObjectAudit();
     }
 
     public function id(): Uuid { return $this->id; }
@@ -74,7 +75,6 @@ class DomainBinding
     public function surfaceKey(): string { return $this->surfaceKey; }
     public function declaration(): ?DomainDeclaration { return $this->declaration; }
     public function status(): DomainBindingStatus { return $this->status; }
-    public function createdAt(): DateTimeImmutable { return $this->createdAt; }
     public function activatedAt(): ?DateTimeImmutable { return $this->activatedAt; }
     public function suspendedAt(): ?DateTimeImmutable { return $this->suspendedAt; }
     public function removedAt(): ?DateTimeImmutable { return $this->removedAt; }
@@ -83,24 +83,28 @@ class DomainBinding
     public function markVerifiedNow(): void
     {
         $this->lastVerifiedAt = new DateTimeImmutable();
+        $this->touchModified();
     }
 
     public function activate(): void
     {
         $this->status = DomainBindingStatus::Active;
         $this->activatedAt = new DateTimeImmutable();
+        $this->touchModified();
     }
 
     public function suspend(): void
     {
         $this->status = DomainBindingStatus::Suspended;
         $this->suspendedAt = new DateTimeImmutable();
+        $this->touchModified();
     }
 
     public function remove(): void
     {
         $this->status = DomainBindingStatus::Removed;
         $this->removedAt = new DateTimeImmutable();
+        $this->touchModified();
     }
 }
 

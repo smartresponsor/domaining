@@ -81,7 +81,7 @@ final class DomainConsumerEnsureCommand extends Command
             return Command::SUCCESS;
         }
 
-        $challenge = $this->challengeRepository->findOneBy(['claim' => $claim], ['createdAt' => 'DESC']);
+        $challenge = $this->challengeRepository->findOneBy(['claim' => $claim], ['objectAudit.createdAt' => 'DESC']);
         if (null === $challenge || in_array($challenge->status(), [DomainVerificationStatus::Failed, DomainVerificationStatus::Expired], true)) {
             $challenge = $this->challengeService->issueTxtChallenge($claim);
         }

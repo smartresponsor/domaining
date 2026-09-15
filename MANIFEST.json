@@ -76,6 +76,7 @@
     "docs/security/domain-takeover-guard.adoc",
     "docs/use-case/custom-domain-existing-owner.adoc",
     "migration/Version20260911205500.php",
+    "migration/Version20260915180500.php",
     "public/index.php",
     "src/Command/DomainConsumerEnsureCommand.php",
     "src/Command/DomainContractGovernanceCommand.php",

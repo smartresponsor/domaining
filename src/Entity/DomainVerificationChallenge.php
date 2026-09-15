@@ -7,6 +7,8 @@ namespace App\Domaining\Entity;
 use App\Domaining\Enum\DomainRecordType;
 use App\Domaining\Enum\DomainVerificationStatus;
 use App\Domaining\Repository\DomainVerificationChallengeRepository;
+use App\Objecting\EntityInterface\ObjectAuditedInterface;
+use App\Objecting\EntityTrait\Embeddable\ObjectAuditEmbeddableTrait;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -16,8 +18,10 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Index(name: 'idx_domain_verification_challenge_claim', columns: ['claim_id'])]
 #[ORM\Index(name: 'domain_verification_ready_idx', columns: ['status', 'expires_at', 'next_check_after'])]
 #[ORM\Index(name: 'domain_verification_challenge_status_retry_idx', columns: ['status', 'next_check_after'])]
-class DomainVerificationChallenge
+class DomainVerificationChallenge implements ObjectAuditedInterface
 {
+    use ObjectAuditEmbeddableTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
     private Uuid $id;
@@ -40,9 +44,6 @@ class DomainVerificationChallenge
 
     #[ORM\Column(name: 'expires_at')]
     private DateTimeImmutable $expiresAt;
-
-    #[ORM\Column(name: 'created_at')]
-    private DateTimeImmutable $createdAt;
 
     #[ORM\Column(name: 'verified_at', nullable: true)]
     private ?DateTimeImmutable $verifiedAt = null;
@@ -67,7 +68,7 @@ class DomainVerificationChallenge
         $this->recordName = $recordName;
         $this->recordValue = $recordValue;
         $this->expiresAt = $expiresAt;
-        $this->createdAt = new DateTimeImmutable();
+        $this->initializeObjectAudit();
     }
 
     public function id(): Uuid { return $this->id; }
@@ -77,7 +78,6 @@ class DomainVerificationChallenge
     public function recordValue(): string { return $this->recordValue; }
     public function status(): DomainVerificationStatus { return $this->status; }
     public function expiresAt(): DateTimeImmutable { return $this->expiresAt; }
-    public function createdAt(): DateTimeImmutable { return $this->createdAt; }
     public function verifiedAt(): ?DateTimeImmutable { return $this->verifiedAt; }
     public function attemptCount(): int { return $this->attemptCount; }
     public function checkedAt(): ?DateTimeImmutable { return $this->checkedAt; }
@@ -91,6 +91,7 @@ class DomainVerificationChallenge
         $this->nextCheckAfter = $now->modify(sprintf('+%d seconds', max(60, $retryDelaySeconds)));
         ++$this->attemptCount;
         $this->lastFailureReason = $failureReason;
+        $this->touchModified($now);
     }
 
     public function markPassed(): void
@@ -101,6 +102,7 @@ class DomainVerificationChallenge
         $this->checkedAt = $now;
         $this->nextCheckAfter = null;
         $this->lastFailureReason = null;
+        $this->touchModified($now);
     }
 
     public function markFailed(?string $reason = null): void
@@ -113,6 +115,7 @@ class DomainVerificationChallenge
     {
         $this->status = DomainVerificationStatus::Expired;
         $this->lastFailureReason = 'Verification challenge has expired.';
+        $this->touchModified();
     }
 
     public function canBeChecked(DateTimeImmutable $now): bool

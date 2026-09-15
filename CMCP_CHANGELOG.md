@@ -141,3 +141,56 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 Что имеем? The complete Domaining-owned RC hardening is signed and committed at `f3bb89f`; every available non-database acceptance gate is green.
 
 Что осталось? Remote publication is externally blocked by the pre-existing `.gating/` worktree entry, and database-backed release acceptance requires a real `DATABASE_URL`.
+
+## 2026-09-15 — Objecting lifecycle RC continuation
+
+### Reconnaissance baseline
+
+- Workspace remains `D:\PhpstormProjects\www\Domaining` on `feature/application-runtime-overlay-20260901`; current HEAD at reconnaissance is `c1787e948461ee06e8f7c1e3bcc8d9a28fa3baeb`.
+- The sole pre-existing worktree entry is untracked `.gating/`; it remains outside this run's mutation and staging scope.
+- Re-read repository `AGENTS.md`, README surfaces, `MANIFEST.json`, Composer/configuration, and the complete AsciiDoc documentation inventory declared by the manifest.
+- Re-read mandatory Canonization/Gating and Objecting/Cruding/Viewing/Interfacing package contracts. Domaining directly declares and locally path-wires Objecting, Cruding, Collectioning, Tabling, Viewing, and Interfacing as required.
+- External maturity review confirms the existing boundary: ownership validation and lifecycle readiness belong in Domaining; certificate issuance, DNS mutation, and edge routing execution remain provider/runtime responsibilities.
+- Current non-database baseline is green: strict Composer validation with lock parity, Composer security audit, PHPStan level 6, PHPUnit, Symfony test-container lint, and YAML lint.
+- Doctrine schema validation remains environment-blocked because the Symfony console process has no `DATABASE_URL`; no destructive or fake production database fallback is used.
+
+### Canonization mapping consulted
+
+- `Canon018ComposerIdentityMappingRule.md`: `domaining/domain` maps to `App\\Domaining\\` and `Domain*`; current package identity follows the rule.
+- `Canon019NoAlternativeLayerTaxonomyRule.md`: no competing Domain/Application/Infrastructure or Port/Adapter roots are introduced.
+- `Canon021CrudingOwnsGenericCrudRule.md`: the EasyAdmin declaration controller remains within the explicit admin exception; no generic application CRUD is added.
+- Objecting responsibility and lifecycle canon: generic entity creation/modification timestamps belong to the reusable audit pack, while consumer repositories, migrations, services, and business event timestamps remain Domaining-owned.
+
+### RC-critical workstream selected
+
+- Complete the previously identified Objecting lifecycle migration for mutable `DomainBinding` and `DomainVerificationChallenge`, which still duplicate generic `created_at` storage locally.
+- Preserve semantically distinct business timestamps (`activated_at`, `suspended_at`, `removed_at`, `last_verified_at`, challenge `verified_at` / `checked_at` / `expires_at`) as Domaining-owned fields.
+- Keep `DomainAuditRecord.created_at` unchanged in this pass because it is the timestamp of the recorded business/audit event and its `actor_id` has distinct event semantics; do not guess that it is Objecting lifecycle attribution.
+
+### Growth workstream (non-blocking)
+
+- Future maturity can add provider-neutral pre-validation/zero-downtime migration guidance and richer runtime feedback telemetry, reflecting Cloudflare-class SaaS practices without moving TLS/DNS/provider execution into Domaining.
+
+### Risks and gates
+
+- The migration must preserve existing `created_at` values and add only nullable lifecycle attribution/modification columns; no owner ID is inferred as a lifecycle actor.
+- Update every repository/caller that relies on the local `createdAt` property path.
+- Re-run PHP lint, PHPStan/PHPUnit, Composer validation/audit, Symfony container/YAML lint, release/contract commands, targeted token scans, and Git-state verification after implementation.
+
+### Material implementation and verification
+
+- `DomainBinding` and `DomainVerificationChallenge` now implement `ObjectAuditedInterface` and compose `ObjectAuditEmbeddableTrait`; their existing `created_at` values remain the canonical Objecting creation columns rather than duplicated local properties.
+- Binding verification/activation/suspension/removal and challenge check/pass/expire mutations now update canonical `modified_at`; domain-specific event timestamps remain separate and unchanged.
+- `DomainConsumerEnsureCommand` now orders challenge lookup by the factual embedded Doctrine path `objectAudit.createdAt`, matching Objecting's Doctrine metadata contract.
+- Added `migration/Version20260915180500.php`, which preserves existing creation data and adds nullable `modified_at`, `created_by`, and `modified_by` columns to `domain_binding` and `domain_verification_challenge`; no business owner is guessed as lifecycle actor.
+- Added `DomainObjectAuditLifecycleTest`; final Composer QA passes PHPStan level 6 with zero errors and PHPUnit with 3 tests / 6 assertions.
+- Targeted tracked-source scan leaves a local `created_at` property only on `DomainAuditRecord`; this is intentionally retained as the timestamp of an immutable audit event, not generic mutable-entity lifecycle metadata.
+- `composer validate --strict --check-lock` passes; `composer audit` reports no security advisories; Symfony container and all 8 YAML files lint successfully; `domaining:contract:governance` reports `ready: true` with zero issues; `domaining:release:manifest` reports `releaseCandidateReady: true`.
+- `doctrine:schema:validate` remains externally blocked because the console runtime has no `DATABASE_URL`. The test suite still uses its explicit in-memory SQLite configuration for bounded tests; no fake production-equivalent database was introduced.
+- The Console MCP registered check `qa` passes. No `gating`/`canon` check alias is registered for this workspace; the relevant textual Canonization rules and Gating Canon044 executable-rule source were therefore inspected directly without inventing a target dependency or wrapper.
+- Running Symfony diagnostics briefly regenerated environment-specific lines in tracked `config/reference.php`; that incidental diff was explicitly reverted and the file is back to its pre-run state.
+
+Что имеем? The remaining confirmed mutable lifecycle duplication in Binding and VerificationChallenge is removed, schema preservation is explicit, and every available non-database RC gate is green.
+
+Что осталось? Create the coherent signed commit, attempt guarded publication of the feature branch, and inspect the post-integration HEAD/worktree. Database-backed schema/release gates still require a real `DATABASE_URL`; the pre-existing untracked `.gating/` remains outside this run's ownership.
+
