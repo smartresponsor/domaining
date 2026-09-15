@@ -20,19 +20,31 @@ final class Version20260823192000 extends AbstractMigration
         $this->abortIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Domaining production schema requires PostgreSQL.');
 
         $claim = $schema->getTable('domain_claim');
-        $claim->addColumn('declaration_id', 'uuid', ['notnull' => false]);
-        $claim->addIndex(['declaration_id'], 'idx_domain_claim_declaration');
-        $claim->addForeignKeyConstraint('domain_declaration', ['declaration_id'], ['id'], ['onDelete' => 'SET NULL'], 'fk_domain_claim_declaration');
+        if (!$claim->hasColumn('declaration_id')) {
+            $this->addSql('ALTER TABLE domain_claim ADD declaration_id UUID DEFAULT NULL');
+        }
+        if (!$claim->hasIndex('idx_domain_claim_declaration')) {
+            $this->addSql('CREATE INDEX idx_domain_claim_declaration ON domain_claim (declaration_id)');
+        }
+        if (!$claim->hasForeignKey('fk_domain_claim_declaration')) {
+            $this->addSql('ALTER TABLE domain_claim ADD CONSTRAINT fk_domain_claim_declaration FOREIGN KEY (declaration_id) REFERENCES domain_declaration (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE');
+        }
 
         $binding = $schema->getTable('domain_binding');
-        $binding->addColumn('declaration_id', 'uuid', ['notnull' => false]);
-        $binding->addIndex(['declaration_id'], 'idx_domain_binding_declaration');
-        $binding->addForeignKeyConstraint('domain_declaration', ['declaration_id'], ['id'], ['onDelete' => 'SET NULL'], 'fk_domain_binding_declaration');
+        if (!$binding->hasColumn('declaration_id')) {
+            $this->addSql('ALTER TABLE domain_binding ADD declaration_id UUID DEFAULT NULL');
+        }
+        if (!$binding->hasIndex('idx_domain_binding_declaration')) {
+            $this->addSql('CREATE INDEX idx_domain_binding_declaration ON domain_binding (declaration_id)');
+        }
+        if (!$binding->hasForeignKey('fk_domain_binding_declaration')) {
+            $this->addSql('ALTER TABLE domain_binding ADD CONSTRAINT fk_domain_binding_declaration FOREIGN KEY (declaration_id) REFERENCES domain_declaration (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE');
+        }
     }
 
     public function down(Schema $schema): void
     {
-        $schema->getTable('domain_binding')->dropColumn('declaration_id');
-        $schema->getTable('domain_claim')->dropColumn('declaration_id');
+        $this->addSql('ALTER TABLE domain_binding DROP COLUMN IF EXISTS declaration_id');
+        $this->addSql('ALTER TABLE domain_claim DROP COLUMN IF EXISTS declaration_id');
     }
 }
