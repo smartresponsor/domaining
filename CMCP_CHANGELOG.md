@@ -194,3 +194,18 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 
 Что осталось? Create the coherent signed commit, attempt guarded publication of the feature branch, and inspect the post-integration HEAD/worktree. Database-backed schema/release gates still require a real `DATABASE_URL`; the pre-existing untracked `.gating/` remains outside this run's ownership.
 
+### Host database continuation
+
+- Host App PostgreSQL connectivity is confirmed through its existing runtime environment; no connection secret was copied into Domaining.
+- Live schema inspection confirms the database is behind the current Objecting audit mapping for claim, binding, and verification challenge.
+- The two new migrations were incorrectly placed in singular `migration/` with `App\\Domaining\\Migration`; the established repository and host App both use plural `migrations/` with `App\\Domaining\\Migrations`.
+- Corrected both migrations, standalone migration configuration, and `MANIFEST.json` to the existing plural contour.
+- Host Doctrine now discovers the Domaining migration namespace and reports `App\\Domaining\\Migrations\\Version20260911205500` as the next version.
+- Host reports four pending migrations application-wide, so no shared-database migration batch was applied automatically.
+- Database-backed `domaining:release:gate` passes with zero errors and zero warnings.
+- Final Domaining QA remains green: PHPStan zero errors; PHPUnit 3 tests / 6 assertions; both moved migration files pass PHP syntax lint.
+
+Что имеем? Database access is resolved, migration discovery is repaired, and the real database lifecycle release gate is green.
+
+Что осталось? Schema synchronization is pending an explicit application-wide migration decision because the host currently has four pending migrations. Remote publication remains separately blocked by pre-existing `.gating/`.
+

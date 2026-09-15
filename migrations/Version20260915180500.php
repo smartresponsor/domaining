@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domaining\Migration;
+namespace App\Domaining\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
