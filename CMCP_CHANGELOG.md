@@ -235,3 +235,17 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 
 Что осталось? Create the signed integration commit, verify a clean branch, and push the feature branch to origin.
 
+### Remote publication result
+
+- Signed RC integration commit created: `75ac613beb26ca648266807ce7914694c8264691` (`Resolve Domaining RC integration blockers`).
+- Post-commit Domaining worktree is clean.
+- Guarded publication attempted with `git push -u origin HEAD` against the repository-declared canonical remote `git@github.com:smartresponsor/domaining.git`.
+- GitHub rejected publication with `Repository not found`; the failure is now remote repository/access state rather than local cleanliness, schema, migration, or test state.
+- Neighboring canonical component remotes follow the same component-name pattern (`smartresponsor/objecting.git`, `smartresponsor/cruding.git`, `smartresponsor/gating.git`), and Domaining's own `tool/repository-bootstrap.ps1` declares `smartresponsor/domaining.git`; no evidence supports silently changing origin to another repository name.
+- Console MCP currently exposes no GitHub repository-creation capability and no guarded remote-set-url capability, so resolving a missing/inaccessible GitHub repository cannot be safely fabricated from this workspace.
+- Final local validation remains green: Composer strict/check-lock validation passes; Domaining scoped PostgreSQL schema validation passes 7/7 tables; migration queue is empty; Domaining QA passes. A post-final-migration rerun of `domaining:release:gate` could not be completed because the Symfony command-discovery call timed out; an earlier database-backed run passed with zero errors and warnings before the final schema-only normalization.
+
+Что имеем? All Domaining-owned implementation, migrations, database synchronization, tests, and local Git integration are complete and committed; the worktree is clean.
+
+Что осталось? GitHub must expose or grant access to the canonical `smartresponsor/domaining` repository before this clean feature branch can be published. Once that remote exists/is accessible, the remaining operation is a guarded push and remote integration check.
+
