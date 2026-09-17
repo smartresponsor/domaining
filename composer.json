@@ -65,6 +65,10 @@
   "prefer-stable": true,
   "scripts": {
     "test": "phpunit",
+    "test:coverage": [
+      "@php -r \"if (!is_dir('var/coverage')) { mkdir('var/coverage', 0777, true); }\"",
+      "@php -d xdebug.mode=coverage vendor/bin/phpunit --path-coverage --coverage-text=var/coverage/summary.txt"
+    ],
     "phpstan": "phpstan analyse src test --level=6 --memory-limit=1G",
     "qa": [
       "@phpstan",

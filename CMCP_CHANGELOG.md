@@ -249,3 +249,82 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 
 Что осталось? GitHub must expose or grant access to the canonical `smartresponsor/domaining` repository before this clean feature branch can be published. Once that remote exists/is accessible, the remaining operation is a guarded push and remote integration check.
 
+## 2026-09-16 — Canon040 RC coverage pass
+
+### Reconnaissance baseline
+
+- Workspace: `D:\PhpstormProjects\www\Domaining`; current branch is `feature/application-runtime-overlay-20260901`.
+- Re-read the Domaining repository instructions, Composer/package contract, `MANIFEST.json`, README surfaces, architecture/API material, and the complete AsciiDoc documentation inventory declared by the manifest.
+- Re-read mandatory Objecting, Cruding, Viewing, and Interfacing contracts. Interfacing has no `MANIFEST.json` in the current tree; its existing `AGENTS.md`, `README.md`, and `composer.json` were inspected instead.
+- Re-read Gating as the executable companion and Canonization as the normative textual source. Consulted the actual Canon018, Canon019, Canon021, Canon022, Canon040, Canon043, and Canon044 rule documents.
+- Market/reference reconnaissance against Cloudflare custom-hostname validation and Caddy automatic/on-demand TLS reinforces the existing boundary: Domaining owns claim/ownership verification/readiness/routing intent; DNS hosting mutation, certificate issuance, and edge/proxy execution remain outside this component.
+- Current Composer QA is green: PHPStan level 6 reports zero errors and PHPUnit passes. However, the pre-existing suite contained only 3 tests / 6 assertions and produced no persistent php-code-coverage evidence.
+
+### Target-to-canon mapping
+
+- Canon018: `domaining/domain` correctly maps to `App\\Domaining\\` and `Domain*` subject vocabulary.
+- Canon019: the inspected source follows role-first Symfony topology; no competing `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Port`, `src/Adapter`, or `src/Adaptor` root is justified.
+- Canon021: Domaining business lifecycle/report controllers remain component-specific; generic application CRUD stays in Cruding. EasyAdmin remains the explicit admin exception.
+- Canon022: the standalone baseline is directly declared: Cruding, Collectioning, Tabling, Viewing, Interfacing, Objecting, and EasyAdmin.
+- Canon043: first-party local path repositories and direct constraints use canonical `dev-master`, with `minimum-stability=dev` and `prefer-stable=true`.
+- Canon044: active Objecting-backed lifecycle fields use entity-native Doctrine names; no new prefixed Objecting storage is introduced by this pass.
+- Canon040: this is the active RC-critical gap. Canonical thresholds are independently lines >=80%, methods >=80%, branches >=70%, and test-count ratios are explicitly non-normative.
+
+### RC-critical workstream selected
+
+- Materialize a persistent PHPUnit/php-code-coverage producer scoped to `src/`.
+- Measure the factual executable coverage baseline before writing tests.
+- Add behaviorally meaningful lifecycle/value/security/service tests in bounded waves, prioritizing state-machine and ownership safety rather than assertion inflation.
+- Re-run coverage after each material wave and keep the resulting debt explicit until Canon040 is actually satisfied.
+
+### Growth workstream (non-blocking)
+
+- Post-RC maturity can add richer provider-neutral pre-validation/DCV telemetry, clearer zero-downtime custom-domain migration guidance, and stronger operator diagnostics without moving DNS/TLS/proxy mutation into Domaining.
+
+### Risks and safeguards
+
+- `DomainDnsVerificationService` calls PHP DNS functions directly; tests must not invent provider state or depend on flaky public DNS merely to raise coverage.
+- Keep the foreign/local `.gating/` overlay out of Domaining product ownership.
+- Generated Symfony `config/reference.php` environment drift caused by test bootstrapping is incidental and must not enter the change set.
+- Do not expand production semantics solely to make code easier to test.
+
+### Coverage instrumentation and measured baseline
+
+- Added Composer `test:coverage`, writing the persistent text summary to `var/coverage/summary.txt` with Xdebug path/branch coverage enabled.
+- Added PHPUnit source scoping for `src/` so coverage evidence represents Domaining production PHP.
+- First factual Canon040 measurement: Lines 3.61% (73/2022), Methods 2.48% (9/363), Branches 1.56% (14/899). This is `HIGH_TEST_DEBT` by Canon040 in all three dimensions.
+- The coverage run regenerated test-environment lines in tracked `config/reference.php`; that incidental drift was immediately reverted and is not part of the intended RC change set.
+
+Что имеем? Domaining now has reproducible Canon040 evidence instead of a misleading test-count-only green signal, and the real RC test debt is quantified.
+
+Что осталось? Build meaningful coverage across lifecycle/value/security/service behavior, re-measure toward 80/80/70, then run complete non-database/database acceptance and Git integration.
+
+### Coverage closure and final RC verification
+
+- Added behavior-focused core lifecycle tests plus a real-kernel SQLite integration harness covering Doctrine repositories, provider-neutral report/release services, console commands, HTTP controllers, runtime overlay, rendering fallback, forms, EasyAdmin admin exception, lifecycle policies, DTOs, events, and query behavior.
+- No production responsibility was expanded for coverage; provider DNS/TLS/proxy mutation remains outside Domaining and public DNS was not used as a flaky test dependency.
+- PHPUnit deprecation diagnostics identified one test-only use of `with()` on a stub. The obsolete argument constraint was removed; a clean diagnostic rerun reported zero PHPUnit deprecations.
+- Final Composer QA is green: PHPStan level 6 reports zero errors and PHPUnit passes 32 tests / 357 assertions.
+- Final Canon040 Xdebug measurement passes every normative threshold independently: Lines 84.47% (1708/2022), Methods 80.17% (291/363), Branches 80.59% (797/989). Canonical minimums are 80% / 80% / 70% respectively.
+- `composer validate --strict` passes and changed/untracked PHP lint is green.
+- Test execution regenerates `config/reference.php` environment annotations (`when@dev` -> `when@test`); the incidental generated drift was reverted after the final measurement and is excluded from the intended change set.
+
+Что имеем? Canon040 is factually satisfied, the expanded suite is statically clean and warning-free, and the RC-critical coverage debt selected by this pass is closed.
+
+Что осталось? Run the repository RC validator and final release/package acceptance, inspect the exact final diff/worktree, create the coherent signed commit, and attempt guarded publication to the canonical remote.
+
+### Final acceptance and integration tail
+
+- Repository RC validation passed all executable checks: Composer validation, PHPStan, PHPUnit, and PHPUnit coverage are green; Canonization issue count is zero. The validator's only readiness blocker before integration is the expected `workspace_has_uncommitted_changes` state for this owned five-file change set.
+- Standalone `domaining:contract:governance --env=test` passes with `ready: true` and zero issues; `domaining:release:manifest --env=test` passes with `releaseCandidateReady: true`.
+- Standalone database-backed `domaining:release:gate --env=test` cannot run because this component workspace intentionally has no `DATABASE_URL`; database acceptance was therefore run through the existing Host App production runtime rather than inventing a substitute environment.
+- Host App `domaining:release:gate --env=prod` passes with zero errors and zero warnings.
+- Host App `domaining:release:review --env=prod` reports `releaseCandidateReady: true`. It includes one non-blocking operational warning for an expired pending verification challenge on `1tasker.com`; no production state was mutated merely to silence that diagnostic.
+- Host App `domaining:release:package --env=prod` reports `packageReady: true` with the six provider-neutral RC surfaces.
+- Composer security audit reports no vulnerability advisories.
+- Final intended integration set contains exactly `CMCP_CHANGELOG.md`, `composer.json`, `phpunit.xml.dist`, `test/Integration/DomainConsoleReportFlowTest.php`, and `test/Unit/DomainCoreLifecycleTest.php`; PHPUnit-generated `config/reference.php` drift has been reverted and is not part of the change set.
+
+Что имеем? The selected Canon040 RC workstream is complete: canonical coverage thresholds, static analysis, tests, security audit, contract governance, manifest, real database release gate, release review, and release package are all green for RC; only one operational data warning remains and does not block readiness.
+
+Что осталось? Create the coherent signed commit, verify the post-commit worktree/HEAD, then attempt guarded publication to the canonical `smartresponsor/domaining` remote and inspect the resulting upstream state.
+
