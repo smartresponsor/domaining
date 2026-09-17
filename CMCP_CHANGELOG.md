@@ -328,3 +328,17 @@ Continue maturity of the application runtime-overlay/declaration capability afte
 
 Что осталось? Create the coherent signed commit, verify the post-commit worktree/HEAD, then attempt guarded publication to the canonical `smartresponsor/domaining` remote and inspect the resulting upstream state.
 
+### Git publication and remote integration result
+
+- Signed RC coverage commit created as `61ea6e5f2e7470cc61c35a47756ed681092a1f05` (`Harden Domaining Canon040 RC coverage`).
+- The post-commit worktree was clean and the canonical `origin` remained `git@github.com:smartresponsor/domaining.git`.
+- Guarded `git push -u origin HEAD` succeeded. `feature/application-runtime-overlay-20260901` is now published and tracks `origin/feature/application-runtime-overlay-20260901` with ahead/behind `0/0`.
+- A PR to `master` was attempted and rejected by GitHub because `master` is not a valid base branch on the remote.
+- After guarded fetch and sync inspection, repository policy identified `main` as the protected primary branch name; a PR to `main` was therefore attempted next.
+- GitHub rejected the `main` PR with the same factual topology error: base SHA is blank and `main` is not present as a branch. The remote currently accepts the published feature branch but exposes no valid base branch for PR creation.
+- No canonical base branch was fabricated, force-created, or substituted from the feature branch merely to manufacture a merge path. Doing so would be a repository-governance decision outside this bounded Domaining implementation pass.
+
+Что имеем? The Domaining Canon040 RC work is implemented, verified, signed, and published to the canonical remote; local HEAD and its feature-branch upstream are synchronized.
+
+Что осталось? Remote merge integration is factually blocked until the GitHub repository has a canonical base branch (`main` or another explicitly established branch). Once that repository-level topology exists, the published feature branch can enter normal PR inspection/check/merge flow without further Domaining source work.
+
