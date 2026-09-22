@@ -5,84 +5,44 @@
   "license": "proprietary",
   "repositories": [
     {
-      "type": "path",
-      "url": "../Administering",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "administering/administration": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/administering.git",
+      "no-api": true
     },
     {
-      "type": "path",
-      "url": "../Collectioning",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "collectioning/collection": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/collectioning.git",
+      "no-api": true
     },
     {
-      "type": "path",
-      "url": "../Cruding",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "cruding/crud": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/cruding.git",
+      "no-api": true
     },
     {
-      "type": "path",
-      "url": "../Interfacing",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "interfacing/interface": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/interfacing.git",
+      "no-api": true
     },
     {
-      "type": "path",
-      "url": "../Objecting",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "objecting/object": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/objecting.git",
+      "no-api": true
     },
     {
-      "type": "path",
-      "url": "../Tabling",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "tabling/table": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/tabling-.git",
+      "no-api": true
     },
     {
-      "type": "path",
-      "url": "../Viewing",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "viewing/view": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/viewing.git",
+      "no-api": true
     },
     {
-      "type": "path",
-      "url": "../Gating",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "gating/gate": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "https://github.com/smartresponsor/gating.git",
+      "no-api": true
     }
   ],
   "require": {

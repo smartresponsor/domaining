@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6630409f8f8c91d5df7113268c079ae",
+    "content-hash": "fd899a5a8feaf80652e38a43924c027c",
     "packages": [
         {
             "name": "administering/administration",
@@ -8424,6 +8424,84 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "gating/gate",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "../Gating",
+                "reference": "957e9d5ade835d089d11e13560cd1f1d24632ac6"
+            },
+            "require": {
+                "php": "^8.4",
+                "symfony/console": "^8.1",
+                "symfony/filesystem": "^8.1",
+                "symfony/finder": "^8.1",
+                "symfony/yaml": "^8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.95.4",
+                "phpstan/phpstan": "^2.2.2",
+                "phpunit/phpunit": "^13.3.3",
+                "rector/rector": "^2.4.1"
+            },
+            "bin": [
+                "bin/gating"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "App\\Gating\\": "src/"
+                }
+            },
+            "scripts": {
+                "gate": [
+                    "@php bin/gating check --target=."
+                ],
+                "scan": [
+                    "@php bin/gating scan --target=."
+                ],
+                "test": [
+                    "@php tests/calibration.php"
+                ],
+                "test:unit": [
+                    "phpunit tests/Unit"
+                ],
+                "test:coverage": [
+                    "@php -d xdebug.mode=coverage vendor/bin/phpunit --branch-coverage --coverage-text=var/coverage/summary.txt"
+                ],
+                "cs:check": [
+                    "php-cs-fixer fix --dry-run --diff --verbose"
+                ],
+                "cs:fix": [
+                    "php-cs-fixer fix --verbose"
+                ],
+                "phpstan": [
+                    "phpstan analyse -c .gating/quality/owner/php/phpstan.neon"
+                ],
+                "rector:check": [
+                    "rector process --dry-run --config .gating/quality/owner/php/rector.php"
+                ],
+                "rector:fix": [
+                    "rector process --config .gating/quality/owner/php/rector.php"
+                ],
+                "quality": [
+                    "@cs:check",
+                    "@phpstan",
+                    "@rector:check",
+                    "@test",
+                    "@gate"
+                ]
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Smart Responsor Symfony-oriented executable ecosystem gate.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
         {
             "name": "myclabs/deep-copy",
             "version": "1.13.4",
