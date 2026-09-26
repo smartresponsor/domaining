@@ -2,7 +2,7 @@
   "name": "domaining/domain",
   "description": "Smart Responsor Domaining component for externally registered custom-domain lifecycle.",
   "type": "symfony-bundle",
-  "license": "proprietary",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "repositories": [
     {
       "type": "path",
@@ -113,10 +113,13 @@
     "symfony/runtime": "^8.1"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.94",
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^12.0",
     "squizlabs/php_codesniffer": "^4.0",
-    "gating/gate": "dev-master"
+    "gating/gate": "dev-master",
+    "symfony/panther": "^2.4",
+    "symfony/test-pack": "^1.2"
   },
   "autoload": {
     "psr-4": {
@@ -138,11 +141,20 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
+    "cs:check": "php-cs-fixer fix --dry-run --diff --using-cache=no",
+    "cs:fix": "php-cs-fixer fix --using-cache=no",
+    "doctrine:schema:validate": "@php bin/console doctrine:schema:validate --env=test",
+    "doctrine:migrations:status": "@php bin/console doctrine:migrations:status --env=test --no-interaction",
+    "doctrine:schema:parity": [
+      "@doctrine:schema:validate",
+      "@php bin/console doctrine:migrations:up-to-date --env=test --no-interaction"
+    ],
     "test": "phpunit",
     "test:coverage": [
       "@php -r \"if (!is_dir('var/coverage')) { mkdir('var/coverage', 0777, true); }\"",
       "@php -d xdebug.mode=coverage vendor/bin/phpunit --path-coverage --coverage-text=var/coverage/summary.txt"
     ],
+    "test:behavioral-coverage": "@php tool/generate-behavioral-ui-coverage.php",
     "phpstan": "phpstan analyse src test --level=6 --memory-limit=1G",
     "qa": [
       "@phpstan",
@@ -150,6 +162,7 @@
     ],
     "gate": "@php vendor/bin/gating check --target=.",
     "quality": [
+      "@cs:check",
       "@phpstan",
       "@test",
       "@gate"
@@ -157,7 +170,7 @@
   },
   "extra": {
     "symfony": {
-      "require": "8.0.*"
+      "require": "8.1.*"
     }
   },
   "suggest": {

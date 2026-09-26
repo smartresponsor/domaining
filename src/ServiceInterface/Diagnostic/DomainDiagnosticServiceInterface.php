@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Diagnostic;
 
-use App\Domaining\Dto\DomainDiagnosticReport;
+use App\Domaining\DTO\DomainDiagnosticReportDTO;
 
 interface DomainDiagnosticServiceInterface
 {
-    public function buildReport(): DomainDiagnosticReport;
+    public function buildReport(): DomainDiagnosticReportDTO;
 }

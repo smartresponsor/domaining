@@ -9,13 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/domain/contract', name: 'domain_contract_')]
 final class DomainContractController extends AbstractController
 {
-    #[Route('/governance', name: 'governance', methods: ['GET'])]
+    #[Route('/domain/contract/governance', name: 'domain_contract_governance', methods: ['GET'])]
     public function governance(DomainContractGovernanceServiceInterface $governanceService): JsonResponse
     {
         return $this->json(['domainContractGovernance' => $governanceService->buildReport()->toArray()]);
     }
 }
-

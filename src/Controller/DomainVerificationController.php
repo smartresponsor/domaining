@@ -14,10 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
-#[Route('/domain/verification', name: 'domain_verification_')]
 final class DomainVerificationController extends AbstractController
 {
-    #[Route('/{challengeId}/instruction', name: 'instruction', methods: ['GET'])]
+    #[Route('/domain/verification/{challengeId}/instruction', name: 'domain_verification_instruction', methods: ['GET'])]
     public function instruction(
         string $challengeId,
         Request $request,
@@ -34,7 +33,7 @@ final class DomainVerificationController extends AbstractController
         return $this->json($instructionService->buildInstructionSet($challenge, $providerHint)->toArray());
     }
 
-    #[Route('/{challengeId}/check', name: 'check', methods: ['POST'])]
+    #[Route('/domain/verification/{challengeId}/check', name: 'domain_verification_check', methods: ['POST'])]
     public function check(
         string $challengeId,
         Request $request,
@@ -56,4 +55,3 @@ final class DomainVerificationController extends AbstractController
         ]);
     }
 }
-

@@ -8,7 +8,7 @@ The endpoint does not duplicate domain business logic and does not make Administ
 
 [source,text]
 ----
-GET /domain/configuration/tool-metadata
+GET /domain/configuration/tool/metadata
 ----
 
 == Canonical variables

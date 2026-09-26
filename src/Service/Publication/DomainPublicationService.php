@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Publication;
 
-use App\Domaining\Dto\DomainPublicationSnapshot;
-use App\Domaining\Dto\DomainRoutingIntent;
-use App\Domaining\Entity\DomainAuditRecord;
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainPublicationState;
-use App\Domaining\Entity\DomainRoutingTarget;
+use App\Domaining\DTO\DomainPublicationSnapshotDTO;
+use App\Domaining\DTO\DomainRoutingIntentDTO;
+use App\Domaining\Entity\DomainAuditRecordEntity;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainPublicationStateEntity;
+use App\Domaining\Entity\DomainRoutingTargetEntity;
 use App\Domaining\Enum\DomainLifecycleTransition;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\Exception\DomainInvalidStateException;
+use App\Domaining\Repository\DomainPersistenceRepository;
 use App\Domaining\Repository\DomainPublicationStateRepository;
 use App\Domaining\Repository\DomainRoutingTargetRepository;
 use App\Domaining\ServiceInterface\Publication\DomainPublicationServiceInterface;
 use App\Domaining\ServiceInterface\Security\DomainOwnershipGuardServiceInterface;
 use App\Domaining\ServiceInterface\State\DomainBindingTransitionGuardInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class DomainPublicationService implements DomainPublicationServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private DomainPersistenceRepository $persistenceRepository,
         private DomainRoutingTargetRepository $targetRepository,
         private DomainPublicationStateRepository $stateRepository,
         private DomainOwnershipGuardServiceInterface $ownershipGuardService,
@@ -31,72 +31,72 @@ final readonly class DomainPublicationService implements DomainPublicationServic
     ) {
     }
 
-    public function prepareRoutingIntent(DomainBinding $binding, string $targetHost, string $targetPath = '/'): DomainRoutingIntent
+    public function prepareRoutingIntent(DomainBindingEntity $binding, string $targetHost, string $targetPath = '/'): DomainRoutingIntentDTO
     {
         $this->transitionGuard->assertAllowed($binding, DomainLifecycleTransition::PreparePublication);
         $this->ownershipGuardService->assertRoutingTargetIsAllowed($targetHost, $targetPath);
 
-        $target = $this->targetRepository->findOneBy(['binding' => $binding]) ?? new DomainRoutingTarget($binding, $targetHost, $targetPath);
+        $target = $this->targetRepository->findOneBy(['binding' => $binding]) ?? new DomainRoutingTargetEntity($binding, $targetHost, $targetPath);
         $target->retarget($targetHost, $targetPath);
-        $state = $this->stateRepository->findOneBy(['binding' => $binding]) ?? new DomainPublicationState($binding);
+        $state = $this->stateRepository->findOneBy(['binding' => $binding]) ?? new DomainPublicationStateEntity($binding);
         $state->markReady();
         $binding->declaration()?->markReady();
 
-        $this->entityManager->persist($target);
-        $this->entityManager->persist($state);
-        $this->entityManager->persist(new DomainAuditRecord($binding->domainName(), 'domain_publication_ready', $binding->ownerId(), [
+        $this->persistenceRepository->persist($target);
+        $this->persistenceRepository->persist($state);
+        $this->persistenceRepository->persist(new DomainAuditRecordEntity($binding->domainName(), 'domain_publication_ready', $binding->ownerId(), [
             'target_host' => $targetHost,
             'target_path' => $targetPath,
         ]));
-        $this->entityManager->flush();
+        $this->persistenceRepository->flush();
 
-        return new DomainRoutingIntent($binding->domainName(), $binding->ownerId(), $binding->surfaceType(), $binding->surfaceKey(), $targetHost, $targetPath);
+        return new DomainRoutingIntentDTO($binding->domainName(), $binding->ownerId(), $binding->surfaceType(), $binding->surfaceKey(), $targetHost, $targetPath);
     }
 
-    public function markPublished(DomainBinding $binding): DomainPublicationSnapshot
+    public function markPublished(DomainBindingEntity $binding): DomainPublicationSnapshotDTO
     {
         $this->transitionGuard->assertAllowed($binding, DomainLifecycleTransition::MarkPublished);
 
         $state = $this->stateRepository->findOneBy(['binding' => $binding]);
-        if (!$state instanceof DomainPublicationState || DomainPublicationStatus::Ready !== $state->status()) {
+        if (!$state instanceof DomainPublicationStateEntity || DomainPublicationStatus::Ready !== $state->status()) {
             throw DomainInvalidStateException::create('Only ready domain publications can be marked as published.');
         }
 
         $target = $this->targetRepository->findOneBy(['binding' => $binding]);
-        if (!$target instanceof DomainRoutingTarget) {
+        if (!$target instanceof DomainRoutingTargetEntity) {
             throw DomainInvalidStateException::create('Domain publication target is missing.');
         }
 
         $state->markPublished();
         $binding->declaration()?->markPublished();
-        $this->entityManager->persist(new DomainAuditRecord($binding->domainName(), 'domain_publication_published', $binding->ownerId(), [
+        $this->persistenceRepository->persist(new DomainAuditRecordEntity($binding->domainName(), 'domain_publication_published', $binding->ownerId(), [
             'target_host' => $target->targetHost(),
             'target_path' => $target->targetPath(),
         ]));
-        $this->entityManager->flush();
+        $this->persistenceRepository->flush();
 
-        return new DomainPublicationSnapshot($binding->domainName(), $binding->ownerId(), $state->status(), $target->targetHost(), $target->targetPath());
+        return new DomainPublicationSnapshotDTO($binding->domainName(), $binding->ownerId(), $state->status(), $target->targetHost(), $target->targetPath());
     }
 
-    public function markWithdrawn(DomainBinding $binding): DomainPublicationSnapshot
+    public function markWithdrawn(DomainBindingEntity $binding): DomainPublicationSnapshotDTO
     {
         $this->transitionGuard->assertAllowed($binding, DomainLifecycleTransition::WithdrawPublication);
 
-        $state = $this->stateRepository->findOneBy(['binding' => $binding]) ?? new DomainPublicationState($binding);
+        $state = $this->stateRepository->findOneBy(['binding' => $binding]) ?? new DomainPublicationStateEntity($binding);
         $target = $this->targetRepository->findOneBy(['binding' => $binding]);
 
         $state->markWithdrawn();
         $binding->declaration()?->suspend();
-        $this->entityManager->persist($state);
-        $this->entityManager->persist(new DomainAuditRecord($binding->domainName(), 'domain_publication_withdrawn', $binding->ownerId()));
-        $this->entityManager->flush();
+        $this->persistenceRepository->persist($state);
+        $this->persistenceRepository->persist(new DomainAuditRecordEntity($binding->domainName(), 'domain_publication_withdrawn', $binding->ownerId()));
+        $this->persistenceRepository->flush();
 
-        return new DomainPublicationSnapshot(
+        return new DomainPublicationSnapshotDTO(
             $binding->domainName(),
             $binding->ownerId(),
             $state->status(),
-            $target instanceof DomainRoutingTarget ? $target->targetHost() : null,
-            $target instanceof DomainRoutingTarget ? $target->targetPath() : null,
+            $target instanceof DomainRoutingTargetEntity ? $target->targetHost() : null,
+            $target instanceof DomainRoutingTargetEntity ? $target->targetPath() : null,
         );
     }
 }

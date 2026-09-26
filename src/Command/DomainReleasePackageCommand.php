@@ -26,4 +26,3 @@ final class DomainReleasePackageCommand extends Command
         return $report->packageReady ? Command::SUCCESS : Command::FAILURE;
     }
 }
-

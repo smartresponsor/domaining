@@ -40,7 +40,7 @@ It does not contain Cloudflare, Nginx, Caddy, Traefik, Kubernetes, or registrar-
   "ownerId": "tenant-123",
   "surfaceType": "tenant",
   "surfaceKey": "public-site",
-  "targetHost": "tenant-123.smartresponsor.app",
+  "targetHost": "tenant-123.example.net",
   "targetPath": "/",
   "publicationStatus": "ready",
   "bindingStatus": "active",

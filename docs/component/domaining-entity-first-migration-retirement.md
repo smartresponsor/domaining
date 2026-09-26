@@ -8,12 +8,12 @@ This pass retires `Domaining/migration/**` as a schema-first source. The Doctrin
 
 The retired migration tables are covered by existing Domaining entities:
 
-- `domain_claim` -> `DomainClaim`
-- `domain_verification_challenge` -> `DomainVerificationChallenge`
-- `domain_binding` -> `DomainBinding`
-- `domain_routing_target` -> `DomainRoutingTarget`
-- `domain_publication_state` -> `DomainPublicationState`
-- `domain_audit_record` -> `DomainAuditRecord`
+- `domain_claim` -> `DomainClaimEntity`
+- `domain_verification_challenge` -> `DomainVerificationChallengeEntity`
+- `domain_binding` -> `DomainBindingEntity`
+- `domain_routing_target` -> `DomainRoutingTargetEntity`
+- `domain_publication_state` -> `DomainPublicationStateEntity`
+- `domain_audit_record` -> `DomainAuditRecordEntity`
 
 ## Migration metadata lifted into Doctrine attributes
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Audit;
 
-use App\Domaining\Dto\DomainAuditTrailEntry;
-use App\Domaining\Entity\DomainAuditRecord;
+use App\Domaining\DTO\DomainAuditTrailEntryDTO;
+use App\Domaining\Entity\DomainAuditRecordEntity;
 use App\Domaining\Repository\DomainAuditRecordRepository;
 use App\Domaining\ServiceInterface\Audit\DomainAuditTrailReadServiceInterface;
 use App\Domaining\Value\DomainName;
@@ -21,7 +21,7 @@ final readonly class DomainAuditTrailReadService implements DomainAuditTrailRead
         $normalizedDomainName = (new DomainName($domainName))->value;
         $records = $this->auditRecordRepository->recentForDomain($normalizedDomainName, max(1, min(250, $limit)));
 
-        return array_map(static fn (DomainAuditRecord $record): DomainAuditTrailEntry => new DomainAuditTrailEntry(
+        return array_map(static fn (DomainAuditRecordEntity $record): DomainAuditTrailEntryDTO => new DomainAuditTrailEntryDTO(
             (string) $record->id(),
             $record->domainName(),
             $record->action(),

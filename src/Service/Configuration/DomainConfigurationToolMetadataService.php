@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Configuration;
 
-use App\Domaining\Dto\DomainConfigurationToolDescriptor;
-use App\Domaining\Dto\DomainConfigurationVariable;
+use App\Domaining\DTO\DomainConfigurationToolDescriptorDTO;
+use App\Domaining\DTO\DomainConfigurationVariableDTO;
 use App\Domaining\Enum\DomainConfigurationTarget;
 use App\Domaining\Enum\DomainPublicationMode;
 use App\Domaining\ServiceInterface\Configuration\DomainConfigurationToolMetadataServiceInterface;
 
 final readonly class DomainConfigurationToolMetadataService implements DomainConfigurationToolMetadataServiceInterface
 {
-    public function descriptor(): DomainConfigurationToolDescriptor
+    public function descriptor(): DomainConfigurationToolDescriptorDTO
     {
-        return new DomainConfigurationToolDescriptor(
+        return new DomainConfigurationToolDescriptorDTO(
             key: 'domaining.domain.connection',
             label: 'Custom domain connection',
             section: 'domain',
             description: 'Provider-neutral configuration metadata for connecting externally registered domains to Smart Responsor surfaces.',
             variables: [
-                new DomainConfigurationVariable(
+                new DomainConfigurationVariableDTO(
                     key: 'DOMAIN_PUBLICATION_MODE',
                     label: 'Publication mode',
                     description: 'Controls whether Domaining only prepares routing intent or allows a runtime provider to mark a binding as published.',
@@ -29,7 +29,7 @@ final readonly class DomainConfigurationToolMetadataService implements DomainCon
                     required: true,
                     allowedValues: array_map(static fn (DomainPublicationMode $mode): string => $mode->value, DomainPublicationMode::cases()),
                 ),
-                new DomainConfigurationVariable(
+                new DomainConfigurationVariableDTO(
                     key: 'DOMAIN_ROUTING_TARGET_HOST',
                     label: 'Default routing target host',
                     description: 'Fallback host suggested in routing intent when a request does not provide a target host.',
@@ -37,7 +37,7 @@ final readonly class DomainConfigurationToolMetadataService implements DomainCon
                     type: 'hostname',
                     required: true,
                 ),
-                new DomainConfigurationVariable(
+                new DomainConfigurationVariableDTO(
                     key: 'DOMAIN_VERIFICATION_TOKEN_PREFIX',
                     label: 'Verification token prefix',
                     description: 'Plain prefix used inside DNS TXT challenge values before the random verification token.',
@@ -45,7 +45,7 @@ final readonly class DomainConfigurationToolMetadataService implements DomainCon
                     type: 'string',
                     required: true,
                 ),
-                new DomainConfigurationVariable(
+                new DomainConfigurationVariableDTO(
                     key: 'DOMAIN_VERIFICATION_RETRY_SECONDS',
                     label: 'Verification retry window',
                     description: 'Minimum age in seconds before a pending DNS challenge should be rechecked by the scheduled command.',
@@ -53,7 +53,7 @@ final readonly class DomainConfigurationToolMetadataService implements DomainCon
                     type: 'integer',
                     required: true,
                 ),
-                new DomainConfigurationVariable(
+                new DomainConfigurationVariableDTO(
                     key: 'DOMAIN_DNS_CHECK_TIMEOUT_SECONDS',
                     label: 'DNS check timeout',
                     description: 'Maximum DNS resolver wait time for one verification lookup.',

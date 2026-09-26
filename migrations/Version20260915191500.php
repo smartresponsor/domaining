@@ -12,7 +12,7 @@ final class Version20260915191500 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Align DomainDeclaration Objecting columns and DomainClaim audit nullability with current ORM metadata.';
+        return 'Align DomainDeclarationEntity Objecting columns and DomainClaimEntity audit nullability with current ORM metadata.';
     }
 
     public function up(Schema $schema): void

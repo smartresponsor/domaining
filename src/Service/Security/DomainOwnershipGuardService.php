@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Security;
 
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainClaim;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainClaimEntity;
 use App\Domaining\Exception\DomainConflictException;
 use App\Domaining\Exception\DomainInvalidStateException;
 use App\Domaining\Repository\DomainBindingRepository;
@@ -24,7 +24,7 @@ final readonly class DomainOwnershipGuardService implements DomainOwnershipGuard
     ) {
     }
 
-    public function assertClaimCanBeCreated(DomainClaim $claim): void
+    public function assertClaimCanBeCreated(DomainClaimEntity $claim): void
     {
         $domainName = strtolower($claim->domainName());
 
@@ -35,15 +35,15 @@ final readonly class DomainOwnershipGuardService implements DomainOwnershipGuard
         }
 
         $existing = $this->bindingRepository->findLiveByDomainName($claim->domainName());
-        if ($existing instanceof DomainBinding && $existing->ownerId() !== $claim->ownerId()) {
+        if ($existing instanceof DomainBindingEntity && $existing->ownerId() !== $claim->ownerId()) {
             throw DomainConflictException::create(sprintf('Domain "%s" already has a live binding for another owner.', $claim->domainName()));
         }
     }
 
-    public function assertBindingCanBeActivated(DomainBinding $binding): void
+    public function assertBindingCanBeActivated(DomainBindingEntity $binding): void
     {
         $existing = $this->bindingRepository->findLiveByDomainName($binding->domainName());
-        if (!$existing instanceof DomainBinding) {
+        if (!$existing instanceof DomainBindingEntity) {
             return;
         }
 

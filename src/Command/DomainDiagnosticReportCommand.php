@@ -30,4 +30,3 @@ final class DomainDiagnosticReportCommand extends Command
         return $report->pass ? Command::SUCCESS : Command::FAILURE;
     }
 }
-

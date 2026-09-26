@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domaining\Command;
 
 use App\Domaining\Enum\DomainSurfaceType;
-use App\Domaining\ServiceInterface\Policy\DomainSurfacePolicyServiceInterface;
+use App\Domaining\Policy\Surface\DomainSurfacePolicyInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'domaining:policy:surface-report', description: 'Export provider-neutral domain surface policy diagnostics.')]
 final class DomainSurfacePolicyReportCommand extends Command
 {
-    public function __construct(private readonly DomainSurfacePolicyServiceInterface $policyService)
+    public function __construct(private readonly DomainSurfacePolicyInterface $policyService)
     {
         parent::__construct();
     }
@@ -42,4 +42,3 @@ final class DomainSurfacePolicyReportCommand extends Command
         return $report->pass ? Command::SUCCESS : Command::FAILURE;
     }
 }
-

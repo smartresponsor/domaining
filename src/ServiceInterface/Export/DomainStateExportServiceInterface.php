@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Export;
 
-use App\Domaining\Dto\DomainStateExportReport;
+use App\Domaining\DTO\DomainStateExportReportDTO;
 
 interface DomainStateExportServiceInterface
 {
-    public function buildExport(): DomainStateExportReport;
+    public function buildExport(): DomainStateExportReportDTO;
 }

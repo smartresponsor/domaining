@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Package;
 
-use App\Domaining\Dto\DomainReleasePackageReport;
-use App\Domaining\Dto\DomainReleasePackageSurface;
+use App\Domaining\DTO\DomainReleasePackageReportDTO;
+use App\Domaining\DTO\DomainReleasePackageSurfaceDTO;
 use App\Domaining\Service\Contract\DomainContractGovernanceService;
 use App\Domaining\Service\Manifest\DomainReleaseManifestService;
 use App\Domaining\Service\Review\DomainReleaseReviewService;
@@ -16,7 +16,6 @@ use App\Domaining\ServiceInterface\Package\DomainReleasePackageServiceInterface;
 use App\Domaining\ServiceInterface\Release\DomainReleaseGateServiceInterface;
 use App\Domaining\ServiceInterface\Review\DomainReleaseReviewServiceInterface;
 use App\Domaining\ServiceInterface\Runtime\DomainRuntimeHandoffServiceInterface;
-use DateTimeImmutable;
 
 /**
  * Builds the final provider-neutral Domaining RC package surface.
@@ -39,7 +38,7 @@ final readonly class DomainReleasePackageService implements DomainReleasePackage
     ) {
     }
 
-    public function buildPackage(): DomainReleasePackageReport
+    public function buildPackage(): DomainReleasePackageReportDTO
     {
         $review = $this->releaseReviewService->buildReport();
         $manifest = $this->releaseManifestService->buildManifest();
@@ -50,9 +49,9 @@ final readonly class DomainReleasePackageService implements DomainReleasePackage
 
         $packageReady = $review->releaseCandidateReady && $manifest->releaseCandidateReady && $contractGovernance->ready && $releaseGate->passed;
 
-        return new DomainReleasePackageReport(
+        return new DomainReleasePackageReportDTO(
             self::SCHEMA_VERSION,
-            new DateTimeImmutable(),
+            new \DateTimeImmutable(),
             $packageReady,
             'Domaining',
             'domaining/domain',
@@ -89,17 +88,17 @@ final readonly class DomainReleasePackageService implements DomainReleasePackage
     }
 
     /**
-     * @return list<DomainReleasePackageSurface>
+     * @return list<DomainReleasePackageSurfaceDTO>
      */
     private function surface(): array
     {
         return [
-            new DomainReleasePackageSurface('releasePackage', self::SCHEMA_VERSION, 'Aggregated Domaining RC package surface.', ['GET /domain/release/package'], ['domaining:release:package']),
-            new DomainReleasePackageSurface('releaseReview', DomainReleaseReviewService::SCHEMA_VERSION, 'Aggregated RC review report.', ['GET /domain/release/review'], ['domaining:release:review']),
-            new DomainReleasePackageSurface('releaseManifest', DomainReleaseManifestService::SCHEMA_VERSION, 'Machine-readable component release manifest.', ['GET /domain/release/manifest'], ['domaining:release:manifest']),
-            new DomainReleasePackageSurface('contractGovernance', DomainContractGovernanceService::SCHEMA_VERSION, 'Exported contract inventory and drift checks.', ['GET /domain/contract/governance'], ['domaining:contract:governance']),
-            new DomainReleasePackageSurface('runtimeHandoff', DomainContractGovernanceService::RUNTIME_HANDOFF_CONTRACT_VERSION, 'Provider-neutral runtime publication handoff.', ['GET /domain/runtime/handoff'], ['domaining:runtime:handoff-export']),
-            new DomainReleasePackageSurface('stateExport', 'domaining.state-export.v1', 'Provider-neutral domain lifecycle state snapshot.', ['GET /domain/export/state'], ['domaining:state:export']),
+            new DomainReleasePackageSurfaceDTO('releasePackage', self::SCHEMA_VERSION, 'Aggregated Domaining RC package surface.', ['GET /domain/release/package'], ['domaining:release:package']),
+            new DomainReleasePackageSurfaceDTO('releaseReview', DomainReleaseReviewService::SCHEMA_VERSION, 'Aggregated RC review report.', ['GET /domain/release/review'], ['domaining:release:review']),
+            new DomainReleasePackageSurfaceDTO('releaseManifest', DomainReleaseManifestService::SCHEMA_VERSION, 'Machine-readable component release manifest.', ['GET /domain/release/manifest'], ['domaining:release:manifest']),
+            new DomainReleasePackageSurfaceDTO('contractGovernance', DomainContractGovernanceService::SCHEMA_VERSION, 'Exported contract inventory and drift checks.', ['GET /domain/contract/governance'], ['domaining:contract:governance']),
+            new DomainReleasePackageSurfaceDTO('runtimeHandoff', DomainContractGovernanceService::RUNTIME_HANDOFF_CONTRACT_VERSION, 'Provider-neutral runtime publication handoff.', ['GET /domain/runtime/handoff'], ['domaining:runtime:handoff-export']),
+            new DomainReleasePackageSurfaceDTO('stateExport', 'domaining.state-export.v1', 'Provider-neutral domain lifecycle state snapshot.', ['GET /domain/export/state'], ['domaining:state:export']),
         ];
     }
 }

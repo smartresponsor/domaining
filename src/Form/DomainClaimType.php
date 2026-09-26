@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Form;
 
-use App\Domaining\Dto\DomainClaimRequest;
+use App\Domaining\DTO\DomainClaimRequestDTO;
 use App\Domaining\Enum\DomainSurfaceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -30,7 +30,7 @@ final class DomainClaimType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => DomainClaimRequest::class,
+            'data_class' => DomainClaimRequestDTO::class,
         ]);
     }
 }

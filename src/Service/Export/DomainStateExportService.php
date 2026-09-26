@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Export;
 
-use App\Domaining\Dto\DomainStateExportBinding;
-use App\Domaining\Dto\DomainStateExportReport;
+use App\Domaining\DTO\DomainStateExportBindingDTO;
+use App\Domaining\DTO\DomainStateExportReportDTO;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\Repository\DomainBindingRepository;
 use App\Domaining\Repository\DomainPublicationStateRepository;
 use App\Domaining\Repository\DomainRoutingTargetRepository;
 use App\Domaining\ServiceInterface\Export\DomainStateExportServiceInterface;
-use DateTimeImmutable;
 
 final readonly class DomainStateExportService implements DomainStateExportServiceInterface
 {
@@ -25,7 +24,7 @@ final readonly class DomainStateExportService implements DomainStateExportServic
     ) {
     }
 
-    public function buildExport(): DomainStateExportReport
+    public function buildExport(): DomainStateExportReportDTO
     {
         $bindings = [];
         $warnings = [];
@@ -46,7 +45,7 @@ final readonly class DomainStateExportService implements DomainStateExportServic
                 $warnings[] = sprintf('Binding "%s" requires review before runtime publication export can be trusted.', $binding->domainName());
             }
 
-            $bindings[] = new DomainStateExportBinding(
+            $bindings[] = new DomainStateExportBindingDTO(
                 $binding->domainName(),
                 $binding->ownerId(),
                 $binding->surfaceType()->value,
@@ -60,7 +59,7 @@ final readonly class DomainStateExportService implements DomainStateExportServic
             );
         }
 
-        return new DomainStateExportReport(self::SCHEMA_VERSION, new DateTimeImmutable(), $bindings, $warnings);
+        return new DomainStateExportReportDTO(self::SCHEMA_VERSION, new \DateTimeImmutable(), $bindings, $warnings);
     }
 
     private function reviewState(

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Controller;
 
-use App\Domaining\Dto\DomainClaimRequest;
+use App\Domaining\DTO\DomainClaimRequestDTO;
 use App\Domaining\Enum\DomainSurfaceType;
 use App\Domaining\Repository\DomainDeclarationRepository;
 use App\Domaining\ServiceInterface\Claim\DomainClaimCreationServiceInterface;
@@ -14,17 +14,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/domain/claim', name: 'domain_claim_')]
 final class DomainClaimController extends AbstractController
 {
-    #[Route('', name: 'create', methods: ['POST'])]
+    #[Route('/domain/claim', name: 'domain_claim_create', methods: ['POST'])]
     public function create(
         Request $request,
         DomainClaimCreationServiceInterface $claimService,
         DomainVerificationChallengeServiceInterface $challengeService,
     ): JsonResponse {
         $payload = $request->toArray();
-        $claim = $claimService->createClaim(new DomainClaimRequest(
+        $claim = $claimService->createClaim(new DomainClaimRequestDTO(
             domainName: (string) ($payload['domainName'] ?? ''),
             ownerId: (string) ($payload['ownerId'] ?? ''),
             surfaceType: DomainSurfaceType::tryFrom((string) ($payload['surfaceType'] ?? 'tenant')) ?? DomainSurfaceType::Tenant,
@@ -45,7 +44,7 @@ final class DomainClaimController extends AbstractController
         ], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/declaration/{id}', name: 'create_from_declaration', methods: ['POST'])]
+    #[Route('/domain/claim/declaration/{id}', name: 'domain_claim_create_from_declaration', methods: ['POST'])]
     public function createFromDeclaration(
         string $id,
         Request $request,
@@ -84,4 +83,3 @@ final class DomainClaimController extends AbstractController
         ], JsonResponse::HTTP_CREATED);
     }
 }
-

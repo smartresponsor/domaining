@@ -1,6 +1,6 @@
 # AGENTS.md
 
-# SmartResponsor Platform Rules
+# Multi-Domain SaaS Platform Rules
 
 Этот файл находится в корне репозитория и является постоянным контекстом для Codex CLI.
 Перед работой прочитай также `README.md`, `composer.json`, `MANIFEST.json` и локальную `.gating/`, если она есть.

@@ -9,13 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/domain/runtime', name: 'domain_runtime_')]
 final class DomainRuntimeController extends AbstractController
 {
-    #[Route('/handoff', name: 'handoff', methods: ['GET'])]
+    #[Route('/domain/runtime/handoff', name: 'domain_runtime_handoff', methods: ['GET'])]
     public function handoff(DomainRuntimeHandoffServiceInterface $handoffService): JsonResponse
     {
         return $this->json($handoffService->buildReport()->toArray());
     }
 }
-

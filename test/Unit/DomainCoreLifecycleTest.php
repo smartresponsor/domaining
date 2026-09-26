@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domaining\Test\Unit;
 
-use App\Domaining\Entity\DomainAuditRecord;
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainClaim;
-use App\Domaining\Entity\DomainDeclaration;
-use App\Domaining\Entity\DomainPublicationState;
-use App\Domaining\Entity\DomainRoutingTarget;
-use App\Domaining\Entity\DomainVerificationChallenge;
+use App\Domaining\Entity\DomainAuditRecordEntity;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainClaimEntity;
+use App\Domaining\Entity\DomainDeclarationEntity;
+use App\Domaining\Entity\DomainPublicationStateEntity;
+use App\Domaining\Entity\DomainRoutingTargetEntity;
+use App\Domaining\Entity\DomainVerificationChallengeEntity;
 use App\Domaining\Enum\DomainApplicationRole;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\Enum\DomainClaimStatus;
@@ -72,7 +72,7 @@ final class DomainCoreLifecycleTest extends TestCase
 
     public function testClaimLifecycleAndAuditSurface(): void
     {
-        $claim = new DomainClaim('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
+        $claim = new DomainClaimEntity('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
 
         self::assertSame('example.com', $claim->domainName());
         self::assertSame('vendor-1', $claim->ownerId());
@@ -96,7 +96,7 @@ final class DomainCoreLifecycleTest extends TestCase
 
     public function testBindingLifecycleTracksBusinessTimestamps(): void
     {
-        $binding = new DomainBinding('example.com', 'vendor-1', DomainSurfaceType::Storefront, 'shop');
+        $binding = new DomainBindingEntity('example.com', 'vendor-1', DomainSurfaceType::Storefront, 'shop');
 
         self::assertSame(DomainBindingStatus::Verified, $binding->status());
         self::assertNull($binding->activatedAt());
@@ -129,9 +129,9 @@ final class DomainCoreLifecycleTest extends TestCase
 
     public function testVerificationChallengeLifecycleAndRetryWindow(): void
     {
-        $claim = new DomainClaim('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
+        $claim = new DomainClaimEntity('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
         $expiresAt = new DateTimeImmutable('+1 hour');
-        $challenge = new DomainVerificationChallenge(
+        $challenge = new DomainVerificationChallengeEntity(
             $claim,
             DomainRecordType::Txt,
             '_smartresponsor-domain.example.com',
@@ -180,8 +180,8 @@ final class DomainCoreLifecycleTest extends TestCase
 
     public function testPublicationAndRoutingStateTransitions(): void
     {
-        $binding = new DomainBinding('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
-        $publication = new DomainPublicationState($binding);
+        $binding = new DomainBindingEntity('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
+        $publication = new DomainPublicationStateEntity($binding);
 
         self::assertSame($binding, $publication->binding());
         self::assertSame(DomainPublicationStatus::NotReady, $publication->status());
@@ -202,7 +202,7 @@ final class DomainCoreLifecycleTest extends TestCase
         self::assertNotNull($publication->withdrawnAt());
         self::assertNotSame('', (string) $publication->id());
 
-        $target = new DomainRoutingTarget($binding, 'tenant.smartresponsor.app');
+        $target = new DomainRoutingTargetEntity($binding, 'tenant.smartresponsor.app');
         self::assertSame($binding, $target->binding());
         self::assertSame('tenant.smartresponsor.app', $target->targetHost());
         self::assertSame('/', $target->targetPath());
@@ -215,7 +215,7 @@ final class DomainCoreLifecycleTest extends TestCase
 
     public function testAuditRecordRetainsBusinessEventContext(): void
     {
-        $record = new DomainAuditRecord('example.com', 'domain_tested', 'vendor-1', ['source' => 'unit']);
+        $record = new DomainAuditRecordEntity('example.com', 'domain_tested', 'vendor-1', ['source' => 'unit']);
 
         self::assertSame('example.com', $record->domainName());
         self::assertSame('domain_tested', $record->action());
@@ -224,14 +224,14 @@ final class DomainCoreLifecycleTest extends TestCase
         self::assertInstanceOf(DateTimeImmutable::class, $record->createdAt());
         self::assertNotSame('', (string) $record->id());
 
-        $anonymous = new DomainAuditRecord('example.com', 'domain_tested');
+        $anonymous = new DomainAuditRecordEntity('example.com', 'domain_tested');
         self::assertNull($anonymous->actorId());
         self::assertSame([], $anonymous->context());
     }
 
     public function testDeclarationNormalizesAndAdvancesLifecycle(): void
     {
-        $declaration = new DomainDeclaration(
+        $declaration = new DomainDeclarationEntity(
             ' app ',
             ' brand ',
             ' production ',
@@ -289,7 +289,7 @@ final class DomainCoreLifecycleTest extends TestCase
         string $domainName,
     ): void {
         $this->expectException(InvalidArgumentException::class);
-        new DomainDeclaration($applicationKey, $brandKey, $environment, $domainName);
+        new DomainDeclarationEntity($applicationKey, $brandKey, $environment, $domainName);
     }
 
     /** @return iterable<string, array{string, string, string, string}> */
@@ -349,22 +349,22 @@ final class DomainCoreLifecycleTest extends TestCase
 
     public function testSupportDtosEventsAndLegacyLifecyclePolicies(): void
     {
-        $contractIssue = new \App\Domaining\Dto\DomainContractGovernanceIssue('warning', 'contract', 'Review contract.', ['v' => 1]);
+        $contractIssue = new \App\Domaining\DTO\DomainContractGovernanceIssueDTO('warning', 'contract', 'Review contract.', ['v' => 1]);
         self::assertSame('contract', $contractIssue->toArray()['code']);
 
-        $policyIssue = new \App\Domaining\Dto\DomainSurfacePolicyIssue('error', 'surface', 'Review surface.', ['owner' => 'vendor']);
+        $policyIssue = new \App\Domaining\DTO\DomainSurfacePolicyIssueDTO('error', 'surface', 'Review surface.', ['owner' => 'vendor']);
         self::assertSame('surface', $policyIssue->toArray()['code']);
 
-        $render = new \App\Domaining\Dto\DomainTemplateRenderResult(true, 'domain', 'domain.html.twig', ['domainName' => 'example.com'], '<p>ok</p>');
+        $render = new \App\Domaining\DTO\DomainTemplateRenderResultDTO(true, 'domain', 'domain.html.twig', ['domainName' => 'example.com'], '<p>ok</p>');
         self::assertSame('<p>ok</p>', $render->toArray()['html']);
 
-        $emptyOverlay = new \App\Domaining\Dto\DomainRuntimeOverlay(
+        $emptyOverlay = new \App\Domaining\DTO\DomainRuntimeOverlayDTO(
             'app', null, 'prod', null, null, null, null, null, null, null,
             false, false, false, false,
         );
         self::assertNull($emptyOverlay->toArray()['customDomain']);
 
-        $overlay = new \App\Domaining\Dto\DomainRuntimeOverlay(
+        $overlay = new \App\Domaining\DTO\DomainRuntimeOverlayDTO(
             'app', 'brand', 'prod', 'example.com', 'primary', 'published', 'active', 'published',
             'edge.smartresponsor.app', '/', true, true, true, true,
         );
@@ -383,21 +383,21 @@ final class DomainCoreLifecycleTest extends TestCase
         self::assertSame('Domain verification failed.', \App\Domaining\Exception\DomainVerificationException::create()->getMessage());
         self::assertSame('custom', \App\Domaining\Exception\DomainVerificationException::create('custom')->getMessage());
 
-        self::assertTrue(\App\Domaining\Lifecycle\DomainBindingLifecyclePolicy::canTransition('claimed', 'verification_pending'));
-        self::assertTrue(\App\Domaining\Lifecycle\DomainBindingLifecyclePolicy::canTransition('bound', 'bound'));
-        self::assertFalse(\App\Domaining\Lifecycle\DomainBindingLifecyclePolicy::canTransition('unknown', 'bound'));
-        self::assertSame(['published', 'suspended', 'removed'], \App\Domaining\Lifecycle\DomainBindingLifecyclePolicy::allowedTargets('bound'));
-        self::assertSame([], \App\Domaining\Lifecycle\DomainBindingLifecyclePolicy::allowedTargets('unknown'));
-        \App\Domaining\Lifecycle\DomainBindingLifecyclePolicy::assertCanTransition('verified', 'bound');
+        self::assertTrue(\App\Domaining\Policy\Lifecycle\DomainBindingLifecyclePolicy::canTransition('claimed', 'verification_pending'));
+        self::assertTrue(\App\Domaining\Policy\Lifecycle\DomainBindingLifecyclePolicy::canTransition('bound', 'bound'));
+        self::assertFalse(\App\Domaining\Policy\Lifecycle\DomainBindingLifecyclePolicy::canTransition('unknown', 'bound'));
+        self::assertSame(['published', 'suspended', 'removed'], \App\Domaining\Policy\Lifecycle\DomainBindingLifecyclePolicy::allowedTargets('bound'));
+        self::assertSame([], \App\Domaining\Policy\Lifecycle\DomainBindingLifecyclePolicy::allowedTargets('unknown'));
+        \App\Domaining\Policy\Lifecycle\DomainBindingLifecyclePolicy::assertCanTransition('verified', 'bound');
         self::addToAssertionCount(1);
         try {
-            \App\Domaining\Lifecycle\DomainBindingLifecyclePolicy::assertCanTransition('removed', 'published');
+            \App\Domaining\Policy\Lifecycle\DomainBindingLifecyclePolicy::assertCanTransition('removed', 'published');
             self::fail('Invalid binding transition must throw.');
         } catch (\DomainException $exception) {
             self::assertStringContainsString('removed', $exception->getMessage());
         }
 
-        $claimPolicy = new \App\Domaining\Lifecycle\DomainClaimLifecyclePolicy();
+        $claimPolicy = new \App\Domaining\Policy\Lifecycle\DomainClaimLifecyclePolicy();
         self::assertTrue($claimPolicy->canTransition(' Draft ', ' PENDING_VERIFICATION '));
         self::assertTrue($claimPolicy->canTransition('verified', 'VERIFIED'));
         self::assertFalse($claimPolicy->canTransition('archived', 'bound'));
@@ -418,24 +418,24 @@ final class DomainCoreLifecycleTest extends TestCase
         $entityManager = $this->createMock(\Doctrine\ORM\EntityManagerInterface::class);
         $entityManager->expects(self::once())
             ->method('persist')
-            ->with(self::callback(static fn (object $record): bool => $record instanceof DomainAuditRecord && 'audit.example.com' === $record->domainName()));
-        (new \App\Domaining\Service\Audit\DomainAuditService($entityManager))->record('audit.example.com', 'domain_test', 'actor-1', ['source' => 'test']);
+            ->with(self::callback(static fn (object $record): bool => $record instanceof DomainAuditRecordEntity && 'audit.example.com' === $record->domainName()));
+        (new \App\Domaining\Service\Audit\DomainAuditService(new \App\Domaining\Repository\DomainPersistenceRepository($entityManager)))->record('audit.example.com', 'domain_test', 'actor-1', ['source' => 'test']);
 
         $declarations = $this->createStub(\App\Domaining\RepositoryInterface\DomainDeclarationRepositoryInterface::class);
         $bindings = $this->createStub(\App\Domaining\RepositoryInterface\DomainBindingRepositoryInterface::class);
         $publications = $this->createStub(\App\Domaining\RepositoryInterface\DomainPublicationStateRepositoryInterface::class);
         $targets = $this->createStub(\App\Domaining\RepositoryInterface\DomainRoutingTargetRepositoryInterface::class);
 
-        $declaration = new DomainDeclaration('published-app', 'brand', 'prod', 'published.example.com', DomainApplicationRole::Primary);
+        $declaration = new DomainDeclarationEntity('published-app', 'brand', 'prod', 'published.example.com', DomainApplicationRole::Primary);
         $declaration->markPublished();
-        $binding = new DomainBinding('published.example.com', 'owner-1', DomainSurfaceType::Application, 'published-app', $declaration);
+        $binding = new DomainBindingEntity('published.example.com', 'owner-1', DomainSurfaceType::Application, 'published-app', $declaration);
         $binding->activate();
-        $publication = new DomainPublicationState($binding);
+        $publication = new DomainPublicationStateEntity($binding);
         $publication->markPublished();
-        $target = new DomainRoutingTarget($binding, 'runtime.smartresponsor.app', '/app');
+        $target = new DomainRoutingTargetEntity($binding, 'runtime.smartresponsor.app', '/app');
 
         $declarations->method('findPrimaryByApplication')->willReturnCallback(
-            static fn (string $applicationKey): ?DomainDeclaration => 'published-app' === $applicationKey ? $declaration : null,
+            static fn (string $applicationKey): ?DomainDeclarationEntity => 'published-app' === $applicationKey ? $declaration : null,
         );
         $bindings->method('findOneForDeclaration')->willReturn($binding);
         $publications->method('findOneForBinding')->willReturn($publication);
@@ -453,31 +453,32 @@ final class DomainCoreLifecycleTest extends TestCase
             self::assertStringContainsString('must not be empty', $exception->getMessage());
         }
 
-        $payload = new \App\Domaining\Dto\DomainInterfacingPayload(
+        $payload = new \App\Domaining\DTO\DomainInterfacingPayloadDTO(
             'domaining.interfacing.v1', 'domain', 'render.example.com', 'owner-1', 'application', 'main',
             ['primary' => 'main'], ['status' => 'active'], ['status' => 'published'], ['slot' => 'domain'],
         );
-        $noTwig = $this->createStub(\Psr\Container\ContainerInterface::class);
-        $noTwig->method('has')->willReturn(false);
-        $fallback = (new \App\Domaining\Service\Interfacing\DomainTemplateRenderService($noTwig, 'domain', ['missing.html.twig']))->render($payload);
+        $fallbackTwig = new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
+        $fallback = (new \App\Domaining\Service\Interfacing\DomainTemplateRenderService($fallbackTwig, 'domain', ['missing.html.twig']))->render($payload);
         self::assertFalse($fallback->rendered);
 
-        $loader = new class {
-            public function exists(string $template): bool { return 'domain.html.twig' === $template; }
-        };
-        $twig = new class($loader) {
-            public function __construct(private object $loader) {}
-            public function getLoader(): object { return $this->loader; }
-            /** @param array<string, mixed> $context */
-            public function render(string $template, array $context): string { return sprintf('<h1>%s:%s</h1>', $template, $context['title']); }
-        };
-        $container = $this->createStub(\Psr\Container\ContainerInterface::class);
-        $container->method('has')->willReturn(true);
-        $container->method('get')->willReturn($twig);
-        $rendered = (new \App\Domaining\Service\Interfacing\DomainTemplateRenderService($container, 'domain', ['', 'missing.html.twig', 'domain.html.twig']))->render($payload);
+        $twig = new \Twig\Environment(new \Twig\Loader\ArrayLoader([
+            'domain.html.twig' => '<h1>{{ title }}</h1>',
+        ]));
+        $rendered = (new \App\Domaining\Service\Interfacing\DomainTemplateRenderService($twig, 'domain', ['', 'missing.html.twig', 'domain.html.twig']))->render($payload);
         self::assertTrue($rendered->rendered);
         self::assertSame('domain.html.twig', $rendered->template);
         self::assertStringContainsString('render.example.com', (string) $rendered->html);
+    }
+
+    public function testPersistenceRepositoryPersistsAndFlushesAsOneUnitOfWork(): void
+    {
+        $entity = new \stdClass();
+        $entityManager = $this->createMock(\Doctrine\ORM\EntityManagerInterface::class);
+        $entityManager->expects(self::once())->method('persist')->with($entity);
+        $entityManager->expects(self::once())->method('flush');
+
+        $repository = new \App\Domaining\Repository\DomainPersistenceRepository($entityManager);
+        $repository->persistAndFlush($entity);
     }
 
     public function testSymfonyFormsAndEasyAdminDeclarationSurface(): void
@@ -496,9 +497,9 @@ final class DomainCoreLifecycleTest extends TestCase
         self::assertNotEmpty($declarationForm->createView()->children);
 
         $controller = new \App\Domaining\Controller\Admin\DomainDeclarationCrudController();
-        self::assertSame(DomainDeclaration::class, \App\Domaining\Controller\Admin\DomainDeclarationCrudController::getEntityFqcn());
+        self::assertSame(DomainDeclarationEntity::class, \App\Domaining\Controller\Admin\DomainDeclarationCrudController::getEntityFqcn());
         self::assertInstanceOf(\EasyCorp\Bundle\EasyAdminBundle\Config\Crud::class, $controller->configureCrud(\EasyCorp\Bundle\EasyAdminBundle\Config\Crud::new()));
-        self::assertInstanceOf(DomainDeclaration::class, $controller->createEntity(DomainDeclaration::class));
+        self::assertInstanceOf(DomainDeclarationEntity::class, $controller->createEntity(DomainDeclarationEntity::class));
         self::assertCount(10, iterator_to_array($controller->configureFields(\EasyCorp\Bundle\EasyAdminBundle\Config\Crud::PAGE_INDEX)));
     }
 
@@ -507,29 +508,29 @@ final class DomainCoreLifecycleTest extends TestCase
         $now = new DateTimeImmutable();
 
         $governance = $this->createStub(\App\Domaining\ServiceInterface\Contract\DomainContractGovernanceServiceInterface::class);
-        $governance->method('buildReport')->willReturn(new \App\Domaining\Dto\DomainContractGovernanceReport('v1', $now, false, [], [], [], []));
+        $governance->method('buildReport')->willReturn(new \App\Domaining\DTO\DomainContractGovernanceReportDTO('v1', $now, false, [], [], [], []));
         self::assertSame(1, (new \Symfony\Component\Console\Tester\CommandTester(new \App\Domaining\Command\DomainContractGovernanceCommand($governance)))->execute([]));
 
         $diagnostic = $this->createStub(\App\Domaining\ServiceInterface\Diagnostic\DomainDiagnosticServiceInterface::class);
-        $diagnostic->method('buildReport')->willReturn(new \App\Domaining\Dto\DomainDiagnosticReport($now, false, [], []));
+        $diagnostic->method('buildReport')->willReturn(new \App\Domaining\DTO\DomainDiagnosticReportDTO($now, false, [], []));
         self::assertSame(1, (new \Symfony\Component\Console\Tester\CommandTester(new \App\Domaining\Command\DomainDiagnosticReportCommand($diagnostic)))->execute([]));
 
         $gate = $this->createStub(\App\Domaining\ServiceInterface\Release\DomainReleaseGateServiceInterface::class);
-        $gate->method('evaluate')->willReturn(new \App\Domaining\Dto\DomainReleaseGateReport(false, ['blocked'], [], []));
+        $gate->method('evaluate')->willReturn(new \App\Domaining\DTO\DomainReleaseGateReportDTO(false, ['blocked'], [], []));
         self::assertSame(1, (new \Symfony\Component\Console\Tester\CommandTester(new \App\Domaining\Command\DomainReleaseGateCommand($gate)))->execute([]));
 
         $manifest = $this->createStub(\App\Domaining\ServiceInterface\Manifest\DomainReleaseManifestServiceInterface::class);
-        $manifest->method('buildManifest')->willReturn(new \App\Domaining\Dto\DomainReleaseManifest(
+        $manifest->method('buildManifest')->willReturn(new \App\Domaining\DTO\DomainReleaseManifestDTO(
             'v1', $now, 'Domaining', 'domaining/domain', 'App\\Domaining\\', 'domain', 'domain_', false, [], [], [], [], [],
         ));
         self::assertSame(1, (new \Symfony\Component\Console\Tester\CommandTester(new \App\Domaining\Command\DomainReleaseManifestCommand($manifest)))->execute([]));
 
         $package = $this->createStub(\App\Domaining\ServiceInterface\Package\DomainReleasePackageServiceInterface::class);
         $package->method('buildPackage')->willReturnOnConsecutiveCalls(
-            new \App\Domaining\Dto\DomainReleasePackageReport(
+            new \App\Domaining\DTO\DomainReleasePackageReportDTO(
                 'v1', $now, false, 'Domaining', 'domaining/domain', [], [], [], [], [],
             ),
-            new \App\Domaining\Dto\DomainReleasePackageReport(
+            new \App\Domaining\DTO\DomainReleasePackageReportDTO(
                 'v1', $now, true, 'Domaining', 'domaining/domain', [], [], [], [], [],
             ),
         );
@@ -538,15 +539,15 @@ final class DomainCoreLifecycleTest extends TestCase
 
         $review = $this->createStub(\App\Domaining\ServiceInterface\Review\DomainReleaseReviewServiceInterface::class);
         $review->method('buildReport')->willReturnOnConsecutiveCalls(
-            new \App\Domaining\Dto\DomainReleaseReviewReport('v1', $now, false, [], []),
-            new \App\Domaining\Dto\DomainReleaseReviewReport('v1', $now, true, [], []),
+            new \App\Domaining\DTO\DomainReleaseReviewReportDTO('v1', $now, false, [], []),
+            new \App\Domaining\DTO\DomainReleaseReviewReportDTO('v1', $now, true, [], []),
         );
         self::assertSame(1, (new \Symfony\Component\Console\Tester\CommandTester(new \App\Domaining\Command\DomainReleaseReviewCommand($review)))->execute([]));
         self::assertSame(0, (new \Symfony\Component\Console\Tester\CommandTester(new \App\Domaining\Command\DomainReleaseReviewCommand($review)))->execute([]));
     }
 
-    private function binding(): DomainBinding
+    private function binding(): DomainBindingEntity
     {
-        return new DomainBinding('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
+        return new DomainBindingEntity('example.com', 'vendor-1', DomainSurfaceType::Application, 'main');
     }
 }

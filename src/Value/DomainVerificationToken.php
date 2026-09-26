@@ -19,7 +19,7 @@ final readonly class DomainVerificationToken
      */
     public static function create(): self
     {
-        return new self('sr-domain-verification=' . bin2hex(random_bytes(24)));
+        return new self('sr-domain-verification='.bin2hex(random_bytes(24)));
     }
 
     public function __toString(): string

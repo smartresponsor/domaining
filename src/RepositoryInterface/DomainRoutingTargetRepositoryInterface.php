@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domaining\RepositoryInterface;
 
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainRoutingTarget;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainRoutingTargetEntity;
 
 interface DomainRoutingTargetRepositoryInterface
 {
-    public function findOneForBinding(DomainBinding $binding): ?DomainRoutingTarget;
+    public function findOneForBinding(DomainBindingEntity $binding): ?DomainRoutingTargetEntity;
 }

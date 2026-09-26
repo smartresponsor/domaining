@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Observability;
 
-use App\Domaining\Dto\DomainReadinessReport;
+use App\Domaining\DTO\DomainReadinessReportDTO;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\Enum\DomainVerificationStatus;
@@ -22,7 +22,7 @@ final readonly class DomainObservabilityService implements DomainObservabilitySe
     ) {
     }
 
-    public function readinessReport(): DomainReadinessReport
+    public function readinessReport(): DomainReadinessReportDTO
     {
         $bindingStatusCount = $this->countBindingStatus();
         $verificationStatusCount = $this->countVerificationStatus();
@@ -37,7 +37,7 @@ final readonly class DomainObservabilityService implements DomainObservabilitySe
             $warnings[] = 'Failed verification challenges exist and should be reviewed.';
         }
 
-        return new DomainReadinessReport([] === $warnings, $bindingStatusCount, $verificationStatusCount, $publicationStatusCount, $warnings);
+        return new DomainReadinessReportDTO([] === $warnings, $bindingStatusCount, $verificationStatusCount, $publicationStatusCount, $warnings);
     }
 
     /**

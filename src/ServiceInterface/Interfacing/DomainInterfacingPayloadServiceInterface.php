@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Interfacing;
 
-use App\Domaining\Dto\DomainInterfacingPayload;
-use App\Domaining\Entity\DomainBinding;
+use App\Domaining\DTO\DomainInterfacingPayloadDTO;
+use App\Domaining\Entity\DomainBindingEntity;
 
 interface DomainInterfacingPayloadServiceInterface
 {
-    public function payloadForBinding(DomainBinding $binding): DomainInterfacingPayload;
+    public function payloadForBinding(DomainBindingEntity $binding): DomainInterfacingPayloadDTO;
 }

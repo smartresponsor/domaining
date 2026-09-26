@@ -26,4 +26,3 @@ final class DomainReleaseReviewCommand extends Command
         return $report->releaseCandidateReady ? Command::SUCCESS : Command::FAILURE;
     }
 }
-

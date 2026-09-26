@@ -18,7 +18,7 @@ Register the bundle when the host does not use auto-registration:
 
 [source,php]
 ----
-App\Domaining\DomainingBundle::class => ['all' => true],
+App\Domaining\CustomDomainBundle::class => ['all' => true],
 ----
 
 Import Domaining routes from the host application:
@@ -26,7 +26,7 @@ Import Domaining routes from the host application:
 [source,yaml]
 ----
 domaining:
-  resource: '@DomainingBundle/config/routes.yaml'
+  resource: '@CustomDomainBundle/config/routes.yaml'
 ----
 
 The host application owns environment configuration, database connection, runtime routing, TLS provider, and Interfacing installation.

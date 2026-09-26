@@ -4,29 +4,29 @@ declare(strict_types=1);
 
 namespace App\Domaining\Repository;
 
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainDeclaration;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainDeclarationEntity;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\RepositoryInterface\DomainBindingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<DomainBinding>
+ * @extends ServiceEntityRepository<DomainBindingEntity>
  */
 final class DomainBindingRepository extends ServiceEntityRepository implements DomainBindingRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DomainBinding::class);
+        parent::__construct($registry, DomainBindingEntity::class);
     }
 
-    public function findActiveByDomainName(string $domainName): ?DomainBinding
+    public function findActiveByDomainName(string $domainName): ?DomainBindingEntity
     {
         return $this->findOneBy(['domainName' => $domainName, 'status' => DomainBindingStatus::Active]);
     }
 
-    public function findLiveByDomainName(string $domainName): ?DomainBinding
+    public function findLiveByDomainName(string $domainName): ?DomainBindingEntity
     {
         return $this->createQueryBuilder('binding')
             ->andWhere('binding.domainName = :domainName')
@@ -41,10 +41,10 @@ final class DomainBindingRepository extends ServiceEntityRepository implements D
             ->getOneOrNullResult();
     }
 
-    public function findOneForDeclaration(DomainDeclaration $declaration): ?DomainBinding
+    public function findOneForDeclaration(DomainDeclarationEntity $declaration): ?DomainBindingEntity
     {
         $binding = $this->findOneBy(['declaration' => $declaration]);
 
-        return $binding instanceof DomainBinding ? $binding : null;
+        return $binding instanceof DomainBindingEntity ? $binding : null;
     }
 }

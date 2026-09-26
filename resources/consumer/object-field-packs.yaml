@@ -1,7 +1,7 @@
 component: Domaining
-business_stem: DomainDeclaration
+business_stem: DomainDeclarationEntity
 namespace: App\Domaining
-entity: App\Domaining\Entity\DomainDeclaration
+entity: App\Domaining\Entity\DomainDeclarationEntity
 field_pack_profile: object_baseline
 field_packs: []
 effective_field_packs:

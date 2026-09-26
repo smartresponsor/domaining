@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Package;
 
-use App\Domaining\Dto\DomainReleasePackageReport;
+use App\Domaining\DTO\DomainReleasePackageReportDTO;
 
 interface DomainReleasePackageServiceInterface
 {
-    public function buildPackage(): DomainReleasePackageReport;
+    public function buildPackage(): DomainReleasePackageReportDTO;
 }

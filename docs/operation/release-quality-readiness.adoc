@@ -35,7 +35,7 @@ The endpoint returns a JSON report with status counts and warnings. A non-empty 
 
 [source,text]
 ----
-GET /domain/observability/metric-snapshot
+GET /domain/observability/metric/snapshot
 ----
 
 The endpoint returns simple status counters that can be adapted to Prometheus/Grafana outside the component.

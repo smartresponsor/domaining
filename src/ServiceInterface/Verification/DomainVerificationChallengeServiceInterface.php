@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Verification;
 
-use App\Domaining\Entity\DomainClaim;
-use App\Domaining\Entity\DomainVerificationChallenge;
+use App\Domaining\Entity\DomainClaimEntity;
+use App\Domaining\Entity\DomainVerificationChallengeEntity;
 
 interface DomainVerificationChallengeServiceInterface
 {
-    public function issueTxtChallenge(DomainClaim $claim): DomainVerificationChallenge;
+    public function issueTxtChallenge(DomainClaimEntity $claim): DomainVerificationChallengeEntity;
 }

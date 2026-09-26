@@ -19,13 +19,13 @@
 
 == Ecosystem surfaces
 
-* `GET /domain/configuration/tool-metadata`
+* `GET /domain/configuration/tool/metadata`
 * `GET /domain/surface/{bindingId}`
 
 == Observability and release
 
 * `GET /domain/observability/readiness`
-* `GET /domain/observability/metric-snapshot`
+* `GET /domain/observability/metric/snapshot`
 * `GET /domain/release/gate`
 * `GET /domain/audit/{domainName}?limit=50`
 

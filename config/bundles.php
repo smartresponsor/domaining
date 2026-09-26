@@ -13,5 +13,5 @@ return [
     App\Objecting\ObjectBundle::class => ['all' => true],
     App\Tabling\TablingBundle::class => ['all' => true],
     App\Viewing\ViewingBundle::class => ['all' => true],
-    App\Domaining\DomainingBundle::class => ['all' => true],
+    App\Domaining\CustomDomainBundle::class => ['all' => true],
 ];

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Publication;
 
-use App\Domaining\Dto\DomainPublicationSnapshot;
-use App\Domaining\Dto\DomainRoutingIntent;
-use App\Domaining\Entity\DomainBinding;
+use App\Domaining\DTO\DomainPublicationSnapshotDTO;
+use App\Domaining\DTO\DomainRoutingIntentDTO;
+use App\Domaining\Entity\DomainBindingEntity;
 
 interface DomainPublicationServiceInterface
 {
-    public function prepareRoutingIntent(DomainBinding $binding, string $targetHost, string $targetPath = '/'): DomainRoutingIntent;
+    public function prepareRoutingIntent(DomainBindingEntity $binding, string $targetHost, string $targetPath = '/'): DomainRoutingIntentDTO;
 
-    public function markPublished(DomainBinding $binding): DomainPublicationSnapshot;
+    public function markPublished(DomainBindingEntity $binding): DomainPublicationSnapshotDTO;
 
-    public function markWithdrawn(DomainBinding $binding): DomainPublicationSnapshot;
+    public function markWithdrawn(DomainBindingEntity $binding): DomainPublicationSnapshotDTO;
 }

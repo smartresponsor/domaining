@@ -28,4 +28,3 @@ final class DomainRuntimeHandoffExportCommand extends Command
         return Command::SUCCESS;
     }
 }
-

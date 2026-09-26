@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Release;
 
-use App\Domaining\Dto\DomainReleaseGateReport;
+use App\Domaining\DTO\DomainReleaseGateReportDTO;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\Enum\DomainVerificationStatus;
@@ -24,7 +24,7 @@ final readonly class DomainReleaseGateService implements DomainReleaseGateServic
     ) {
     }
 
-    public function evaluate(): DomainReleaseGateReport
+    public function evaluate(): DomainReleaseGateReportDTO
     {
         $errors = [];
         $warnings = [];
@@ -53,7 +53,7 @@ final readonly class DomainReleaseGateService implements DomainReleaseGateServic
             $warnings[] = 'Suspended domain bindings exist; confirm that runtime publication is withdrawn.';
         }
 
-        return new DomainReleaseGateReport([] === $errors, $errors, $warnings, [
+        return new DomainReleaseGateReportDTO([] === $errors, $errors, $warnings, [
             'active_bindings' => $activeBindings,
             'verified_bindings' => $verifiedBindings,
             'suspended_bindings' => $suspendedBindings,

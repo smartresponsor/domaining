@@ -2,10 +2,17 @@
 /.console-mcp/
 /.gating/
 /.idea/
+/.php-cs-fixer.cache
 /.phpunit.cache/
 /.phpunit.result.cache
+/config/reference.php
+/node_modules/
+/playwright-report/
+/test-results/
 /vendor/
 /var/
 /.env.local
 /.env.*.local
 /auth.json
+.DS_Store
+Thumbs.db

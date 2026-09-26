@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domaining\Test\Integration;
 
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainClaim;
-use App\Domaining\Entity\DomainPublicationState;
-use App\Domaining\Entity\DomainRoutingTarget;
-use App\Domaining\Entity\DomainVerificationChallenge;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainClaimEntity;
+use App\Domaining\Entity\DomainPublicationStateEntity;
+use App\Domaining\Entity\DomainRoutingTargetEntity;
+use App\Domaining\Entity\DomainVerificationChallengeEntity;
 use App\Domaining\Enum\DomainRecordType;
 use App\Domaining\Enum\DomainSurfaceType;
 use App\Domaining\Kernel;
@@ -153,14 +153,14 @@ final class DomainConsoleReportFlowTest extends TestCase
 
     public function testHttpApiSurfacesExerciseProviderNeutralApplicationFlows(): void
     {
-        $published = $this->entityManager->getRepository(DomainBinding::class)->findOneBy(['domainName' => 'published.example.com']);
-        self::assertInstanceOf(DomainBinding::class, $published);
+        $published = $this->entityManager->getRepository(DomainBindingEntity::class)->findOneBy(['domainName' => 'published.example.com']);
+        self::assertInstanceOf(DomainBindingEntity::class, $published);
 
-        $challenge = $this->entityManager->getRepository(DomainVerificationChallenge::class)->findOneBy(['recordName' => '_smartresponsor-domain.expired.example.com']);
-        self::assertInstanceOf(DomainVerificationChallenge::class, $challenge);
+        $challenge = $this->entityManager->getRepository(DomainVerificationChallengeEntity::class)->findOneBy(['recordName' => '_smartresponsor-domain.expired.example.com']);
+        self::assertInstanceOf(DomainVerificationChallengeEntity::class, $challenge);
 
         foreach ([
-            '/domain/configuration/tool-metadata',
+            '/domain/configuration/tool/metadata',
             '/domain/contract/governance',
             '/domain/diagnostic/report',
             '/domain/export/state',
@@ -169,7 +169,7 @@ final class DomainConsoleReportFlowTest extends TestCase
             '/domain/release/review',
             '/domain/release/package',
             '/domain/runtime/handoff',
-            '/domain/observability/metric-snapshot',
+            '/domain/observability/metric/snapshot',
             '/domain/policy/surface/vendor-1?surfaceType=application&surfaceKey=published',
             '/domain/publication/'.(string) $published->id().'/snapshot',
             '/domain/surface/'.(string) $published->id(),
@@ -196,33 +196,33 @@ final class DomainConsoleReportFlowTest extends TestCase
         self::assertSame(Response::HTTP_CREATED, $claimResponse->getStatusCode());
         self::assertStringContainsString('sr-domain-verification=', $claimResponse->getContent() ?: '');
 
-        $verifiedClaim = new DomainClaim('binding-http.example.com', 'vendor-http', DomainSurfaceType::Application, 'binding-http');
+        $verifiedClaim = new DomainClaimEntity('binding-http.example.com', 'vendor-http', DomainSurfaceType::Application, 'binding-http');
         $verifiedClaim->markVerified();
         $this->entityManager->persist($verifiedClaim);
         $this->entityManager->flush();
 
-        $bindingResponse = $this->request('POST', '/domain/binding/from-claim/'.(string) $verifiedClaim->id());
+        $bindingResponse = $this->request('POST', '/domain/binding/from/claim/'.(string) $verifiedClaim->id());
         self::assertSame(Response::HTTP_CREATED, $bindingResponse->getStatusCode());
         $bindingPayload = json_decode($bindingResponse->getContent() ?: '', true, 512, JSON_THROW_ON_ERROR);
         $bindingId = (string) $bindingPayload['bindingId'];
 
-        $routingResponse = $this->request('POST', '/domain/binding/'.$bindingId.'/routing-intent', [
+        $routingResponse = $this->request('POST', '/domain/binding/'.$bindingId.'/routing/intent', [
             'targetHost' => 'binding-http.smartresponsor.app',
             'targetPath' => '/tenant',
         ]);
         self::assertSame(Response::HTTP_OK, $routingResponse->getStatusCode());
         self::assertStringContainsString('binding-http.smartresponsor.app', $routingResponse->getContent() ?: '');
 
-        $binding = $this->entityManager->getRepository(DomainBinding::class)->find($bindingId);
-        self::assertInstanceOf(DomainBinding::class, $binding);
+        $binding = $this->entityManager->getRepository(DomainBindingEntity::class)->find($bindingId);
+        self::assertInstanceOf(DomainBindingEntity::class, $binding);
         $binding->activate();
         $this->entityManager->flush();
 
         $publishedResponse = $this->request('POST', '/domain/publication/'.$bindingId.'/published');
         self::assertSame(Response::HTTP_OK, $publishedResponse->getStatusCode());
 
-        $binding = $this->entityManager->getRepository(DomainBinding::class)->find($bindingId);
-        self::assertInstanceOf(DomainBinding::class, $binding);
+        $binding = $this->entityManager->getRepository(DomainBindingEntity::class)->find($bindingId);
+        self::assertInstanceOf(DomainBindingEntity::class, $binding);
         $binding->suspend();
         $this->entityManager->flush();
         $withdrawnResponse = $this->request('POST', '/domain/publication/'.$bindingId.'/withdrawn');
@@ -238,28 +238,28 @@ final class DomainConsoleReportFlowTest extends TestCase
         self::assertNotEmpty(iterator_to_array($this->kernel->registerBundles()));
         self::assertSame(dirname(__DIR__, 2), $this->kernel->getProjectDir());
 
-        $passed = new \App\Domaining\Dto\DomainVerificationResult(\App\Domaining\Enum\DomainVerificationStatus::Passed, 'passed');
-        $failed = new \App\Domaining\Dto\DomainVerificationResult(\App\Domaining\Enum\DomainVerificationStatus::Failed, 'failed');
+        $passed = new \App\Domaining\DTO\DomainVerificationResultDTO(\App\Domaining\Enum\DomainVerificationStatus::Passed, 'passed');
+        $failed = new \App\Domaining\DTO\DomainVerificationResultDTO(\App\Domaining\Enum\DomainVerificationStatus::Failed, 'failed');
         self::assertTrue($passed->passed());
         self::assertFalse($failed->passed());
 
-        $declaration = new \App\Domaining\Entity\DomainDeclaration('repository-app', 'brand', 'test', 'repository.example.com', \App\Domaining\Enum\DomainApplicationRole::Primary);
-        $unboundDeclaration = new \App\Domaining\Entity\DomainDeclaration('unbound-app', 'brand', 'test', 'unbound.example.com', \App\Domaining\Enum\DomainApplicationRole::Primary);
-        $binding = new DomainBinding('repository.example.com', 'repository-owner', DomainSurfaceType::Application, 'repository', $declaration);
+        $declaration = new \App\Domaining\Entity\DomainDeclarationEntity('repository-app', 'brand', 'test', 'repository.example.com', \App\Domaining\Enum\DomainApplicationRole::Primary);
+        $unboundDeclaration = new \App\Domaining\Entity\DomainDeclarationEntity('unbound-app', 'brand', 'test', 'unbound.example.com', \App\Domaining\Enum\DomainApplicationRole::Primary);
+        $binding = new DomainBindingEntity('repository.example.com', 'repository-owner', DomainSurfaceType::Application, 'repository', $declaration);
         $binding->activate();
-        $publication = new DomainPublicationState($binding);
+        $publication = new DomainPublicationStateEntity($binding);
         $publication->markReady();
-        $target = new DomainRoutingTarget($binding, 'repository.smartresponsor.app', '/repository');
-        $pendingClaim = new DomainClaim('pending-ready.example.com', 'repository-owner', DomainSurfaceType::Application, 'pending-ready');
-        $pendingChallenge = new DomainVerificationChallenge($pendingClaim, DomainRecordType::Txt, '_smartresponsor-domain.pending-ready.example.com', 'sr-domain-verification=pending-ready', new DateTimeImmutable('+1 hour'));
-        $audit = new \App\Domaining\Entity\DomainAuditRecord('repository.example.com', 'repository_test', 'tester');
+        $target = new DomainRoutingTargetEntity($binding, 'repository.smartresponsor.app', '/repository');
+        $pendingClaim = new DomainClaimEntity('pending-ready.example.com', 'repository-owner', DomainSurfaceType::Application, 'pending-ready');
+        $pendingChallenge = new DomainVerificationChallengeEntity($pendingClaim, DomainRecordType::Txt, '_smartresponsor-domain.pending-ready.example.com', 'sr-domain-verification=pending-ready', new DateTimeImmutable('+1 hour'));
+        $audit = new \App\Domaining\Entity\DomainAuditRecordEntity('repository.example.com', 'repository_test', 'tester');
 
         foreach ([$declaration, $unboundDeclaration, $binding, $publication, $target, $pendingClaim, $pendingChallenge, $audit] as $entity) {
             $this->entityManager->persist($entity);
         }
         $this->entityManager->flush();
 
-        $declarations = $this->entityManager->getRepository(\App\Domaining\Entity\DomainDeclaration::class);
+        $declarations = $this->entityManager->getRepository(\App\Domaining\Entity\DomainDeclarationEntity::class);
         self::assertInstanceOf(\App\Domaining\Repository\DomainDeclarationRepository::class, $declarations);
         self::assertSame($declaration->id(), $declarations->findOneById((string) $declaration->id())?->id());
         self::assertSame($declaration->id(), $declarations->findOneByDomainAndEnvironment(' Repository.Example.COM. ', ' test ')?->id());
@@ -269,7 +269,7 @@ final class DomainConsoleReportFlowTest extends TestCase
         self::assertCount(1, $declarations->findByApplication(' repository-app ', ' test '));
         self::assertSame([], $declarations->findByApplication('missing-app', 'test'));
 
-        $bindings = $this->entityManager->getRepository(DomainBinding::class);
+        $bindings = $this->entityManager->getRepository(DomainBindingEntity::class);
         self::assertInstanceOf(\App\Domaining\Repository\DomainBindingRepository::class, $bindings);
         self::assertSame($binding->id(), $bindings->findActiveByDomainName('repository.example.com')?->id());
         self::assertNull($bindings->findActiveByDomainName('missing.example.com'));
@@ -278,23 +278,23 @@ final class DomainConsoleReportFlowTest extends TestCase
         self::assertSame($binding->id(), $bindings->findOneForDeclaration($declaration)?->id());
         self::assertNull($bindings->findOneForDeclaration($unboundDeclaration));
 
-        $publications = $this->entityManager->getRepository(DomainPublicationState::class);
+        $publications = $this->entityManager->getRepository(DomainPublicationStateEntity::class);
         self::assertInstanceOf(\App\Domaining\Repository\DomainPublicationStateRepository::class, $publications);
         self::assertSame($publication->id(), $publications->findOneForBinding($binding)?->id());
-        $unbound = new DomainBinding('repository-unbound.example.com', 'repository-owner', DomainSurfaceType::Application, 'unbound');
+        $unbound = new DomainBindingEntity('repository-unbound.example.com', 'repository-owner', DomainSurfaceType::Application, 'unbound');
         self::assertNull($publications->findOneForBinding($unbound));
 
-        $targets = $this->entityManager->getRepository(DomainRoutingTarget::class);
+        $targets = $this->entityManager->getRepository(DomainRoutingTargetEntity::class);
         self::assertInstanceOf(\App\Domaining\Repository\DomainRoutingTargetRepository::class, $targets);
         self::assertSame($target->id(), $targets->findOneForBinding($binding)?->id());
         self::assertNull($targets->findOneForBinding($unbound));
 
-        $challenges = $this->entityManager->getRepository(DomainVerificationChallenge::class);
+        $challenges = $this->entityManager->getRepository(DomainVerificationChallengeEntity::class);
         self::assertInstanceOf(\App\Domaining\Repository\DomainVerificationChallengeRepository::class, $challenges);
         $ready = $challenges->findPendingReadyForCheck(new DateTimeImmutable(), 10);
-        self::assertCount(1, array_filter($ready, static fn (DomainVerificationChallenge $item): bool => (string) $item->id() === (string) $pendingChallenge->id()));
+        self::assertCount(1, array_filter($ready, static fn (DomainVerificationChallengeEntity $item): bool => (string) $item->id() === (string) $pendingChallenge->id()));
 
-        $audits = $this->entityManager->getRepository(\App\Domaining\Entity\DomainAuditRecord::class);
+        $audits = $this->entityManager->getRepository(\App\Domaining\Entity\DomainAuditRecordEntity::class);
         self::assertInstanceOf(\App\Domaining\Repository\DomainAuditRecordRepository::class, $audits);
         self::assertCount(1, $audits->recentForDomain('repository.example.com', 0));
         self::assertCount(1, $audits->recentForDomain('repository.example.com', 500));
@@ -314,25 +314,25 @@ final class DomainConsoleReportFlowTest extends TestCase
         $published = $this->binding('published.example.com', 'published');
         $published->markVerifiedNow();
         $published->activate();
-        $publishedState = new DomainPublicationState($published);
+        $publishedState = new DomainPublicationStateEntity($published);
         $publishedState->markReady();
         $publishedState->markPublished();
-        $publishedRoute = new DomainRoutingTarget($published, 'published.smartresponsor.app', '/');
+        $publishedRoute = new DomainRoutingTargetEntity($published, 'published.smartresponsor.app', '/');
 
         $ready = $this->binding('ready.example.com', 'ready');
         $ready->markVerifiedNow();
         $ready->activate();
-        $readyState = new DomainPublicationState($ready);
+        $readyState = new DomainPublicationStateEntity($ready);
         $readyState->markReady();
-        $readyRoute = new DomainRoutingTarget($ready, 'ready.smartresponsor.app', '/app');
+        $readyRoute = new DomainRoutingTargetEntity($ready, 'ready.smartresponsor.app', '/app');
 
         $suspended = $this->binding('suspended.example.com', 'suspended');
         $suspended->markVerifiedNow();
         $suspended->suspend();
-        $suspendedState = new DomainPublicationState($suspended);
+        $suspendedState = new DomainPublicationStateEntity($suspended);
         $suspendedState->markReady();
         $suspendedState->markPublished();
-        $suspendedRoute = new DomainRoutingTarget($suspended, 'suspended.smartresponsor.app');
+        $suspendedRoute = new DomainRoutingTargetEntity($suspended, 'suspended.smartresponsor.app');
 
         $verified = $this->binding('verified.example.com', 'verified');
         $verified->markVerifiedNow();
@@ -342,13 +342,13 @@ final class DomainConsoleReportFlowTest extends TestCase
         $removed = $this->binding('removed.example.com', 'removed');
         $removed->remove();
 
-        $claim = new DomainClaim(
+        $claim = new DomainClaimEntity(
             'expired.example.com',
             'vendor-1',
             DomainSurfaceType::Application,
             'expired',
         );
-        $challenge = new DomainVerificationChallenge(
+        $challenge = new DomainVerificationChallengeEntity(
             $claim,
             DomainRecordType::Txt,
             '_smartresponsor-domain.expired.example.com',
@@ -381,9 +381,9 @@ final class DomainConsoleReportFlowTest extends TestCase
         $this->entityManager->flush();
     }
 
-    private function binding(string $domainName, string $surfaceKey): DomainBinding
+    private function binding(string $domainName, string $surfaceKey): DomainBindingEntity
     {
-        return new DomainBinding(
+        return new DomainBindingEntity(
             $domainName,
             'vendor-1',
             DomainSurfaceType::Application,

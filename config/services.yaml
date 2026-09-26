@@ -19,7 +19,7 @@ services:
     resource: '../src/'
     exclude:
       - '../src/Entity/'
-      - '../src/Dto/'
+      - '../src/DTO/'
       - '../src/Enum/'
       - '../src/Value/'
       - '../src/Exception/'
@@ -84,8 +84,8 @@ services:
   App\Domaining\ServiceInterface\Diagnostic\DomainDiagnosticServiceInterface:
     alias: App\Domaining\Service\Diagnostic\DomainDiagnosticService
 
-  App\Domaining\ServiceInterface\Policy\DomainSurfacePolicyServiceInterface:
-    alias: App\Domaining\Service\Policy\DomainSurfacePolicyService
+  App\Domaining\Policy\Surface\DomainSurfacePolicyInterface:
+    alias: App\Domaining\Policy\Surface\DomainSurfacePolicy
 
   App\Domaining\ServiceInterface\Export\DomainStateExportServiceInterface:
     alias: App\Domaining\Service\Export\DomainStateExportService

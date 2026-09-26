@@ -10,10 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/domain/audit')]
 final class DomainAuditController extends AbstractController
 {
-    #[Route('/{domainName}', name: 'domaining_audit_recent_for_domain', methods: ['GET'])]
+    #[Route('/domain/audit/{domainName}', name: 'domaining_audit_recent_for_domain', methods: ['GET'])]
     public function recent(string $domainName, Request $request, DomainAuditTrailReadServiceInterface $auditTrailReadService): JsonResponse
     {
         $limit = max(1, min(250, (int) $request->query->get('limit', '50')));
@@ -26,4 +25,3 @@ final class DomainAuditController extends AbstractController
         ]);
     }
 }
-

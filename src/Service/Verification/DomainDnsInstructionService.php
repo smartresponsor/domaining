@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Verification;
 
-use App\Domaining\Dto\DomainDnsInstructionSet;
-use App\Domaining\Dto\DomainDnsRecordInstruction;
-use App\Domaining\Entity\DomainVerificationChallenge;
+use App\Domaining\DTO\DomainDnsInstructionSetDTO;
+use App\Domaining\DTO\DomainDnsRecordInstructionDTO;
+use App\Domaining\Entity\DomainVerificationChallengeEntity;
 use App\Domaining\Enum\DomainDnsProviderHint;
 use App\Domaining\ServiceInterface\Verification\DomainDnsInstructionServiceInterface;
 
 final readonly class DomainDnsInstructionService implements DomainDnsInstructionServiceInterface
 {
-    public function buildInstructionSet(DomainVerificationChallenge $challenge, DomainDnsProviderHint $providerHint = DomainDnsProviderHint::Unknown): DomainDnsInstructionSet
+    public function buildInstructionSet(DomainVerificationChallengeEntity $challenge, DomainDnsProviderHint $providerHint = DomainDnsProviderHint::Unknown): DomainDnsInstructionSetDTO
     {
-        return new DomainDnsInstructionSet(
+        return new DomainDnsInstructionSetDTO(
             $challenge->claim()->domainName(),
             $providerHint,
             [
-                new DomainDnsRecordInstruction(
+                new DomainDnsRecordInstructionDTO(
                     $challenge->recordType(),
                     $challenge->recordName(),
                     $challenge->recordValue(),

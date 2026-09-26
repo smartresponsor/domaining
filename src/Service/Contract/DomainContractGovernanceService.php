@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Contract;
 
-use App\Domaining\Dto\DomainContractGovernanceIssue;
-use App\Domaining\Dto\DomainContractGovernanceReport;
+use App\Domaining\DTO\DomainContractGovernanceIssueDTO;
+use App\Domaining\DTO\DomainContractGovernanceReportDTO;
 use App\Domaining\Service\Export\DomainStateExportService;
 use App\Domaining\ServiceInterface\Contract\DomainContractGovernanceServiceInterface;
-use DateTimeImmutable;
 
 final readonly class DomainContractGovernanceService implements DomainContractGovernanceServiceInterface
 {
@@ -57,7 +56,7 @@ final readonly class DomainContractGovernanceService implements DomainContractGo
         ];
     }
 
-    public function buildReport(): DomainContractGovernanceReport
+    public function buildReport(): DomainContractGovernanceReportDTO
     {
         $contractVersion = [
             'stateExport' => DomainStateExportService::SCHEMA_VERSION,
@@ -74,11 +73,11 @@ final readonly class DomainContractGovernanceService implements DomainContractGo
         $issues = $this->inspectContractVersion($contractVersion);
         $issues = [...$issues, ...$this->inspectEndpointCoverage()];
 
-        $hasError = array_any($issues, static fn (DomainContractGovernanceIssue $issue): bool => 'error' === $issue->severity);
+        $hasError = array_any($issues, static fn (DomainContractGovernanceIssueDTO $issue): bool => 'error' === $issue->severity);
 
-        return new DomainContractGovernanceReport(
+        return new DomainContractGovernanceReportDTO(
             self::SCHEMA_VERSION,
-            new DateTimeImmutable(),
+            new \DateTimeImmutable(),
             !$hasError,
             $contractVersion,
             $this->endpoint(),
@@ -89,7 +88,8 @@ final readonly class DomainContractGovernanceService implements DomainContractGo
 
     /**
      * @param array<string, string> $contractVersion
-     * @return list<DomainContractGovernanceIssue>
+     *
+     * @return list<DomainContractGovernanceIssueDTO>
      */
     private function inspectContractVersion(array $contractVersion): array
     {
@@ -115,7 +115,7 @@ final readonly class DomainContractGovernanceService implements DomainContractGo
     }
 
     /**
-     * @return list<DomainContractGovernanceIssue>
+     * @return list<DomainContractGovernanceIssueDTO>
      */
     private function inspectEndpointCoverage(): array
     {
@@ -143,8 +143,8 @@ final readonly class DomainContractGovernanceService implements DomainContractGo
     /**
      * @param array<string, mixed> $context
      */
-    private function issue(string $severity, string $code, string $message, array $context = []): DomainContractGovernanceIssue
+    private function issue(string $severity, string $code, string $message, array $context = []): DomainContractGovernanceIssueDTO
     {
-        return new DomainContractGovernanceIssue($severity, $code, $message, $context);
+        return new DomainContractGovernanceIssueDTO($severity, $code, $message, $context);
     }
 }

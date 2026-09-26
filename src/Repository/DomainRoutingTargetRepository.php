@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace App\Domaining\Repository;
 
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainRoutingTarget;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainRoutingTargetEntity;
 use App\Domaining\RepositoryInterface\DomainRoutingTargetRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<DomainRoutingTarget>
+ * @extends ServiceEntityRepository<DomainRoutingTargetEntity>
  */
 final class DomainRoutingTargetRepository extends ServiceEntityRepository implements DomainRoutingTargetRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DomainRoutingTarget::class);
+        parent::__construct($registry, DomainRoutingTargetEntity::class);
     }
 
-    public function findOneForBinding(\App\Domaining\Entity\DomainBinding $binding): ?DomainRoutingTarget
+    public function findOneForBinding(DomainBindingEntity $binding): ?DomainRoutingTargetEntity
     {
         $target = $this->findOneBy(['binding' => $binding]);
 
-        return $target instanceof DomainRoutingTarget ? $target : null;
+        return $target instanceof DomainRoutingTargetEntity ? $target : null;
     }
 }

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Claim;
 
-use App\Domaining\Dto\DomainClaimRequest;
-use App\Domaining\Entity\DomainClaim;
-use App\Domaining\Entity\DomainDeclaration;
+use App\Domaining\DTO\DomainClaimRequestDTO;
+use App\Domaining\Entity\DomainClaimEntity;
+use App\Domaining\Entity\DomainDeclarationEntity;
 
 interface DomainClaimCreationServiceInterface
 {
-    public function createClaim(DomainClaimRequest $request): DomainClaim;
+    public function createClaim(DomainClaimRequestDTO $request): DomainClaimEntity;
 
-    public function createForDeclaration(DomainDeclaration $declaration, string $ownerId): DomainClaim;
+    public function createForDeclaration(DomainDeclarationEntity $declaration, string $ownerId): DomainClaimEntity;
 }

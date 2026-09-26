@@ -26,7 +26,7 @@ Normal checks respect the retry window. Forced checks are intended for explicit 
 
 [source,text]
 ----
-GET  /domain/configuration/tool-metadata
+GET  /domain/configuration/tool/metadata
 GET  /domain/publication/{bindingId}/snapshot
 POST /domain/publication/{bindingId}/ready
 POST /domain/publication/{bindingId}/published

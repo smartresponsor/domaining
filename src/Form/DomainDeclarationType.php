@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Form;
 
-use App\Domaining\Entity\DomainDeclaration;
+use App\Domaining\Entity\DomainDeclarationEntity;
 use App\Domaining\Enum\DomainApplicationRole;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -31,7 +31,7 @@ final class DomainDeclarationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => DomainDeclaration::class,
+            'data_class' => DomainDeclarationEntity::class,
         ]);
     }
 }

@@ -26,4 +26,3 @@ final class DomainReleaseGateCommand extends Command
         return $report->passed ? Command::SUCCESS : Command::FAILURE;
     }
 }
-

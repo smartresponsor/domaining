@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domaining\Value;
 
-use InvalidArgumentException;
-
 final readonly class DomainName
 {
     public string $value;
@@ -14,7 +12,7 @@ final readonly class DomainName
     {
         $normalized = self::normalize($value);
         if (!self::isValid($normalized)) {
-            throw new InvalidArgumentException(sprintf('Invalid domain nameEntity "%s".', $value));
+            throw new \InvalidArgumentException(sprintf('Invalid domain nameEntity "%s".', $value));
         }
         $this->value = $normalized;
     }

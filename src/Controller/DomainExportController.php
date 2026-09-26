@@ -9,13 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/domain/export', name: 'domain_export_')]
 final class DomainExportController extends AbstractController
 {
-    #[Route('/state', name: 'state', methods: ['GET'])]
+    #[Route('/domain/export/state', name: 'domain_export_state', methods: ['GET'])]
     public function state(DomainStateExportServiceInterface $exportService): JsonResponse
     {
         return $this->json(['domainStateExport' => $exportService->buildExport()->toArray()]);
     }
 }
-

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Review;
 
-use App\Domaining\Dto\DomainReleaseReviewReport;
+use App\Domaining\DTO\DomainReleaseReviewReportDTO;
 
 interface DomainReleaseReviewServiceInterface
 {
-    public function buildReport(): DomainReleaseReviewReport;
+    public function buildReport(): DomainReleaseReviewReportDTO;
 }

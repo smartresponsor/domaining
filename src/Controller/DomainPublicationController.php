@@ -13,10 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
-#[Route('/domain/publication', name: 'domain_publication_')]
 final class DomainPublicationController extends AbstractController
 {
-    #[Route('/{bindingId}/snapshot', name: 'snapshot', methods: ['GET'])]
+    #[Route('/domain/publication/{bindingId}/snapshot', name: 'domain_publication_snapshot', methods: ['GET'])]
     public function snapshot(
         string $bindingId,
         DomainBindingRepository $bindingRepository,
@@ -30,7 +29,7 @@ final class DomainPublicationController extends AbstractController
         return $this->json($readService->snapshot($binding)->toArray());
     }
 
-    #[Route('/{bindingId}/ready', name: 'ready', methods: ['POST'])]
+    #[Route('/domain/publication/{bindingId}/ready', name: 'domain_publication_ready', methods: ['POST'])]
     public function ready(
         string $bindingId,
         Request $request,
@@ -62,7 +61,7 @@ final class DomainPublicationController extends AbstractController
         ]);
     }
 
-    #[Route('/{bindingId}/published', name: 'published', methods: ['POST'])]
+    #[Route('/domain/publication/{bindingId}/published', name: 'domain_publication_published', methods: ['POST'])]
     public function published(
         string $bindingId,
         DomainBindingRepository $bindingRepository,
@@ -76,7 +75,7 @@ final class DomainPublicationController extends AbstractController
         return $this->json($publicationService->markPublished($binding)->toArray());
     }
 
-    #[Route('/{bindingId}/withdrawn', name: 'withdrawn', methods: ['POST'])]
+    #[Route('/domain/publication/{bindingId}/withdrawn', name: 'domain_publication_withdrawn', methods: ['POST'])]
     public function withdrawn(
         string $bindingId,
         DomainBindingRepository $bindingRepository,
@@ -90,4 +89,3 @@ final class DomainPublicationController extends AbstractController
         return $this->json($publicationService->markWithdrawn($binding)->toArray());
     }
 }
-

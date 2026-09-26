@@ -12,7 +12,7 @@ composer install
 APP_ENV=dev APP_DEBUG=1 DATABASE_URL='sqlite:///%kernel.project_dir%/var/domaining.db' php -S 127.0.0.1:8080 -t public
 ----
 
-The standalone kernel is `App\Domaining\Kernel` and registers the same `DomainingBundle` used by a host application.
+The standalone kernel is `App\Domaining\Kernel` and registers the same `CustomDomainBundle` used by a host application.
 
 == Host application / Composer sibling mode
 
@@ -35,7 +35,7 @@ Register the bundle in the host application when Symfony Flex does not do it aut
 [source,php]
 ----
 return [
-    App\Domaining\DomainingBundle::class => ['all' => true],
+    App\Domaining\CustomCustomDomainBundle::class => ['all' => true],
 ];
 ----
 
@@ -44,7 +44,7 @@ Import routes explicitly from the host application:
 [source,yaml]
 ----
 domaining:
-  resource: '@DomainingBundle/config/routes.yaml'
+  resource: '@CustomDomainBundle/config/routes.yaml'
 ----
 
 == Interfacing template lookup

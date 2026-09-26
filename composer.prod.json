@@ -117,7 +117,7 @@
   },
   "extra": {
     "symfony": {
-      "require": "8.0.*"
+      "require": "8.1.*"
     }
   },
   "suggest": {

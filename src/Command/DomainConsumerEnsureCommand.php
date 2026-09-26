@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Command;
 
-use App\Domaining\Dto\DomainClaimRequest;
+use App\Domaining\DTO\DomainClaimRequestDTO;
 use App\Domaining\Enum\DomainApplicationRole;
 use App\Domaining\Enum\DomainClaimStatus;
 use App\Domaining\Enum\DomainSurfaceType;
@@ -73,7 +73,7 @@ final class DomainConsumerEnsureCommand extends Command
             return Command::SUCCESS;
         }
 
-        $claim = $this->claimCreationService->createClaim(new DomainClaimRequest($domain, $owner, $surface, $surfaceKey));
+        $claim = $this->claimCreationService->createClaim(new DomainClaimRequestDTO($domain, $owner, $surface, $surfaceKey));
 
         if (DomainClaimStatus::Verified === $claim->status()) {
             $output->writeln(sprintf('Domain %s is already verified.', $domain));

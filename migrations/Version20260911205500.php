@@ -11,7 +11,7 @@ final class Version20260911205500 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Normalize DomainClaim audit fields to the canonical Objecting created/modified lifecycle columns.';
+        return 'Normalize DomainClaimEntity audit fields to the canonical Objecting created/modified lifecycle columns.';
     }
 
     public function up(Schema $schema): void

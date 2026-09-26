@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Runtime;
 
-use App\Domaining\Dto\DomainRuntimeOverlay;
+use App\Domaining\DTO\DomainRuntimeOverlayDTO;
 use App\Domaining\Enum\DomainDeclarationStatus;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\RepositoryInterface\DomainBindingRepositoryInterface;
@@ -23,7 +23,7 @@ final readonly class DomainRuntimeOverlayService implements DomainRuntimeOverlay
     ) {
     }
 
-    public function forApplication(string $applicationKey, string $environment): DomainRuntimeOverlay
+    public function forApplication(string $applicationKey, string $environment): DomainRuntimeOverlayDTO
     {
         $applicationKey = trim($applicationKey);
         $environment = trim($environment);
@@ -34,7 +34,7 @@ final readonly class DomainRuntimeOverlayService implements DomainRuntimeOverlay
         $declaration = $this->declarationRepository->findPrimaryByApplication($applicationKey, $environment);
 
         if (null === $declaration) {
-            return new DomainRuntimeOverlay(
+            return new DomainRuntimeOverlayDTO(
                 $applicationKey,
                 null,
                 $environment,
@@ -56,7 +56,7 @@ final readonly class DomainRuntimeOverlayService implements DomainRuntimeOverlay
         $publicationState = null === $binding ? null : $this->publicationStateRepository->findOneForBinding($binding);
         $routingTarget = null === $binding ? null : $this->routingTargetRepository->findOneForBinding($binding);
 
-        return new DomainRuntimeOverlay(
+        return new DomainRuntimeOverlayDTO(
             $declaration->applicationKey(),
             $declaration->brandKey(),
             $declaration->environment(),

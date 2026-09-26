@@ -123,7 +123,7 @@ The package aggregates release review, manifest, contract governance, release ga
 Domaining supports standalone review mode and Composer sibling/bundle mode.
 
 * Standalone: use `App\Domaining\Kernel` through `public/index.php`.
-* Host application: require `domaining/domain` through a Composer path repository and register `App\Domaining\DomainingBundle`.
+* Host application: require `domaining/domain` through a Composer path repository and register `App\Domaining\CustomDomainBundle`.
 * Interfacing: Domaining looks for the noun surface `domain`; if missing, it returns structured JSON.
 
 See `docs/bundle/standalone-and-bundle-mode.adoc`.

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Verification;
 
-use App\Domaining\Dto\DomainVerificationResult;
-use App\Domaining\Entity\DomainVerificationChallenge;
+use App\Domaining\DTO\DomainVerificationResultDTO;
+use App\Domaining\Entity\DomainVerificationChallengeEntity;
 
 interface DomainDnsVerificationServiceInterface
 {
-    public function verify(DomainVerificationChallenge $challenge): DomainVerificationResult;
-    public function recheck(DomainVerificationChallenge $challenge): DomainVerificationResult;
+    public function verify(DomainVerificationChallengeEntity $challenge): DomainVerificationResultDTO;
+
+    public function recheck(DomainVerificationChallengeEntity $challenge): DomainVerificationResultDTO;
 }

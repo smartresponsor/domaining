@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Interfacing;
 
-use App\Domaining\Dto\DomainInterfacingPayload;
-use App\Domaining\Entity\DomainBinding;
+use App\Domaining\DTO\DomainInterfacingPayloadDTO;
+use App\Domaining\Entity\DomainBindingEntity;
 use App\Domaining\ServiceInterface\Interfacing\DomainInterfacingPayloadServiceInterface;
 use App\Domaining\ServiceInterface\Publication\DomainPublicationReadServiceInterface;
 
@@ -48,7 +48,7 @@ final readonly class DomainInterfacingPayloadService implements DomainInterfacin
     ) {
     }
 
-    public function payloadForBinding(DomainBinding $binding): DomainInterfacingPayload
+    public function payloadForBinding(DomainBindingEntity $binding): DomainInterfacingPayloadDTO
     {
         $publication = $this->publicationReadService->snapshot($binding)->toArray();
         $bindingData = [
@@ -61,7 +61,7 @@ final readonly class DomainInterfacingPayloadService implements DomainInterfacin
             'lastVerifiedAt' => $binding->lastVerifiedAt()?->format(DATE_ATOM),
         ];
 
-        return new DomainInterfacingPayload(
+        return new DomainInterfacingPayloadDTO(
             self::SCHEMA_VERSION,
             'domain',
             $binding->domainName(),
@@ -276,4 +276,3 @@ final readonly class DomainInterfacingPayloadService implements DomainInterfacin
         return 'Review diagnostics and release gate.';
     }
 }
-

@@ -1,0 +1,8 @@
+cruding:
+  entity_class_alias_map:
+    domain/declaration: App\Domaining\Entity\DomainDeclarationEntity
+  form_type_map:
+    App\Domaining\Entity\DomainDeclarationEntity: App\Domaining\Form\DomainDeclarationType
+
+  route_guard:
+    require_runtime_lock: false

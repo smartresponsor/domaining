@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\Controller\Admin;
 
-use App\Domaining\Entity\DomainDeclaration;
+use App\Domaining\Entity\DomainDeclarationEntity;
 use App\Domaining\Enum\DomainApplicationRole;
 use App\Domaining\Enum\DomainDeclarationStatus;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -14,13 +14,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/** @extends AbstractCrudController<DomainDeclaration> */
+/** @extends AbstractCrudController<DomainDeclarationEntity> */
 #[IsGranted('ROLE_ADMIN')]
 final class DomainDeclarationCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return DomainDeclaration::class;
+        return DomainDeclarationEntity::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -32,9 +32,9 @@ final class DomainDeclarationCrudController extends AbstractCrudController
             ->setDefaultSort(['applicationKey' => 'ASC', 'domainName' => 'ASC']);
     }
 
-    public function createEntity(string $entityFqcn): DomainDeclaration
+    public function createEntity(string $entityFqcn): DomainDeclarationEntity
     {
-        return new DomainDeclaration('application', 'brand', 'sandbox', 'example.invalid');
+        return new DomainDeclarationEntity('application', 'brand', 'sandbox', 'example.invalid');
     }
 
     public function configureFields(string $pageName): iterable

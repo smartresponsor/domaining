@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Publication;
 
-use App\Domaining\Dto\DomainPublicationSnapshot;
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainPublicationState;
-use App\Domaining\Entity\DomainRoutingTarget;
+use App\Domaining\DTO\DomainPublicationSnapshotDTO;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainPublicationStateEntity;
+use App\Domaining\Entity\DomainRoutingTargetEntity;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\Repository\DomainPublicationStateRepository;
 use App\Domaining\Repository\DomainRoutingTargetRepository;
@@ -21,17 +21,17 @@ final readonly class DomainPublicationReadService implements DomainPublicationRe
     ) {
     }
 
-    public function snapshot(DomainBinding $binding): DomainPublicationSnapshot
+    public function snapshot(DomainBindingEntity $binding): DomainPublicationSnapshotDTO
     {
         $state = $this->stateRepository->findOneBy(['binding' => $binding]);
         $target = $this->targetRepository->findOneBy(['binding' => $binding]);
 
-        return new DomainPublicationSnapshot(
+        return new DomainPublicationSnapshotDTO(
             $binding->domainName(),
             $binding->ownerId(),
-            $state instanceof DomainPublicationState ? $state->status() : DomainPublicationStatus::NotReady,
-            $target instanceof DomainRoutingTarget ? $target->targetHost() : null,
-            $target instanceof DomainRoutingTarget ? $target->targetPath() : null,
+            $state instanceof DomainPublicationStateEntity ? $state->status() : DomainPublicationStatus::NotReady,
+            $target instanceof DomainRoutingTargetEntity ? $target->targetHost() : null,
+            $target instanceof DomainRoutingTargetEntity ? $target->targetPath() : null,
         );
     }
 }

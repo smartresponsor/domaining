@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'domaining:release:manifest', description: 'Export the Domaining release manifest for RC review.')] 
+#[AsCommand(name: 'domaining:release:manifest', description: 'Export the Domaining release manifest for RC review.')]
 final class DomainReleaseManifestCommand extends Command
 {
     public function __construct(private readonly DomainReleaseManifestServiceInterface $manifestService)
@@ -26,4 +26,3 @@ final class DomainReleaseManifestCommand extends Command
         return $manifest->releaseCandidateReady ? Command::SUCCESS : Command::FAILURE;
     }
 }
-

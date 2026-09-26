@@ -11,10 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
-#[Route('/domain/surface', name: 'domain_surface_')]
 final class DomainSurfaceController extends AbstractController
 {
-    #[Route('/{bindingId}', name: 'binding', methods: ['GET'])]
+    #[Route('/domain/surface/{bindingId}', name: 'domain_surface_binding', methods: ['GET'])]
     public function binding(
         string $bindingId,
         DomainBindingRepository $bindingRepository,
@@ -29,7 +28,7 @@ final class DomainSurfaceController extends AbstractController
     }
 
     /** @return JsonResponse|array<string, mixed> */
-    #[Route('/{bindingId}/render', name: 'binding_render', methods: ['GET'])]
+    #[Route('/domain/surface/{bindingId}/render', name: 'domain_surface_binding_render', methods: ['GET'])]
     public function renderBinding(
         string $bindingId,
         DomainBindingRepository $bindingRepository,
@@ -56,6 +55,4 @@ final class DomainSurfaceController extends AbstractController
             ],
         ];
     }
-
 }
-

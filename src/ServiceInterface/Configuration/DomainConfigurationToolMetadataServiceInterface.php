@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Configuration;
 
-use App\Domaining\Dto\DomainConfigurationToolDescriptor;
+use App\Domaining\DTO\DomainConfigurationToolDescriptorDTO;
 
 interface DomainConfigurationToolMetadataServiceInterface
 {
-    public function descriptor(): DomainConfigurationToolDescriptor;
+    public function descriptor(): DomainConfigurationToolDescriptorDTO;
 }

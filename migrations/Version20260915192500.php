@@ -12,7 +12,7 @@ final class Version20260915192500 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Remove the redundant DomainBinding domain_name index already covered by the canonical unique index.';
+        return 'Remove the redundant DomainBindingEntity domain_name index already covered by the canonical unique index.';
     }
 
     public function up(Schema $schema): void

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Runtime;
 
-use App\Domaining\Dto\DomainRuntimeHandoffItem;
-use App\Domaining\Dto\DomainRuntimeHandoffReport;
+use App\Domaining\DTO\DomainRuntimeHandoffItemDTO;
+use App\Domaining\DTO\DomainRuntimeHandoffReportDTO;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\Repository\DomainBindingRepository;
@@ -22,7 +22,7 @@ final readonly class DomainRuntimeHandoffService implements DomainRuntimeHandoff
     ) {
     }
 
-    public function buildReport(): DomainRuntimeHandoffReport
+    public function buildReport(): DomainRuntimeHandoffReportDTO
     {
         $items = [];
         $warnings = [];
@@ -48,7 +48,7 @@ final readonly class DomainRuntimeHandoffService implements DomainRuntimeHandoff
                 default => 'review',
             };
 
-            $items[] = new DomainRuntimeHandoffItem(
+            $items[] = new DomainRuntimeHandoffItemDTO(
                 $binding->domainName(),
                 $binding->ownerId(),
                 $binding->surfaceType()->value,
@@ -61,6 +61,6 @@ final readonly class DomainRuntimeHandoffService implements DomainRuntimeHandoff
             );
         }
 
-        return new DomainRuntimeHandoffReport($items, $warnings);
+        return new DomainRuntimeHandoffReportDTO($items, $warnings);
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Runtime;
 
-use App\Domaining\Dto\DomainRuntimeHandoffReport;
+use App\Domaining\DTO\DomainRuntimeHandoffReportDTO;
 
 interface DomainRuntimeHandoffServiceInterface
 {
-    public function buildReport(): DomainRuntimeHandoffReport;
+    public function buildReport(): DomainRuntimeHandoffReportDTO;
 }

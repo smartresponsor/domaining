@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace App\Domaining\Repository;
 
-use App\Domaining\RepositoryInterface\DomainVerificationChallengeRepositoryInterface;
-use App\Domaining\Entity\DomainVerificationChallenge;
+use App\Domaining\Entity\DomainVerificationChallengeEntity;
 use App\Domaining\Enum\DomainVerificationStatus;
-use DateTimeImmutable;
+use App\Domaining\RepositoryInterface\DomainVerificationChallengeRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<DomainVerificationChallenge>
+ * @extends ServiceEntityRepository<DomainVerificationChallengeEntity>
  */
 final class DomainVerificationChallengeRepository extends ServiceEntityRepository implements DomainVerificationChallengeRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DomainVerificationChallenge::class);
+        parent::__construct($registry, DomainVerificationChallengeEntity::class);
     }
 
     /**
-     * @return list<DomainVerificationChallenge>
+     * @return list<DomainVerificationChallengeEntity>
      */
-    public function findPendingReadyForCheck(DateTimeImmutable $now, int $limit = 50): array
+    public function findPendingReadyForCheck(\DateTimeImmutable $now, int $limit = 50): array
     {
         return $this->createQueryBuilder('challenge')
             ->andWhere('challenge.status = :status')

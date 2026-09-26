@@ -9,13 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/domain/release', name: 'domain_release_review_')]
 final class DomainReviewController extends AbstractController
 {
-    #[Route('/review', name: 'review', methods: ['GET'])]
+    #[Route('/domain/release/review', name: 'domain_release_review_review', methods: ['GET'])]
     public function review(DomainReleaseReviewServiceInterface $reviewService): JsonResponse
     {
         return $this->json(['domainReleaseReview' => $reviewService->buildReport()->toArray()]);
     }
 }
-

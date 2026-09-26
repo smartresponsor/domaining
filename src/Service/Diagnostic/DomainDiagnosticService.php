@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Diagnostic;
 
-use App\Domaining\Dto\DomainDiagnosticIssue;
-use App\Domaining\Dto\DomainDiagnosticReport;
-use App\Domaining\Entity\DomainBinding;
-use App\Domaining\Entity\DomainPublicationState;
-use App\Domaining\Entity\DomainRoutingTarget;
-use App\Domaining\Entity\DomainVerificationChallenge;
+use App\Domaining\DTO\DomainDiagnosticIssueDTO;
+use App\Domaining\DTO\DomainDiagnosticReportDTO;
+use App\Domaining\Entity\DomainBindingEntity;
+use App\Domaining\Entity\DomainPublicationStateEntity;
+use App\Domaining\Entity\DomainRoutingTargetEntity;
+use App\Domaining\Entity\DomainVerificationChallengeEntity;
 use App\Domaining\Enum\DomainBindingStatus;
 use App\Domaining\Enum\DomainPublicationStatus;
 use App\Domaining\Enum\DomainVerificationStatus;
@@ -18,7 +18,6 @@ use App\Domaining\Repository\DomainPublicationStateRepository;
 use App\Domaining\Repository\DomainRoutingTargetRepository;
 use App\Domaining\Repository\DomainVerificationChallengeRepository;
 use App\Domaining\ServiceInterface\Diagnostic\DomainDiagnosticServiceInterface;
-use DateTimeImmutable;
 
 final readonly class DomainDiagnosticService implements DomainDiagnosticServiceInterface
 {
@@ -30,9 +29,9 @@ final readonly class DomainDiagnosticService implements DomainDiagnosticServiceI
     ) {
     }
 
-    public function buildReport(): DomainDiagnosticReport
+    public function buildReport(): DomainDiagnosticReportDTO
     {
-        $now = new DateTimeImmutable();
+        $now = new \DateTimeImmutable();
         $issues = [];
 
         foreach ($this->bindingRepository->findAll() as $binding) {
@@ -51,13 +50,13 @@ final readonly class DomainDiagnosticService implements DomainDiagnosticServiceI
             $severityCount[$issue->severity] = ($severityCount[$issue->severity] ?? 0) + 1;
         }
 
-        return new DomainDiagnosticReport($now, 0 === ($severityCount['error'] ?? 0), $severityCount, $issues);
+        return new DomainDiagnosticReportDTO($now, 0 === ($severityCount['error'] ?? 0), $severityCount, $issues);
     }
 
     /**
-     * @return list<DomainDiagnosticIssue>
+     * @return list<DomainDiagnosticIssueDTO>
      */
-    private function inspectBinding(DomainBinding $binding, ?DomainPublicationState $publicationState, ?DomainRoutingTarget $routingTarget): array
+    private function inspectBinding(DomainBindingEntity $binding, ?DomainPublicationStateEntity $publicationState, ?DomainRoutingTargetEntity $routingTarget): array
     {
         $issues = [];
         $publicationStatus = $publicationState?->status() ?? DomainPublicationStatus::NotReady;
@@ -100,15 +99,15 @@ final readonly class DomainDiagnosticService implements DomainDiagnosticServiceI
     }
 
     /**
-     * @return list<DomainDiagnosticIssue>
+     * @return list<DomainDiagnosticIssueDTO>
      */
-    private function inspectChallenge(DomainVerificationChallenge $challenge, DateTimeImmutable $now): array
+    private function inspectChallenge(DomainVerificationChallengeEntity $challenge, \DateTimeImmutable $now): array
     {
         $issues = [];
         $claim = $challenge->claim();
 
         if (DomainVerificationStatus::Pending === $challenge->status() && $challenge->expired($now)) {
-            $issues[] = new DomainDiagnosticIssue(
+            $issues[] = new DomainDiagnosticIssueDTO(
                 'warning',
                 'pending_challenge_expired',
                 'Pending verification challenge is past its expiration timestamp and should be expired or regenerated.',
@@ -125,7 +124,7 @@ final readonly class DomainDiagnosticService implements DomainDiagnosticServiceI
         }
 
         if (DomainVerificationStatus::Pending === $challenge->status() && $challenge->attemptCount() >= 5) {
-            $issues[] = new DomainDiagnosticIssue(
+            $issues[] = new DomainDiagnosticIssueDTO(
                 'warning',
                 'verification_retry_threshold_reached',
                 'Pending verification challenge has reached repeated DNS check attempts and needs operator review or user guidance.',
@@ -147,9 +146,9 @@ final readonly class DomainDiagnosticService implements DomainDiagnosticServiceI
     /**
      * @param array<string, mixed> $context
      */
-    private function issue(string $severity, string $code, string $message, DomainBinding $binding, array $context = []): DomainDiagnosticIssue
+    private function issue(string $severity, string $code, string $message, DomainBindingEntity $binding, array $context = []): DomainDiagnosticIssueDTO
     {
-        return new DomainDiagnosticIssue(
+        return new DomainDiagnosticIssueDTO(
             $severity,
             $code,
             $message,

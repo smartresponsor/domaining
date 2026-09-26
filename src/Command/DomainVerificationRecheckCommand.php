@@ -6,7 +6,6 @@ namespace App\Domaining\Command;
 
 use App\Domaining\Repository\DomainVerificationChallengeRepository;
 use App\Domaining\ServiceInterface\Verification\DomainDnsVerificationServiceInterface;
-use DateTimeImmutable;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +33,7 @@ final class DomainVerificationRecheckCommand extends Command
         $checked = 0;
         $passed = 0;
 
-        foreach ($this->challengeRepository->findPendingReadyForCheck(new DateTimeImmutable(), $limit) as $challenge) {
+        foreach ($this->challengeRepository->findPendingReadyForCheck(new \DateTimeImmutable(), $limit) as $challenge) {
             $result = $this->verificationService->recheck($challenge);
             ++$checked;
             if ('passed' === $result->status->value) {
@@ -47,4 +46,3 @@ final class DomainVerificationRecheckCommand extends Command
         return Command::SUCCESS;
     }
 }
-

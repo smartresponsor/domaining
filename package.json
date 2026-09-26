@@ -1,0 +1,11 @@
+{
+  "name": "domaining-browser-tests",
+  "private": true,
+  "scripts": {
+    "test:ui": "playwright test",
+    "test:ui:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

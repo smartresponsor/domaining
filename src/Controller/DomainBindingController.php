@@ -14,10 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
-#[Route('/domain/binding', name: 'domain_binding_')]
 final class DomainBindingController extends AbstractController
 {
-    #[Route('/from-claim/{claimId}', name: 'create_from_claim', methods: ['POST'])]
+    #[Route('/domain/binding/from/claim/{claimId}', name: 'domain_binding_create_from_claim', methods: ['POST'])]
     public function createFromClaim(string $claimId, DomainClaimRepository $claimRepository, DomainBindingServiceInterface $bindingService): JsonResponse
     {
         $claim = $claimRepository->find(Uuid::fromString($claimId));
@@ -39,7 +38,7 @@ final class DomainBindingController extends AbstractController
         ], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/{bindingId}/routing-intent', name: 'routing_intent', methods: ['POST'])]
+    #[Route('/domain/binding/{bindingId}/routing/intent', name: 'domain_binding_routing_intent', methods: ['POST'])]
     public function routingIntent(
         string $bindingId,
         Request $request,
@@ -70,4 +69,3 @@ final class DomainBindingController extends AbstractController
         ]);
     }
 }
-

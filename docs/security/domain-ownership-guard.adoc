@@ -15,7 +15,7 @@ The ownership guard protects these decisions:
 
 == Reserved platform domains
 
-Platform-owned domains such as `smart-responder.com` and `smartresponsor.com` are reserved by default.
+Domains owned by the platform itself are reserved by default; consumer/domain-owned public names remain consumer-scoped rather than platform identity.
 A tenant must not claim the platform's own public domains or subdomains as an external custom domain.
 
 == Live binding policy

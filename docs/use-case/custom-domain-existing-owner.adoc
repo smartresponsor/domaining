@@ -4,17 +4,17 @@
 == Scenario
 
 A user already owns `example.com` through an external registrar or DNS provider.
-The user wants to connect it to a Smart Responsor surface.
+The user wants to connect it to a surface belonging to the Smart Responsor consumer/domain.
 
 == Flow
 
 . User submits the domain name and target surface.
-. Domaining creates a `DomainClaim`.
+. Domaining creates a `DomainClaimEntity`.
 . Domaining issues a TXT challenge under `_smartresponsor-domain.example.com`.
 . User adds the TXT record in their DNS provider.
 . Domaining checks DNS records.
 . If the expected TXT value is present, the claim becomes verified.
-. Domaining creates a `DomainBinding`.
+. Domaining creates a `DomainBindingEntity`.
 . Domaining prepares routing intent.
 . Host/runtime infrastructure publishes route and TLS.
 

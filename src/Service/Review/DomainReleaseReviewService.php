@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Domaining\Service\Review;
 
-use App\Domaining\Dto\DomainContractGovernanceIssue;
-use App\Domaining\Dto\DomainDiagnosticIssue;
-use App\Domaining\Dto\DomainReleaseManifestCheck;
-use App\Domaining\Dto\DomainReleaseReviewIssue;
-use App\Domaining\Dto\DomainReleaseReviewReport;
+use App\Domaining\DTO\DomainContractGovernanceIssueDTO;
+use App\Domaining\DTO\DomainDiagnosticIssueDTO;
+use App\Domaining\DTO\DomainReleaseManifestCheckDTO;
+use App\Domaining\DTO\DomainReleaseReviewIssueDTO;
+use App\Domaining\DTO\DomainReleaseReviewReportDTO;
 use App\Domaining\ServiceInterface\Contract\DomainContractGovernanceServiceInterface;
 use App\Domaining\ServiceInterface\Diagnostic\DomainDiagnosticServiceInterface;
 use App\Domaining\ServiceInterface\Manifest\DomainReleaseManifestServiceInterface;
 use App\Domaining\ServiceInterface\Release\DomainReleaseGateServiceInterface;
 use App\Domaining\ServiceInterface\Review\DomainReleaseReviewServiceInterface;
-use DateTimeImmutable;
 
 /**
  * Aggregates Domaining RC gates into one review surface.
@@ -35,7 +34,7 @@ final readonly class DomainReleaseReviewService implements DomainReleaseReviewSe
     ) {
     }
 
-    public function buildReport(): DomainReleaseReviewReport
+    public function buildReport(): DomainReleaseReviewReportDTO
     {
         $releaseGate = $this->releaseGateService->evaluate();
         $contractGovernance = $this->contractGovernanceService->buildReport();
@@ -64,11 +63,11 @@ final readonly class DomainReleaseReviewService implements DomainReleaseReviewSe
             ]);
         }
 
-        $hasError = array_any($issues, static fn (DomainReleaseReviewIssue $issue): bool => 'error' === $issue->severity);
+        $hasError = array_any($issues, static fn (DomainReleaseReviewIssueDTO $issue): bool => 'error' === $issue->severity);
 
-        return new DomainReleaseReviewReport(
+        return new DomainReleaseReviewReportDTO(
             self::SCHEMA_VERSION,
-            new DateTimeImmutable(),
+            new \DateTimeImmutable(),
             !$hasError,
             $issues,
             [
@@ -82,48 +81,52 @@ final readonly class DomainReleaseReviewService implements DomainReleaseReviewSe
 
     /**
      * @param list<string> $message
-     * @return list<DomainReleaseReviewIssue>
+     *
+     * @return list<DomainReleaseReviewIssueDTO>
      */
     private function issueFromReleaseGate(array $message, string $severity): array
     {
         return array_map(
-            fn (string $text): DomainReleaseReviewIssue => $this->issue($severity, 'release_gate_' . $severity, $text),
+            fn (string $text): DomainReleaseReviewIssueDTO => $this->issue($severity, 'release_gate_'.$severity, $text),
             $message,
         );
     }
 
     /**
-     * @param list<DomainContractGovernanceIssue> $issue
-     * @return list<DomainReleaseReviewIssue>
+     * @param list<DomainContractGovernanceIssueDTO> $issue
+     *
+     * @return list<DomainReleaseReviewIssueDTO>
      */
     private function issueFromContractGovernance(array $issue): array
     {
         return array_map(
-            fn (DomainContractGovernanceIssue $item): DomainReleaseReviewIssue => $this->issue($item->severity, 'contract_' . $item->code, $item->message, $item->context),
+            fn (DomainContractGovernanceIssueDTO $item): DomainReleaseReviewIssueDTO => $this->issue($item->severity, 'contract_'.$item->code, $item->message, $item->context),
             $issue,
         );
     }
 
     /**
-     * @param list<DomainReleaseManifestCheck> $check
-     * @return list<DomainReleaseReviewIssue>
+     * @param list<DomainReleaseManifestCheckDTO> $check
+     *
+     * @return list<DomainReleaseReviewIssueDTO>
      */
     private function issueFromManifest(array $check): array
     {
         return array_map(
-            fn (DomainReleaseManifestCheck $item): DomainReleaseReviewIssue => $this->issue($item->severity, 'manifest_' . $item->code, $item->message, $item->context),
+            fn (DomainReleaseManifestCheckDTO $item): DomainReleaseReviewIssueDTO => $this->issue($item->severity, 'manifest_'.$item->code, $item->message, $item->context),
             $check,
         );
     }
 
     /**
-     * @param list<DomainDiagnosticIssue> $issue
-     * @return list<DomainReleaseReviewIssue>
+     * @param list<DomainDiagnosticIssueDTO> $issue
+     *
+     * @return list<DomainReleaseReviewIssueDTO>
      */
     private function issueFromDiagnostic(array $issue): array
     {
         return array_map(
-            fn (DomainDiagnosticIssue $item): DomainReleaseReviewIssue => $this->issue($item->severity, 'diagnostic_' . $item->code, $item->message, $item->context),
+            fn (DomainDiagnosticIssueDTO $item): DomainReleaseReviewIssueDTO => $this->issue($item->severity, 'diagnostic_'.$item->code, $item->message, $item->context),
             $issue,
         );
     }
@@ -131,8 +134,8 @@ final readonly class DomainReleaseReviewService implements DomainReleaseReviewSe
     /**
      * @param array<string, mixed> $context
      */
-    private function issue(string $severity, string $code, string $message, array $context = []): DomainReleaseReviewIssue
+    private function issue(string $severity, string $code, string $message, array $context = []): DomainReleaseReviewIssueDTO
     {
-        return new DomainReleaseReviewIssue($severity, $code, $message, $context);
+        return new DomainReleaseReviewIssueDTO($severity, $code, $message, $context);
     }
 }

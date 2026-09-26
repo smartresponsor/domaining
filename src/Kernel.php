@@ -40,7 +40,7 @@ final class Kernel extends BaseKernel implements KernelInterface
         yield new ObjectBundle();
         yield new TablingBundle();
         yield new ViewingBundle();
-        yield new DomainingBundle();
+        yield new CustomDomainBundle();
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void

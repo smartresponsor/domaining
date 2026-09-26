@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domaining\ServiceInterface\Declaration;
 
-use App\Domaining\Entity\DomainDeclaration;
+use App\Domaining\Entity\DomainDeclarationEntity;
 use App\Domaining\Enum\DomainApplicationRole;
 
 interface DomainDeclarationServiceInterface
@@ -15,5 +15,5 @@ interface DomainDeclarationServiceInterface
         string $environment,
         string $domainName,
         DomainApplicationRole $role = DomainApplicationRole::Primary,
-    ): DomainDeclaration;
+    ): DomainDeclarationEntity;
 }

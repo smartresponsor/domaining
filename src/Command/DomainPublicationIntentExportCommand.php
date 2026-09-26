@@ -33,4 +33,3 @@ final class DomainPublicationIntentExportCommand extends Command
         return Command::SUCCESS;
     }
 }
-

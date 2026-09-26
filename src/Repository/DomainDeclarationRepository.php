@@ -4,38 +4,38 @@ declare(strict_types=1);
 
 namespace App\Domaining\Repository;
 
-use App\Domaining\Entity\DomainDeclaration;
+use App\Domaining\Entity\DomainDeclarationEntity;
 use App\Domaining\Enum\DomainApplicationRole;
 use App\Domaining\RepositoryInterface\DomainDeclarationRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/** @extends ServiceEntityRepository<DomainDeclaration> */
+/** @extends ServiceEntityRepository<DomainDeclarationEntity> */
 final class DomainDeclarationRepository extends ServiceEntityRepository implements DomainDeclarationRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DomainDeclaration::class);
+        parent::__construct($registry, DomainDeclarationEntity::class);
     }
 
-    public function findOneById(string $id): ?DomainDeclaration
+    public function findOneById(string $id): ?DomainDeclarationEntity
     {
         $declaration = $this->find($id);
 
-        return $declaration instanceof DomainDeclaration ? $declaration : null;
+        return $declaration instanceof DomainDeclarationEntity ? $declaration : null;
     }
 
-    public function findOneByDomainAndEnvironment(string $domainName, string $environment): ?DomainDeclaration
+    public function findOneByDomainAndEnvironment(string $domainName, string $environment): ?DomainDeclarationEntity
     {
         $declaration = $this->findOneBy([
             'domainName' => strtolower(rtrim(trim($domainName), '.')),
             'environment' => trim($environment),
         ]);
 
-        return $declaration instanceof DomainDeclaration ? $declaration : null;
+        return $declaration instanceof DomainDeclarationEntity ? $declaration : null;
     }
 
-    public function findPrimaryByApplication(string $applicationKey, string $environment): ?DomainDeclaration
+    public function findPrimaryByApplication(string $applicationKey, string $environment): ?DomainDeclarationEntity
     {
         $declaration = $this->findOneBy([
             'applicationKey' => trim($applicationKey),
@@ -43,11 +43,11 @@ final class DomainDeclarationRepository extends ServiceEntityRepository implemen
             'role' => DomainApplicationRole::Primary,
         ]);
 
-        return $declaration instanceof DomainDeclaration ? $declaration : null;
+        return $declaration instanceof DomainDeclarationEntity ? $declaration : null;
     }
 
     /**
-     * @return list<DomainDeclaration>
+     * @return list<DomainDeclarationEntity>
      */
     public function findByApplication(string $applicationKey, string $environment): array
     {

@@ -29,4 +29,3 @@ final class DomainContractGovernanceCommand extends Command
         return $report->ready ? Command::SUCCESS : Command::FAILURE;
     }
 }
-
