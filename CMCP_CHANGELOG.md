@@ -473,5 +473,17 @@ Define a configurable periodic re-verification age and operator remediation work
 
 Что осталось? Inspect the final owned diff, create one signed commit containing only Domaining-owned files, push the synchronized master branch, and verify post-push HEAD/upstream while preserving the pre-existing foreign dirty paths.
 
+### Git integration
+
+- Created signed implementation commit `b2a1fe4` (`Harden Domaining release verification gate`) containing only `CMCP_CHANGELOG.md`, `docs/release/release-gate.adoc`, `src/Service/Release/DomainReleaseGateService.php`, and `test/Integration/DomainConsoleReportFlowTest.php`.
+- The commit hook re-ran PHP-CS-Fixer on the staged PHP file and fixed 0 files.
+- Guarded push succeeded: `master` advanced on `origin` from `328b227` to `b2a1fe4`.
+- The pre-existing modified `.gating/README.md` and untracked CMCP helper scripts were not staged, committed, rewritten, moved, or deleted.
+
+Что имеем? The RC hardening is implemented, fully verified, signed, and published on the canonical `origin/master`.
+
+Что осталось? Publish this final journal-only integration record and confirm local HEAD/upstream remain synchronized with only the preserved foreign dirty paths.
+
+
 
 
