@@ -30,6 +30,7 @@ The report contains:
 == Blocking checks
 
 * Active bindings must have at least one published publication state.
+* Active bindings must have a recorded ownership verification timestamp.
 * Ready publication states must have routing targets.
 
 == Warning checks

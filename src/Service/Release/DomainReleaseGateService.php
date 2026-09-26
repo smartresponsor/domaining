@@ -32,6 +32,10 @@ final readonly class DomainReleaseGateService implements DomainReleaseGateServic
         $activeBindings = $this->bindingRepository->count(['status' => DomainBindingStatus::Active]);
         $verifiedBindings = $this->bindingRepository->count(['status' => DomainBindingStatus::Verified]);
         $suspendedBindings = $this->bindingRepository->count(['status' => DomainBindingStatus::Suspended]);
+        $activeBindingsWithoutVerification = $this->bindingRepository->count([
+            'status' => DomainBindingStatus::Active,
+            'lastVerifiedAt' => null,
+        ]);
         $failedChallenges = $this->challengeRepository->count(['status' => DomainVerificationStatus::Failed]);
         $readyPublications = $this->publicationStateRepository->count(['status' => DomainPublicationStatus::Ready]);
         $publishedPublications = $this->publicationStateRepository->count(['status' => DomainPublicationStatus::Published]);
@@ -39,6 +43,10 @@ final readonly class DomainReleaseGateService implements DomainReleaseGateServic
 
         if ($activeBindings > 0 && 0 === $publishedPublications) {
             $errors[] = 'Active domain bindings exist, but no publication state is marked as published.';
+        }
+
+        if ($activeBindingsWithoutVerification > 0) {
+            $errors[] = 'Active domain bindings exist without recorded ownership verification timestamps.';
         }
 
         if ($readyPublications > 0 && 0 === $routingTargets) {
@@ -55,6 +63,7 @@ final readonly class DomainReleaseGateService implements DomainReleaseGateServic
 
         return new DomainReleaseGateReportDTO([] === $errors, $errors, $warnings, [
             'active_bindings' => $activeBindings,
+            'active_bindings_without_verification' => $activeBindingsWithoutVerification,
             'verified_bindings' => $verifiedBindings,
             'suspended_bindings' => $suspendedBindings,
             'failed_challenges' => $failedChallenges,

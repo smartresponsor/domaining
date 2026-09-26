@@ -425,3 +425,53 @@ After RC, improve provider-neutral DCV/pre-validation telemetry, zero-downtime c
 
 Что осталось? Commit and publish this final orchestration-journal integration record, then re-check that upstream remains synchronized and no Domaining-owned implementation tail remains.
 
+## engine-20260926084803-domaining-f7a975
+
+### Reconnaissance and baseline
+
+- Workspace: `D:\\PhpstormProjects\\www\\Domaining`; branch `master` at `328b2278d9a3c30d7397852d299cc74a5ea78d6d`, tracking `origin/master` with ahead/behind `0/0`.
+- Preserved pre-existing worktree state outside this run's ownership: modified `.gating/README.md` and untracked `tool/cmcp-process-diagnostic.ps1`, `tool/cmcp-run-coverage.ps1`, and `tool/cmcp-run-phpunit.ps1`.
+- Re-read the Domaining AGENTS/README/AsciiDoc lifecycle, API, security, release, runtime, observability, and package contracts; Composer/package manifests; current verification/security/release source; tests; scripts; and Git state.
+- Re-read the mandatory Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization contours. Consulted the normative Canon003, Canon012, Canon018, Canon019, Canon021, Canon022, Canon030, Canon041, Canon043, Canon044, Canon046, Canon048, Canon053, and Canon054 rule documents plus the architecture guard matrix.
+- Target-to-canon mapping remains aligned: `domaining/domain` maps to `App\\Domaining\\` and `Domain*`; no competing layer taxonomy is introduced; generic application CRUD remains in Cruding; the standalone dependency/test-tooling baseline is declared; local first-party path dependencies use the allowed helper contour; Objecting and Doctrine naming/persistence contracts remain applicable.
+- Current strict Composer validation with lock parity is green. Full Gating/QA/behavioral coverage starts are temporarily deferred by Console MCP runtime capacity (`ADMIT_LIGHT_ONLY`, resource/backlog pressure); no process was started or restarted.
+- Market/enterprise comparison remains consistent with the repository boundary: mature custom-domain products separate hostname ownership validation from traffic activation and certificate/runtime execution. Cloudflare for SaaS explicitly separates hostname ownership validation from certificate validation and supports pre-validation before traffic cutover; AWS Amplify similarly stages domain ownership verification and DNS activation.
+
+### RC-critical workstream selected
+
+Harden release acceptance around the existing ownership-verification invariant without inventing a new re-verification interval. The repository already records `DomainBindingEntity.lastVerifiedAt` and diagnostics flag live bindings with no verification timestamp, but the release gate currently allows an active binding with no recorded ownership verification. The bounded RC fix is to make that impossible to promote while keeping age-based periodic re-verification as a separate policy decision.
+
+### Growth workstream (non-blocking)
+
+Define a configurable periodic re-verification age and operator remediation workflow after RC, then extend provider-neutral telemetry for stale ownership proof and zero-downtime custom-domain migration. DNS mutation, TLS issuance, registrar actions, and edge routing remain outside Domaining.
+
+### Risks and gates
+
+- Do not infer a periodic verification interval that is not specified by the current product contract.
+- Do not mutate external DNS, certificates, or production domain state.
+- Keep the change read-only at release-evaluation time and preserve current lifecycle behavior.
+- Add a focused regression test, run changed PHP lint and the smallest available PHPUnit/release checks, then run aggregate QA/Gating when runtime capacity admits them.
+
+### Implementation and verification
+
+- Hardened `DomainReleaseGateService` so active bindings with no `lastVerifiedAt` ownership-verification evidence are a blocking release error.
+- Added `active_bindings_without_verification` to the machine-readable release-gate checks without changing the existing contract version or moving provider-specific behavior into Domaining.
+- Added an integration regression that activates a binding without verification evidence and proves `domaining:release:gate` returns failure with the expected blocking issue.
+- Updated `docs/release/release-gate.adoc` to match executable behavior.
+- Changed PHP lint is green for the release service and integration test.
+- Full PHPUnit is green: 34 tests / 367 assertions.
+- PHPStan level 6 is green across 168 analyzed files.
+- Aggregate Composer `quality` is green: PHP-CS-Fixer reports 0 fixable files, PHPStan is green, PHPUnit is green, and Gating reports 0 failed / 0 warning.
+- Canon040 evidence remains above threshold after the change: lines 85.17% (1706/2003), methods 80.16% (295/368), branches 80.69% (798/989).
+- Canon042 behavioral/UI evidence regenerated successfully. No browser/UI behavior was changed, so Panther/Playwright screenshots are not applicable to this backend-only release-gate change.
+- Symfony test container lint is green and all 8 config YAML files lint successfully with tags.
+- Existing Host App production runtime was reused without restart. `domaining:release:gate --env=prod` passes with `active_bindings_without_verification: 0`.
+- Host `domaining:release:review --env=prod` remains RC-ready with only the pre-existing non-blocking expired pending challenge diagnostic; `domaining:release:package --env=prod` reports `packageReady: true`.
+- No DNS, TLS, registrar, proxy, or production domain lifecycle state was mutated.
+
+Что имеем? The bounded RC defect is closed and verified across unit/integration quality gates plus the existing Host production read-only release surfaces.
+
+Что осталось? Inspect the final owned diff, create one signed commit containing only Domaining-owned files, push the synchronized master branch, and verify post-push HEAD/upstream while preserving the pre-existing foreign dirty paths.
+
+
+

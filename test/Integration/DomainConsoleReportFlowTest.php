@@ -110,6 +110,30 @@ final class DomainConsoleReportFlowTest extends TestCase
         self::assertSame(DomainSurfaceType::Application->value, $policy['surfaceType']);
     }
 
+    public function testReleaseGateBlocksActiveBindingWithoutVerificationEvidence(): void
+    {
+        $binding = new DomainBindingEntity(
+            'unverified-active.example.com',
+            'vendor-unverified',
+            DomainSurfaceType::Application,
+            'unverified-active',
+        );
+        $binding->activate();
+        $this->entityManager->persist($binding);
+        $this->entityManager->flush();
+
+        [$status, $text] = $this->runCommand('domaining:release:gate');
+
+        self::assertSame(Command::FAILURE, $status);
+        $gate = json_decode($text, true, 512, JSON_THROW_ON_ERROR);
+        self::assertFalse($gate['passed']);
+        self::assertGreaterThanOrEqual(1, $gate['checks']['active_bindings_without_verification']);
+        self::assertContains(
+            'Active domain bindings exist without recorded ownership verification timestamps.',
+            $gate['errors'],
+        );
+    }
+
     public function testConsumerEnsureCoversDeclarationOnlyAndClaimChallengeFlows(): void
     {
         [$declarationStatus, $declarationText] = $this->runCommand('domaining:consumer:ensure', [
