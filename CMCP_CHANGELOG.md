@@ -413,3 +413,15 @@ After RC, improve provider-neutral DCV/pre-validation telemetry, zero-downtime c
 
 Что осталось? Integrate only the Domaining-owned change set into Git, attempt guarded publication of the current branch, then inspect final HEAD/worktree/upstream state. Canon031 PHPDoc uplift remains a separate non-blocking maturity workstream.
 
+### Git integration and publication
+
+- Staged only Domaining-owned implementation/configuration/documentation/test/tooling changes. The pre-existing `.gating/README.md` edit and three externally appearing CMCP helper files were explicitly excluded from the index and preserved in the working tree.
+- Created signed RC implementation commit `6c8b0cb76d983b98658c6314983b990ca6e47dcd` (`Harden Domaining canonical RC contract`), containing the canonical topology, persistence boundary, route/tooling/test/documentation, and repository hygiene changes.
+- Guarded push to the canonical `git@github.com:smartresponsor/domaining.git` succeeded: `master -> origin/master`.
+- Immediate post-push inspection reports `master` at `6c8b0cb76d983b98658c6314983b990ca6e47dcd`, tracking `origin/master` with ahead/behind `0/0`.
+- The only remaining working-tree entries are outside this run's ownership: modified `.gating/README.md` and untracked `tool/cmcp-process-diagnostic.ps1`, `tool/cmcp-run-coverage.ps1`, and `tool/cmcp-run-phpunit.ps1`.
+
+Что имеем? The substantive Domaining RC implementation is committed and published, and local/remote master are synchronized at the implementation commit.
+
+Что осталось? Commit and publish this final orchestration-journal integration record, then re-check that upstream remains synchronized and no Domaining-owned implementation tail remains.
+
