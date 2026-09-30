@@ -487,3 +487,43 @@ Define a configurable periodic re-verification age and operator remediation work
 
 
 
+
+
+## engine-20260930021552-domaining-a2a113
+
+### Reconnaissance and baseline
+
+- Workspace: `D:\\PhpstormProjects\\www\\Domaining`; branch `master` at `959c5371165f108a40834a5c86bb09b17f56ceba`, tracking `origin/master` at ahead/behind `0/0`.
+- Preserved pre-existing worktree entries: modified `.gating/README.md` plus untracked `tool/cmcp-process-diagnostic.ps1`, `tool/cmcp-run-coverage.ps1`, and `tool/cmcp-run-phpunit.ps1`.
+- Read the task specification, Domaining AGENTS/README/Composer/production manifest/MANIFEST/.gitignore, current Gating RED report, fresh Inspecting report, and mandatory Objecting/Cruding/Viewing/Interfacing/Gating/Canonization contract contours.
+- Fresh Inspecting baseline for fingerprint `ca6e898f50c15ea7ad630bc07e1c8f9bd1740337ccff86b1a6c6c94267e0e399` contains six medium design/maintainability observations and no hard blocker; no duplicate pre-remediation Inspecting run was performed.
+- Canonization rule consulted: `.canonization/Governance/Architecture/Rule/Canon052GatingIntegrationRule.md`. Target mapping: Domaining already declares `gating/gate=dev-master`, local `../Gating` with `symlink=true`, packaged production Gating dependency, standard `gate` script, and `@gate` in `quality`; the only hard failure is polluted consumer `.gating/` topology.
+- Executable companion consulted: `Gating/src/Rule/Canon/Canon052GatingIntegrationRule.php`; the rule permits generated artifact roots and a non-executable `.gating/README.md`, while rejecting copied engine/policy/runtime files.
+- Market/enterprise reference check: mature custom-domain SaaS separates hostname ownership validation from certificate validation and traffic activation; this supports Domaining's provider-neutral ownership-verification/publication-readiness boundary while registrar, DNS hosting/mutation, TLS issuance, and edge routing execution remain outside the component.
+
+### RC-critical workstream
+
+- Restore Canon052 consumer topology without deleting evidence: preserve the legacy copied Gating snapshot under ignored `var/`, then recreate only the permitted consumer boundary README under `.gating/`.
+- Re-run deterministic Composer/Gating quality gates and post-mutation Inspecting; do not broaden remediation to the non-blocking medium Inspecting observations unless verification makes them actionable.
+
+### Growth workstream (non-blocking)
+
+- After RC, continue maturity around provider-neutral re-verification telemetry, pre-validation/zero-downtime migration ergonomics, and diagnostics. Keep registrar, DNS mutation, certificate issuance, and reverse-proxy/edge execution outside Domaining.
+
+### Material implementation
+
+- Moved the entire pre-existing `.gating/` snapshot to `var/cmcp-preserved-gating-engine-20260930021552` using Console MCP path-move, preserving its bytes while removing copied Gating engine/policy files from the consumer artifact surface.
+- Recreated `.gating/README.md` as a non-executable boundary note only, exactly within the Canon052 allowed topology.
+
+
+### Verification
+
+- Composer `gate` is GREEN: exit 0, 0 failed, 0 warning.
+- Composer `quality` is GREEN: PHP-CS-Fixer found 0 fixable files; PHPStan reported 0 errors; PHPUnit passed 34 tests / 367 assertions; embedded Gating finished 0 failed / 0 warning.
+- No product PHP, UI, navigation, forms, browser behavior, or mobile surface changed; runtime restart, Panther/Playwright execution, and screenshots are not applicable to this Canon052 repository-topology repair.
+- The post-mutation Inspecting invocation exceeded the orchestration call window, but the mutation did not touch `src/`; the supplied fresh Inspecting report analyzes `src/` only and remains applicable to the unchanged inspected scope. Its six medium observations remain non-blocking and were not converted into speculative RC work.
+- Post-fix Git diff contains only the Canon052 boundary README and this orchestration journal; the three pre-existing untracked CMCP helper scripts remain excluded.
+
+Что имеем? Canon052's concrete RED cause is removed without deleting the preserved legacy snapshot, and deterministic repository quality gates are green.
+
+Что осталось? Create a coherent signed commit for the two owned tracked files, publish `master`, then verify final HEAD/upstream and preserved foreign dirty state.
