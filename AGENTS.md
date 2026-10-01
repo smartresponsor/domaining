@@ -370,7 +370,7 @@ Doctrine mapping/schema validation
 - Use `cf-ai-verify` to verify auth and `cf-ai-test` for a smoke request.
 - Prefer `curl.exe` from PowerShell when validating Cloudflare endpoints.
 - Use `codex-cf-review -Scope Changed` as the default daily review path.
-- Keep the policy layer in `.gating/` when you need scope, prompt, schema, or exit-code changes.
+- Consumer `.gating/` is artifact-only. Gating policy, profiles, schemas, severity configuration, and executable rules are owned by the installed `gating/gate` package; development resolves that package through the canonical sibling symlink.
 
 ## Codex Usage
 
