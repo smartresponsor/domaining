@@ -527,3 +527,35 @@ Define a configurable periodic re-verification age and operator remediation work
 Что имеем? Canon052's concrete RED cause is removed without deleting the preserved legacy snapshot, and deterministic repository quality gates are green.
 
 Что осталось? Create a coherent signed commit for the two owned tracked files, publish `master`, then verify final HEAD/upstream and preserved foreign dirty state.
+
+## engine-20260930212831-domaining-2788fe
+
+### Reconnaissance and baseline
+
+- Workspace: `D:\PhpstormProjects\www\Domaining`; current branch `master`, initially aligned with `origin/master`.
+- Read the authoritative task specification, current CanonScanning RED report, supplied Inspecting report, Domaining repository contracts, and mandatory Objecting/Cruding/Viewing/Interfacing/Gating/Canonization contours.
+- Canon052 is the sole hard RED from the supplied scan. Domaining already satisfies the Composer dependency, symlink, production-package, `gate`, and `quality` requirements; the failure was caused by a copied executable Gating tree under consumer-local `.gating/`.
+- Fresh Inspecting evidence contains six medium PHP-structure observations only; no autofixable or hard blocker was supplied.
+
+### Canon mapping and market boundary
+
+- Normative source consulted: `Canon052GatingIntegrationRule.md` plus its executable Gating mirror.
+- Consumer `.gating/` is artifact-only. Normative Gating policy/runtime remains owned by the `gating/gate` package.
+- Mature SaaS custom-domain practice separates hostname ownership validation from certificate validation and traffic activation. Domaining therefore remains provider-neutral; registrar operations, DNS hosting/mutation, TLS issuance, and reverse-proxy execution stay outside this component.
+- Growth work remains post-RC: richer pre-validation UX, delegated validation automation, and operational analytics.
+
+### Remediation
+
+- Moved the complete local `.gating/` tree non-destructively to ignored `var/cmcp-preserved-gating-20260930-1905`; no files were deleted.
+- Preserved all pre-existing tracked/untracked user work and did not reset, clean, stash, or overwrite it.
+
+### Verification
+
+- Composer `gate`: GREEN, 0 failed / 0 warning.
+- Composer `quality`: GREEN; PHP-CS-Fixer 0 fixable files, PHPStan 0 errors, PHPUnit 34 tests / 367 assertions, embedded Gating 0 failed / 0 warning.
+- No product PHP, UI, navigation, forms, browser/mobile behavior, or runtime code changed. Existing Inspecting evidence remains applicable to the unchanged `src/` scope; no duplicate Inspecting run was required.
+- Visual/browser evidence is not applicable to this repository-topology-only remediation.
+
+Что имеем? Canon052 is remediated non-destructively and the complete deterministic quality contour is green.
+
+Что осталось? Reconcile the final Git diff by ownership, commit only coherent in-scope tracked changes if safe, publish when permitted, and verify final HEAD/upstream state.
