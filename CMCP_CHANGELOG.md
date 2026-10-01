@@ -559,3 +559,14 @@ Define a configurable periodic re-verification age and operator remediation work
 Что имеем? Canon052 is remediated non-destructively and the complete deterministic quality contour is green.
 
 Что осталось? Reconcile the final Git diff by ownership, commit only coherent in-scope tracked changes if safe, publish when permitted, and verify final HEAD/upstream state.
+
+### Git integration
+
+- Signed journal commit created: `f8f6c2cde69a1868890478a0c06d73692aace976` (`Record Domaining Canon052 RC remediation`).
+- Guarded push succeeded: `master -> origin/master`.
+- Post-push branch state: local HEAD and `origin/master` are synchronized at ahead/behind `0/0`.
+- Remaining worktree entries are preserved pre-existing/unowned state only: deleted `.gating/README.md`, modified `AGENTS.md`, and the three untracked CMCP helper scripts.
+
+Что имеем? The Canon052 RC remediation is green, signed, and published; local and remote master are synchronized.
+
+Что осталось? No authorized Domaining-owned RC work remains for this task.
